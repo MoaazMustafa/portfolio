@@ -25,5 +25,3 @@ export interface PaginatedResponse<T> {
   };
 }
 
-// Re-export database types
-export * from './database';
