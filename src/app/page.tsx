@@ -1,9 +1,7 @@
 import type { Metadata } from 'next';
 
-import { pageMetadata } from '@/lib/metadata';
-import { ThemeToggle } from '@/components';
 import ComingSoon from '@/components/sections/coming-soon';
-
+import { pageMetadata } from '@/lib/metadata';
 
 export const metadata: Metadata = pageMetadata.home;
 

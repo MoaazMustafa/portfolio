@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { MdPanoramaHorizontal } from 'react-icons/md';
 
 interface PageMetadata {
   title: string;
@@ -63,7 +62,18 @@ export function generatePageMetadata({
 export const defaultMetadata: Metadata = generatePageMetadata({
   title: 'Moaaz Mustafa - Software Engineer & Tech Enthusiast',
   description: 'Innovative Digital Solutions by Moaaz Mustafa',
-  keywords: ['Moaaz Mustafa', 'Moaaz Mustafa Portfolio', 'Moaz Mustafa', 'Muaz Mustafa', 'Moaaz', 'MOAAZ', 'moaazmustafa.tech', 'moaazmustafa', 'maaz', 'Muaz'],
+  keywords: [
+    'Moaaz Mustafa',
+    'Moaaz Mustafa Portfolio',
+    'Moaz Mustafa',
+    'Muaz Mustafa',
+    'Moaaz',
+    'MOAAZ',
+    'moaazmustafa.tech',
+    'moaazmustafa',
+    'maaz',
+    'Muaz',
+  ],
   canonical: '/',
 });
 
@@ -71,8 +81,20 @@ export const defaultMetadata: Metadata = generatePageMetadata({
 export const pageMetadata = {
   home: generatePageMetadata({
     title: 'Moaaz Mustafa',
-    description: 'Discover Moaaz Mustafa\'s portfolio showcasing projects, skills, and experiences in software engineering and technology.',
-    keywords: ['Moaaz Mustafa', 'Moaaz Mustafa Portfolio', 'Moaz Mustafa', 'Muaz Mustafa', 'Moaaz', 'MOAAZ', 'moaazmustafa.tech', 'moaazmustafa', 'maaz', 'Muaz'],
+    description:
+      "Discover Moaaz Mustafa's portfolio showcasing projects, skills, and experiences in software engineering and technology.",
+    keywords: [
+      'Moaaz Mustafa',
+      'Moaaz Mustafa Portfolio',
+      'Moaz Mustafa',
+      'Muaz Mustafa',
+      'Moaaz',
+      'MOAAZ',
+      'moaazmustafa.tech',
+      'moaazmustafa',
+      'maaz',
+      'Muaz',
+    ],
     canonical: '/',
   }),
 };
