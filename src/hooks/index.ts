@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 
-// Export all hooks
-export * from './use-toast';
 
 /**
  * Custom hook for managing local storage state
