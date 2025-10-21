@@ -24,7 +24,7 @@ export default function ComingSoon({
   title = 'Coming Soon',
   description = "We're working hard to bring you something amazing. This page will be available soon with exciting new features and content.",
   expectedDate = 'Q1 2026',
-  notifyEmail = 'hello@upvave.com',
+  notifyEmail = 'contactwithmoaaz@gmail.com',
 }: ComingSoonProps) {
   return (
     <div className="bg-background min-h-screen">
@@ -39,7 +39,7 @@ export default function ComingSoon({
             <div className="from-primary/20 to-primary/10 relative inline-flex rounded-full bg-gradient-to-br p-6">
               <Sparkles className="text-primary h-12 w-12 animate-pulse" />
               <div className="absolute -top-2 -right-2">
-                <Star className="h-6 w-6 animate-bounce fill-primary-400 text-primary-500" />
+                <Star className="fill-primary-400 text-primary-500 h-6 w-6 animate-bounce" />
               </div>
             </div>
           </div>

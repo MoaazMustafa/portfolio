@@ -5,6 +5,7 @@ import NextTopLoader from 'nextjs-toploader';
 import { ThemeProvider } from '@/components/theme-provider';
 
 import '@/styles/globals.css';
+import ClickSpark from '../components/ui/Spark';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -19,24 +20,24 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Moaaz Mustafa Portfolio - Software Engineer & Tech Enthusiast',
   description:
-    'Welcome to Moaaz Mustafa\'s portfolio. Explore projects, skills, and experiences of a passionate software engineer and tech enthusiast.',
+    "Welcome to Moaaz Mustafa's portfolio. Explore projects, skills, and experiences of a passionate software engineer and tech enthusiast.",
   icons: {
     icon: '/favicon/favicon.ico',
     shortcut: '/favicon/favicon-16x16.png',
     apple: '/favicon/favicon-apple.png',
   },
   keywords: [
-   'Moaaz Mustafa',
-   'Maaz Mustafa Portfolio',
-   'Moaaz',
-   'Mustafa',
-   'Maaz',
-   'Mustafa',
-   'Maaz Mustafa',
-   'Muaz Mustafa Portfolio',
-   'Muaz Mustafa',
-   'Portfolio',
-   'Software Developer',
+    'Moaaz Mustafa',
+    'Maaz Mustafa Portfolio',
+    'Moaaz',
+    'Mustafa',
+    'Maaz',
+    'Mustafa',
+    'Maaz Mustafa',
+    'Muaz Mustafa Portfolio',
+    'Muaz Mustafa',
+    'Portfolio',
+    'Software Developer',
     'Web Developer',
     'Full-Stack Developer',
     'Next.js',
@@ -77,17 +78,23 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="z-50" data-navbar>
-            {/* <Navbar /> */}
-          </div>
+          <ClickSpark
+            sparkColor="#ACEC00"
+            sparkSize={10}
+            sparkRadius={15}
+            sparkCount={8}
+            duration={400}
+          >
+            <div className="z-50" data-navbar>
+              {/* <Navbar /> */}
+            </div>
 
-          {children}
-          {/* <Toaster position="top-right" richColors /> */}
+            {children}
+            {/* <Toaster position="top-right" richColors /> */}
 
-          {/* Footer */}
-          <div data-footer>
-            {/* <Footer /> */}
-          </div>
+            {/* Footer */}
+            <div data-footer>{/* <Footer /> */}</div>
+          </ClickSpark>
         </ThemeProvider>
       </body>
     </html>

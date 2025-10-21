@@ -9,7 +9,7 @@ interface PageMetadata {
   noIndex?: boolean;
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://moaazmustafa.tech';
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://moaazmustafa.dev';
 const defaultOgImage = `${baseUrl}/img/og-default.png`;
 
 export function generatePageMetadata({
@@ -20,7 +20,9 @@ export function generatePageMetadata({
   canonical,
   noIndex = false,
 }: PageMetadata): Metadata {
-  const fullTitle = title.includes('Upvave') ? title : `${title} | Upvave`;
+  const fullTitle = title.includes('Moaaz Mustafa')
+    ? title
+    : `${title} | Moaaz Mustafa`;
 
   return {
     title: fullTitle,
@@ -36,7 +38,7 @@ export function generatePageMetadata({
       url: canonical ? `${baseUrl}${canonical}` : baseUrl,
       title: fullTitle,
       description,
-      siteName: 'Upvave',
+      siteName: 'MOAAZ MUSTAFA',
       images: [
         {
           url: ogImage,
@@ -69,7 +71,7 @@ export const defaultMetadata: Metadata = generatePageMetadata({
     'Muaz Mustafa',
     'Moaaz',
     'MOAAZ',
-    'moaazmustafa.tech',
+    'moaazmustafa.dev',
     'moaazmustafa',
     'maaz',
     'Muaz',
@@ -90,7 +92,7 @@ export const pageMetadata = {
       'Muaz Mustafa',
       'Moaaz',
       'MOAAZ',
-      'moaazmustafa.tech',
+      'moaazmustafa.dev',
       'moaazmustafa',
       'maaz',
       'Muaz',
