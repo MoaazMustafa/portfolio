@@ -3,74 +3,48 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 
 import { ThemeProvider } from '@/components';
+import ClickSpark from '@/components/ui/Spark';
+import { defaultMetadata } from '@/lib/metadata';
 
 import '@/styles/globals.css';
-import ClickSpark from '../components/ui/Spark';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
+  display: 'swap',
 });
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: 'Moaaz Mustafa Portfolio - Software Engineer & Tech Enthusiast',
-  description:
-    "Welcome to Moaaz Mustafa's portfolio. Explore projects, skills, and experiences of a passionate software engineer and tech enthusiast.",
+  ...defaultMetadata,
   icons: {
     icon: '/favicon/favicon.ico',
     shortcut: '/favicon/favicon-16x16.png',
     apple: '/favicon/favicon-apple.png',
   },
-  keywords: [
-    'Moaaz Mustafa',
-    'Maaz Mustafa Portfolio',
-    'Moaaz',
-    'Mustafa',
-    'Maaz',
-    'Mustafa',
-    'Maaz Mustafa',
-    'Muaz Mustafa Portfolio',
-    'Muaz Mustafa',
-    'Portfolio',
-    'Software Developer',
-    'Web Developer',
-    'Full-Stack Developer',
-    'Next.js',
-    'TypeScript',
-    'Tailwind CSS',
-    'React',
-    'JavaScript',
-    'Frontend Developer',
-    'Backend Developer',
-    'Open Source',
-    'GitHub',
-    'Projects',
-    'Tech Stack',
-    'Testimonials',
-    'Contact',
-  ],
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+interface RootLayoutProps {
+  readonly children: React.ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
         <NextTopLoader
           color="#acec00"
           shadow="0 0 10px #acec00, 0 0 5px #acec00"
           height={4}
-          showSpinner={true}
+          showSpinner
+          showForHashAnchor
         />
         <ThemeProvider
           attribute="class"
@@ -85,11 +59,13 @@ export default function RootLayout({
             sparkCount={8}
             duration={400}
           >
-            {children}
-            {/* <Toaster position="top-right" richColors /> */}
+            <main role="main" id="main-content">
+              {children}
+            </main>
 
-            {/* Footer */}
-            <div data-footer>{/* <Footer /> */}</div>
+            <footer role="contentinfo" data-footer>
+              {/* Footer component will be added here */}
+            </footer>
           </ClickSpark>
         </ThemeProvider>
       </body>
