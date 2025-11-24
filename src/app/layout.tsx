@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 
-import { Navbar, ThemeProvider } from '@/components';
+import { ThemeProvider } from '@/components';
 
 import '@/styles/globals.css';
 import ClickSpark from '../components/ui/Spark';
@@ -85,8 +85,6 @@ export default function RootLayout({
             sparkCount={8}
             duration={400}
           >
-            <Navbar />
-
             {children}
             {/* <Toaster position="top-right" richColors /> */}
 
