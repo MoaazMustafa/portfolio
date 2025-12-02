@@ -78,7 +78,7 @@ export function Hero() {
             </div>
 
             {/* Animated Roles - TextType */}
-            <div className="flex items-center justify-center gap-2 text-lg lg:justify-start sm:text-xl">
+            <div className="flex items-center justify-center gap-2 text-lg sm:text-xl lg:justify-start">
               <span className="text-muted-foreground text-lg">I&apos;m a</span>
               <div className="relative flex h-8 items-center sm:h-10">
                 <TextType
@@ -96,7 +96,7 @@ export function Hero() {
             </div>
 
             {/* Short Bio */}
-            <p className="text-muted-foreground mx-auto max-w-xl text-base leading-relaxed lg:mx-0 sm:text-lg">
+            <p className="text-muted-foreground mx-auto max-w-xl text-base leading-relaxed sm:text-lg lg:mx-0">
               Passionate about crafting elegant digital experiences and turning
               ideas into reality through code. I specialize in building modern,
               scalable web applications with a focus on user experience and
