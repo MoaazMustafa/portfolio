@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist, Geist_Mono, Orbitron } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 
 import { ThemeProvider } from '@/components';
+import { Navbar } from '@/components/navbar';
 import ClickSpark from '@/components/ui/Spark';
 import { defaultMetadata } from '@/lib/metadata';
 
@@ -17,6 +18,13 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
+  display: 'swap',
+});
+
+const orbitron = Orbitron({
+  variable: '--font-orbitron',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
   display: 'swap',
 });
 
@@ -37,7 +45,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} font-sans antialiased`}
       >
         <NextTopLoader
           color="#acec00"
@@ -59,6 +67,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             sparkCount={8}
             duration={400}
           >
+            <Navbar />
             <main role="main" id="main-content">
               {children}
             </main>
