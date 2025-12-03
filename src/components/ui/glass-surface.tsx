@@ -196,6 +196,10 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   }, [width, height, updateDisplacementMap]);
 
   const supportsSVGFilters = () => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      return false;
+    }
+    
     const isWebkit =
       /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
     const isFirefox = /Firefox/.test(navigator.userAgent);

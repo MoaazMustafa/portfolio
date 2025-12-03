@@ -7,10 +7,15 @@ import { cn } from '@/lib/utils';
 export function Preloader() {
   const [isLoading, setIsLoading] = useState(true);
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+    
     // Prevent scrolling during loading
-    document.body.style.overflow = 'hidden';
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = 'hidden';
+    }
 
     // Simulate loading time (2 seconds)
     const timer = setTimeout(() => {
@@ -18,17 +23,21 @@ export function Preloader() {
       // Remove preloader and restore scrolling after animation completes
       setTimeout(() => {
         setIsLoading(false);
-        document.body.style.overflow = 'unset';
+        if (typeof document !== 'undefined') {
+          document.body.style.overflow = 'unset';
+        }
       }, 1000); // Match the animation duration
     }, 2000);
 
     return () => {
       clearTimeout(timer);
-      document.body.style.overflow = 'unset';
+      if (typeof document !== 'undefined') {
+        document.body.style.overflow = 'unset';
+      }
     };
   }, []);
 
-  if (!isLoading) return null;
+  if (!isMounted || !isLoading) return null;
 
   return (
     <>
