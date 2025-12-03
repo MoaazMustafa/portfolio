@@ -57,7 +57,7 @@ export function Navbar() {
       >
         <GlassSurface
           borderRadius={50}
-          backgroundOpacity={0.6}
+          backgroundOpacity={0.1}
           saturation={1}
           borderWidth={0.07}
           brightness={50}
