@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 import { pageMetadata } from '@/lib/metadata';
 
-import ComingSoon from '../components/sections/coming-soon';
+import { Hero } from '../components';
 
 export const metadata: Metadata = pageMetadata.home;
 
@@ -10,5 +10,5 @@ export const metadata: Metadata = pageMetadata.home;
 export const revalidate = 3600; // Revalidate every hour
 
 export default function Home() {
-  return <ComingSoon />;
+  return <Hero />;
 }
