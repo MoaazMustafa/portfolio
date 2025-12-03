@@ -47,12 +47,31 @@ const useDarkMode = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDark(mediaQuery.matches);
+    // Check for dark class on html element (next-themes uses this)
+    const checkDarkMode = () => {
+      const htmlElement = document.documentElement;
+      setIsDark(htmlElement.classList.contains('dark'));
+    };
 
-    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches);
+    // Initial check
+    checkDarkMode();
+
+    // Watch for class changes on html element
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    // Also listen to system preference changes as fallback
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = () => checkDarkMode();
     mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
+
+    return () => {
+      observer.disconnect();
+      mediaQuery.removeEventListener('change', handler);
+    };
   }, []);
 
   return isDark;
