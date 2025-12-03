@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button';
 import TextType from '@/components/ui/text-type';
 import VariableProximity from '@/components/ui/variable-proximity';
 
+import GlassSurface from '../ui/glass-surface';
+
 const roles = [
   'Software Engineer',
   'Frontend Engineer',
@@ -26,15 +28,15 @@ export function Hero() {
   //   };
   const containerRef = useRef(null);
   return (
-    <section className="relative min-h-screen overflow-hidden">
+    <section className="relative min-h-screen">
       <div className="container mx-auto mt-12 max-w-6xl px-4 py-12 sm:py-16 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Right Side - Image with Orb Background - Shows first on mobile */}
-          <div className="relative flex items-center justify-center lg:order-2 lg:justify-end">
+          <div className="relative flex items-center justify-center overflow-visible lg:order-2 lg:justify-end">
             <div className="relative h-[400px] w-[400px] sm:h-[500px] sm:w-[500px] lg:h-[600px] lg:w-[600px]">
               {/* Orb Background - Sibling */}
               <div className="absolute inset-0 z-0">
-                <Orb hue={75} hoverIntensity={2} rotateOnHover={true} />
+                <Orb hue={75} hoverIntensity={0.6} rotateOnHover={true} />
               </div>
 
               {/* Profile Image Container - Sibling with pointer-events-none */}
@@ -64,7 +66,7 @@ export function Hero() {
               style={{ position: 'relative' }}
             >
               <p className="text-primary text-lg font-medium sm:text-xl">
-                Hello, I&apos;m
+                Assalamualaikum, I&apos;m
               </p>
               <VariableProximity
                 label="MOAAZ MUSTAFA"
@@ -115,9 +117,24 @@ export function Hero() {
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button size="lg" variant="outline">
+                <GlassSurface
+                  borderRadius={5}
+                  backgroundOpacity={0.1}
+                  saturation={1}
+                  borderWidth={0.07}
+                  brightness={50}
+                  blur={11}
+                  displace={0.5}
+                  distortionScale={-180}
+                  redOffset={0}
+                  greenOffset={0}
+                  blueOffset={0}
+                  opacity={0.8}
+                  mixBlendMode="screen"
+                  className="text-foreground hover:text-primary !h-full !w-full !rounded-md px-4 py-2 text-center text-lg font-medium transition-colors"
+                >
                   Get In Touch
-                </Button>
+                </GlassSurface>
               </Link>
             </div>
 

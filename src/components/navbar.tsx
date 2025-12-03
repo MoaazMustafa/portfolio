@@ -71,25 +71,25 @@ export function Navbar() {
           mixBlendMode="screen"
           className="!w-full"
         >
-          <div className="flex h-14 w-full items-center justify-between px-4 sm:h-16 sm:px-6 lg:px-8">
+          <div className="flex h-10 w-full items-center justify-between px-4 sm:h-12 sm:px-6 lg:px-8">
             {/* Logo */}
             <Link
               href="/"
-              className="group relative flex items-center gap-1 sm:gap-2"
+              className="group relative flex items-center"
               aria-label="Home"
             >
               <div className="relative">
                 <span className="font-orbitron text-foreground group-hover:text-primary text-lg font-black tracking-tight transition-all duration-300 sm:text-2xl">
-                  MOAAZ
+                  M
                 </span>
                 <div className="from-primary to-primary/50 absolute -bottom-1 left-0 h-0.5 w-0 bg-linear-to-r transition-all duration-300 group-hover:w-full" />
               </div>
-              {/* <div className="relative">
+              <div className="relative">
                 <span className="font-orbitron text-primary group-hover:text-foreground text-lg font-black tracking-tight transition-all duration-300 sm:text-2xl">
-                  MUSTAFA
+                  M
                 </span>
                 <div className="bg-primary/20 absolute -inset-1 -z-10 rounded opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-100" />
-              </div> */}
+              </div>
             </Link>
 
             {/* Desktop Navigation */}

@@ -1,4 +1,5 @@
 // Theme Components
+export { Preloader } from './preloader';
 export { ThemeProvider } from './theme-provider';
 export { ThemeToggle } from './theme-toggle';
 

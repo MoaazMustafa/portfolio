@@ -4,6 +4,7 @@ import NextTopLoader from 'nextjs-toploader';
 
 import { ThemeProvider } from '@/components';
 import { Navbar } from '@/components/navbar';
+import { Preloader } from '@/components/preloader';
 import ClickSpark from '@/components/ui/Spark';
 import { defaultMetadata } from '@/lib/metadata';
 
@@ -60,6 +61,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
+          <Preloader />
           <ClickSpark
             sparkColor="#ACEC00"
             sparkSize={10}
