@@ -136,6 +136,13 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Prevent flash of content before preloader */
+  body:not(.preloader-done) #main-content,
+  body:not(.preloader-done) nav:not([role='presentation']),
+  body:not(.preloader-done) footer {
+    opacity: 0;
+    pointer-events: none;
+  }
   yyy html {
     scroll-behavior: smooth;
   }

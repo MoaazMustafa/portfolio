@@ -7,11 +7,8 @@ import { cn } from '@/lib/utils';
 export function Preloader() {
   const [isLoading, setIsLoading] = useState(true);
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
-
     // Prevent scrolling during loading
     if (typeof document !== 'undefined') {
       document.body.style.overflow = 'hidden';
@@ -27,9 +24,10 @@ export function Preloader() {
           setIsLoading(false);
           if (typeof document !== 'undefined') {
             document.body.style.overflow = 'unset';
+            document.body.classList.add('preloader-done');
           }
         }, 1000); // Match the animation duration
-      }, 1500); // Small delay after load
+      }, 300); // Small delay after load
     };
 
     if (typeof window !== 'undefined') {
@@ -52,7 +50,7 @@ export function Preloader() {
     };
   }, []);
 
-  if (!isMounted || !isLoading) return null;
+  if (!isLoading) return null;
 
   return (
     <>
