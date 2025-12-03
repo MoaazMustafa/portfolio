@@ -160,7 +160,6 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     xChannel,
     yChannel,
     mixBlendMode,
-    updateDisplacementMap,
   ]);
 
   useEffect(() => {
@@ -189,15 +188,15 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     return () => {
       resizeObserver.disconnect();
     };
-  }, [updateDisplacementMap]);
+  }, []);
 
   useEffect(() => {
     setTimeout(updateDisplacementMap, 0);
-  }, [width, height, updateDisplacementMap]);
+  }, [width, height]);
 
   const supportsSVGFilters = () => {
     if (typeof window === 'undefined' || typeof document === 'undefined') {
-      return false;
+      return true; // Assume support during SSR to enable the effect
     }
 
     const isWebkit =
@@ -401,7 +400,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
         </defs>
       </svg>
 
-      <div className="relative z-10 flex h-full w-full items-center justify-center rounded-[inherit]">
+      <div className="relative z-10 flex h-full w-full items-center justify-center rounded-[inherit] p-2">
         {children}
       </div>
     </div>
