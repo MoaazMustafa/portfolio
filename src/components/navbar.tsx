@@ -75,7 +75,7 @@ export function Navbar() {
             {/* Logo */}
             <Link
               href="/"
-              className="group relative flex items-center"
+              className="group relative ml-4 flex items-center"
               aria-label="Home"
             >
               <div className="relative">

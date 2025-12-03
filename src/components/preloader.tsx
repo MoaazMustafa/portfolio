@@ -17,20 +17,35 @@ export function Preloader() {
       document.body.style.overflow = 'hidden';
     }
 
-    // Simulate loading time (2 seconds)
-    const timer = setTimeout(() => {
-      setIsAnimatingOut(true);
-      // Remove preloader and restore scrolling after animation completes
+    // Wait for the page to fully load
+    const handleLoad = () => {
+      // Add a small delay to ensure everything is rendered
       setTimeout(() => {
-        setIsLoading(false);
-        if (typeof document !== 'undefined') {
-          document.body.style.overflow = 'unset';
-        }
-      }, 1000); // Match the animation duration
-    }, 2000);
+        setIsAnimatingOut(true);
+        // Remove preloader and restore scrolling after animation completes
+        setTimeout(() => {
+          setIsLoading(false);
+          if (typeof document !== 'undefined') {
+            document.body.style.overflow = 'unset';
+          }
+        }, 1000); // Match the animation duration
+      }, 1500); // Small delay after load
+    };
+
+    if (typeof window !== 'undefined') {
+      if (document.readyState === 'complete') {
+        // Page already loaded
+        handleLoad();
+      } else {
+        // Wait for load event
+        window.addEventListener('load', handleLoad);
+      }
+    }
 
     return () => {
-      clearTimeout(timer);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('load', handleLoad);
+      }
       if (typeof document !== 'undefined') {
         document.body.style.overflow = 'unset';
       }
@@ -44,37 +59,24 @@ export function Preloader() {
       {/* Preloader Overlay */}
       <div
         className={cn(
-          'bg-background fixed inset-0 z-100 flex items-center justify-center transition-transform duration-1000',
-          isAnimatingOut && '-translate-y-full',
+          'bg-background fixed inset-0 z-100 flex items-center justify-center transition-opacity duration-1000',
+          isAnimatingOut && 'opacity-0',
         )}
-        style={{
-          transitionTimingFunction: isAnimatingOut
-            ? 'cubic-bezier(0.33, 1, 0.68, 1)'
-            : 'ease-in-out',
-        }}
       >
-        {/* Logo that will animate to navbar */}
+        {/* Logo that will scale up to fill screen */}
         <div
           className={cn(
             'font-orbitron flex items-center text-5xl font-black tracking-tight transition-all duration-1000 sm:text-6xl lg:text-7xl',
+            isAnimatingOut && 'scale-[20] opacity-0',
           )}
+          style={{
+            transitionTimingFunction: isAnimatingOut
+              ? 'cubic-bezier(0.33, 1, 0.68, 1)'
+              : 'ease-in-out',
+          }}
         >
-          <span
-            className={cn(
-              'text-foreground transition-colors duration-500',
-              isAnimatingOut && 'text-foreground',
-            )}
-          >
-            M
-          </span>
-          <span
-            className={cn(
-              'text-primary transition-colors duration-500',
-              isAnimatingOut && 'text-primary',
-            )}
-          >
-            M
-          </span>
+          <span className="text-foreground">M</span>
+          <span className="text-primary">M</span>
         </div>
 
         {/* Optional: Loading indicator dots */}
@@ -89,16 +91,6 @@ export function Preloader() {
           <div className="bg-primary h-2 w-2 animate-bounce rounded-full" />
         </div>
       </div>
-
-      {/* Page Content Wrapper - Animates up with preloader */}
-      <style jsx global>{`
-        #main-content,
-        nav,
-        footer {
-          transform: ${isAnimatingOut ? 'translateY(0)' : 'translateY(100vh)'};
-          transition: transform 1000ms cubic-bezier(0.33, 1, 0.68, 1);
-        }
-      `}</style>
     </>
   );
 }

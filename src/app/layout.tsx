@@ -61,6 +61,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
+          {/* <DisableDevTools /> */}
           <Preloader />
           <ClickSpark
             sparkColor="#ACEC00"

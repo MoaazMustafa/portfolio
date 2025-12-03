@@ -2,6 +2,7 @@
 export { Preloader } from './preloader';
 export { ThemeProvider } from './theme-provider';
 export { ThemeToggle } from './theme-toggle';
+export { DisableDevTools } from './disable-devtools';
 
 // Navigation
 export { Navbar } from './navbar';
