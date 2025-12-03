@@ -11,7 +11,7 @@ export function Preloader() {
 
   useEffect(() => {
     setIsMounted(true);
-    
+
     // Prevent scrolling during loading
     if (typeof document !== 'undefined') {
       document.body.style.overflow = 'hidden';
