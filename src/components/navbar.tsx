@@ -24,23 +24,23 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const currentScrollY = window.scrollY;
 
-      // Hide on scroll down, show on scroll up
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setIsVisible(false);
-      } else {
-        setIsVisible(true);
-      }
+  //     // Hide on scroll down, show on scroll up
+  //     if (currentScrollY > lastScrollY && currentScrollY > 100) {
+  //       setIsVisible(false);
+  //     } else {
+  //       setIsVisible(true);
+  //     }
 
-      setLastScrollY(currentScrollY);
-    };
+  //     setLastScrollY(currentScrollY);
+  //   };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  //   window.addEventListener('scroll', handleScroll, { passive: true });
+  //   return () => window.removeEventListener('scroll', handleScroll);
+  // }, [lastScrollY]);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -57,8 +57,8 @@ export function Navbar() {
       >
         <GlassSurface
           borderRadius={50}
-          backgroundOpacity={0.1}
-          saturation={1}
+          backgroundOpacity={0.7}
+          saturation={0.7}
           borderWidth={0.07}
           brightness={50}
           blur={11}

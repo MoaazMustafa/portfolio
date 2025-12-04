@@ -4,6 +4,11 @@ import { useEffect } from 'react';
 
 export function DisableDevTools() {
   useEffect(() => {
+    // Only enable devtools-disabling behavior in production
+    if (process.env.NODE_ENV !== 'production') {
+      return;
+    }
+
     // Disable right-click
     const handleContextMenu = (e: MouseEvent) => {
       e.preventDefault();
