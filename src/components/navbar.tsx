@@ -16,11 +16,11 @@ const navItems = [
   { href: '/projects', label: 'Projects' },
   { href: '/experience', label: 'Experience' },
   { href: '/contact', label: 'Contact' },
+  { href: '/gallery', label: 'Gallery' },
 ];
 
 export function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
@@ -103,14 +103,11 @@ export function Navbar() {
                     className={cn(
                       'relative px-4 py-2 text-sm font-medium transition-colors duration-200',
                       isActive
-                        ? 'text-primary'
-                        : 'text-muted-foreground hover:text-foreground',
+                        ? 'text-primary from-primary/20 to-primary/5 ring-primary/20 hover:ring-primary/40 relative rounded-xl bg-linear-to-br ring-1 transition-all duration-300'
+                        : 'text-foreground hover:text-primary',
                     )}
                   >
                     {item.label}
-                    {isActive && (
-                      <span className="bg-primary absolute bottom-0 left-1/2 h-0.5 w-1/2 -translate-x-1/2 rounded-full" />
-                    )}
                   </Link>
                 );
               })}

@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRight, Github, Linkedin, Mail, Twitter } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
@@ -10,7 +10,9 @@ import { Button } from '@/components/ui/button';
 import TextType from '@/components/ui/text-type';
 import VariableProximity from '@/components/ui/variable-proximity';
 
+import { BackgroundBeams } from '../ui/bg-beams';
 import GlassSurface from '../ui/glass-surface';
+import { TextGenerateEffect } from '../ui/text-generate-effect';
 
 const roles = [
   'Software Engineer',
@@ -43,7 +45,7 @@ export function Hero() {
               <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
                 <div className="shadow-primary/20 relative h-64 w-64 overflow-hidden rounded-full shadow-2xl sm:h-80 sm:w-80 lg:h-87 lg:w-87">
                   <Image
-                    src="/31a71a762a1fa2f82f95cb795987fc41.jpeg"
+                    src="/img/31a71a762a1fa2f82f95cb795987fc41.jpeg"
                     alt="Moaaz Mustafa"
                     fill
                     className="object-cover"
@@ -98,12 +100,14 @@ export function Hero() {
             </div>
 
             {/* Short Bio */}
-            <p className="text-muted-foreground mx-auto max-w-xl text-base leading-relaxed sm:text-lg lg:mx-0">
-              Passionate about crafting elegant digital experiences and turning
+            <TextGenerateEffect
+              words="Passionate about crafting elegant digital experiences and turning
               ideas into reality through code. I specialize in building modern,
               scalable web applications with a focus on user experience and
-              clean architecture.
-            </p>
+              clean architecture."
+              className="text-muted-foreground mx-auto max-w-xl text-base leading-relaxed font-extralight sm:text-lg lg:mx-0"
+              duration={0.5}
+            />
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
@@ -139,7 +143,7 @@ export function Hero() {
             </div>
 
             {/* Social Links */}
-            <div className="flex items-center justify-center gap-4 lg:justify-start">
+            {/* <div className="flex items-center justify-center gap-4 lg:justify-start">
               <a
                 href="https://github.com/MoaazMustafa"
                 target="_blank"
@@ -174,13 +178,14 @@ export function Hero() {
               >
                 <Mail className="h-6 w-6" />
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
 
       {/* Bottom gradient fade */}
       <div className="from-background to-background/0 pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-linear-to-t" />
+      <BackgroundBeams />
     </section>
   );
 }

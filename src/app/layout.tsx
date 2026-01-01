@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Orbitron } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 
-import { DisableDevTools, ThemeProvider } from '@/components';
+import { DisableDevTools, Footer, ThemeProvider } from '@/components';
 import { Navbar } from '@/components/navbar';
 import { Preloader } from '@/components/preloader';
 import ClickSpark from '@/components/ui/Spark';
@@ -64,7 +64,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <DisableDevTools />
           <Preloader />
           <ClickSpark
-            sparkColor="#ACEC00"
+            sparkColor="#acec00"
             sparkSize={10}
             sparkRadius={15}
             sparkCount={8}
@@ -74,10 +74,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <main role="main" id="main-content">
               {children}
             </main>
-
-            <footer role="contentinfo" data-footer>
-              {/* Footer component will be added here */}
-            </footer>
+            <Footer />
           </ClickSpark>
         </ThemeProvider>
       </body>

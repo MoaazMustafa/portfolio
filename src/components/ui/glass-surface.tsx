@@ -80,7 +80,7 @@ const useDarkMode = () => {
 const GlassSurface: React.FC<GlassSurfaceProps> = ({
   children,
   width = 200,
-  height = 80,
+  height = 65,
   borderRadius = 20,
   borderWidth = 0.07,
   brightness = 50,
@@ -179,6 +179,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     xChannel,
     yChannel,
     mixBlendMode,
+    updateDisplacementMap,
   ]);
 
   useEffect(() => {
@@ -193,7 +194,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     return () => {
       resizeObserver.disconnect();
     };
-  }, []);
+  }, [updateDisplacementMap]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -207,7 +208,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     return () => {
       resizeObserver.disconnect();
     };
-  }, []);
+  }, [updateDisplacementMap]);
 
   useEffect(() => {
     setTimeout(updateDisplacementMap, 0);

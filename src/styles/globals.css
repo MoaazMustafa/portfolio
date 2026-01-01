@@ -53,6 +53,19 @@
   --color-primary-700: #7aa503;
   --color-primary-800: #688d01;
   --color-primary-900: #567500;
+  --animate-aurora: aurora 60s linear infinite;
+  @keyframes aurora {
+    from {
+      background-position:
+        50% 50%,
+        50% 50%;
+    }
+    to {
+      background-position:
+        350% 50%,
+        350% 50%;
+    }
+  }
 }
 
 :root {
