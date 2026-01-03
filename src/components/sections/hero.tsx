@@ -7,10 +7,10 @@ import { useRef } from 'react';
 
 import Orb from '@/components/orb';
 import { Button } from '@/components/ui/button';
+import { Spotlight } from '@/components/ui/spotlight';
 import TextType from '@/components/ui/text-type';
 import VariableProximity from '@/components/ui/variable-proximity';
 
-import { BackgroundBeams } from '../ui/bg-beams';
 import GlassSurface from '../ui/glass-surface';
 import { TextGenerateEffect } from '../ui/text-generate-effect';
 
@@ -30,7 +30,11 @@ export function Hero() {
   //   };
   const containerRef = useRef(null);
   return (
-    <section className="relative min-h-screen">
+    <section className="relative min-h-screen overflow-hidden">
+      <Spotlight
+        className="-top-40 left-0 md:-top-20 md:left-60"
+        fill="#acec00"
+      />
       <div className="container mx-auto mt-12 max-w-6xl px-4 py-12 sm:py-16 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Right Side - Image with Orb Background - Shows first on mobile */}
@@ -185,7 +189,6 @@ export function Hero() {
 
       {/* Bottom gradient fade */}
       <div className="from-background to-background/0 pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-linear-to-t" />
-      <BackgroundBeams />
     </section>
   );
 }

@@ -54,6 +54,7 @@
   --color-primary-800: #688d01;
   --color-primary-900: #567500;
   --animate-aurora: aurora 60s linear infinite;
+  --animate-spotlight: spotlight 2s ease 0.25s 1 forwards;
   @keyframes aurora {
     from {
       background-position:
@@ -64,6 +65,16 @@
       background-position:
         350% 50%,
         350% 50%;
+    }
+  }
+  @keyframes spotlight {
+    0% {
+      opacity: 0;
+      transform: translate(-72%, -62%) scale(0.5);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -40%) scale(1);
     }
   }
 }
