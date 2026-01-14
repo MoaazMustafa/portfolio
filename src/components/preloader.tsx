@@ -2,11 +2,39 @@
 
 import { useEffect, useState } from 'react';
 
+import VaporizeTextCycle, { Tag } from '@/components/ui/vapour-text-effect';
 import { cn } from '@/lib/utils';
 
-export function Preloader() {
+interface PreloaderProps {
+  children?: React.ReactNode;
+}
+
+export function Preloader({ children }: PreloaderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
+  const [fontSize, setFontSize] = useState('128px');
+
+  // Responsive font size to match: text-6xl sm:text-7xl lg:text-8xl xl:text-9xl
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const updateFontSize = () => {
+      const width = window.innerWidth;
+      if (width >= 1280) {
+        setFontSize('128px'); // xl: text-9xl = 8rem = 128px
+      } else if (width >= 1024) {
+        setFontSize('85px'); // lg: text-8xl = 6rem = 96px
+      } else if (width >= 640) {
+        setFontSize('64px'); // sm: text-7xl = 4.5rem = 72px
+      } else {
+        setFontSize('52px'); // base: text-6xl = 3.25rem = 52px
+      }
+    };
+
+    updateFontSize();
+    window.addEventListener('resize', updateFontSize);
+    return () => window.removeEventListener('resize', updateFontSize);
+  }, []);
 
   useEffect(() => {
     // Prevent scrolling during loading
@@ -14,81 +42,64 @@ export function Preloader() {
       document.body.style.overflow = 'hidden';
     }
 
-    // Wait for the page to fully load
-    const handleLoad = () => {
-      // Add a small delay to ensure everything is rendered
+    // Start fade out after vapor animation completes
+    const animationTimeout = setTimeout(() => {
+      setIsAnimatingOut(true);
+      // Remove preloader and restore scrolling after fade out completes
       setTimeout(() => {
-        setIsAnimatingOut(true);
-        // Remove preloader and restore scrolling after animation completes
-        setTimeout(() => {
-          setIsLoading(false);
-          if (typeof document !== 'undefined') {
-            document.body.style.overflow = 'unset';
-            document.body.classList.add('preloader-done');
-          }
-        }, 1000); // Match the animation duration
-      }, 300); // Small delay after load
-    };
-
-    if (typeof window !== 'undefined') {
-      if (document.readyState === 'complete') {
-        // Page already loaded
-        handleLoad();
-      } else {
-        // Wait for load event
-        window.addEventListener('load', handleLoad);
-      }
-    }
+        setIsLoading(false);
+        if (typeof document !== 'undefined') {
+          document.body.style.overflow = 'unset';
+          document.body.classList.add('preloader-done');
+        }
+      }, 1000); // Fade out duration
+    }, 2500); // Vapor animation duration (2s vaporize only)
 
     return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('load', handleLoad);
-      }
+      clearTimeout(animationTimeout);
       if (typeof document !== 'undefined') {
         document.body.style.overflow = 'unset';
       }
     };
   }, []);
 
-  if (!isLoading) return null;
-
   return (
     <>
       {/* Preloader Overlay */}
-      <div
-        className={cn(
-          'bg-background fixed inset-0 z-100 flex items-center justify-center transition-opacity duration-1000',
-          isAnimatingOut && 'opacity-0',
-        )}
-      >
-        {/* Logo that will scale up to fill screen */}
+      {isLoading && (
         <div
           className={cn(
-            'font-orbitron flex items-center text-5xl font-black tracking-tight transition-all duration-1000 sm:text-6xl lg:text-7xl',
-            isAnimatingOut && 'scale-[20] opacity-0',
-          )}
-          style={{
-            transitionTimingFunction: isAnimatingOut
-              ? 'cubic-bezier(0.33, 1, 0.68, 1)'
-              : 'ease-in-out',
-          }}
-        >
-          <span className="text-foreground">M</span>
-          <span className="text-primary">M</span>
-        </div>
-
-        {/* Optional: Loading indicator dots */}
-        <div
-          className={cn(
-            'absolute bottom-20 flex gap-2 transition-opacity duration-300',
+            'bg-background fixed inset-0 z-100 flex items-center justify-center transition-opacity duration-1000',
             isAnimatingOut && 'opacity-0',
           )}
         >
-          <div className="bg-primary h-2 w-2 animate-bounce rounded-full [animation-delay:-0.3s]" />
-          <div className="bg-primary h-2 w-2 animate-bounce rounded-full [animation-delay:-0.15s]" />
-          <div className="bg-primary h-2 w-2 animate-bounce rounded-full" />
+          {/* Vapor effect animation */}
+          <div className="h-[80px] w-full max-w-[1200px] px-4 sm:h-[100px] lg:h-[130px] xl:h-[170px]">
+            <VaporizeTextCycle
+              texts={['Moaaz Mustafa']}
+              font={{
+                fontFamily: 'Georgia, Times New Roman, serif',
+                fontSize: fontSize,
+                fontWeight: 300,
+              }}
+              color="primary"
+              spread={8}
+              density={8}
+              animation={{
+                vaporizeDuration: 2,
+                fadeInDuration: 0,
+                waitDuration: 0,
+              }}
+              direction="left-to-right"
+              alignment="center"
+              tag={Tag.H1}
+            />
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Render content only after preloader is done */}
+      {!isLoading && children}
     </>
   );
 }

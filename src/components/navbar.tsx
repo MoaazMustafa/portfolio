@@ -101,13 +101,29 @@ export function Navbar() {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      'relative px-4 py-2 text-sm font-medium transition-colors duration-200',
+                      'group relative overflow-hidden px-4 py-2 text-sm font-medium transition-colors duration-200',
                       isActive
                         ? 'text-primary from-primary/20 to-primary/5 ring-primary/20 hover:ring-primary/40 relative rounded-xl bg-linear-to-br ring-1 transition-all duration-300'
                         : 'text-foreground hover:text-primary',
                     )}
+                    onMouseMove={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const x = e.clientX - rect.left;
+                      const y = e.clientY - rect.top;
+                      e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+                      e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+                    }}
                   >
-                    {item.label}
+                    {/* Spotlight effect */}
+                    <span className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      <span
+                        className="absolute inset-0 rounded-xl"
+                        style={{
+                          background: `radial-gradient(200px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(172, 236, 0, 0.15), transparent 80%)`,
+                        }}
+                      />
+                    </span>
+                    <span className="relative z-10">{item.label}</span>
                   </Link>
                 );
               })}

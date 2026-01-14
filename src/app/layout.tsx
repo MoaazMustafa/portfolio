@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Orbitron } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 
-import { DisableDevTools, Footer, ThemeProvider } from '@/components';
+import { DisableDevTools, ThemeProvider } from '@/components';
 import { Navbar } from '@/components/navbar';
 import { Preloader } from '@/components/preloader';
 import ClickSpark from '@/components/ui/Spark';
@@ -62,20 +62,20 @@ export default function RootLayout({ children }: RootLayoutProps) {
           disableTransitionOnChange
         >
           <DisableDevTools />
-          <Preloader />
-          <ClickSpark
-            sparkColor="#acec00"
-            sparkSize={10}
-            sparkRadius={15}
-            sparkCount={8}
-            duration={400}
-          >
-            <Navbar />
-            <main role="main" id="main-content">
-              {children}
-            </main>
-            <Footer />
-          </ClickSpark>
+          <Preloader>
+            <ClickSpark
+              sparkColor="#acec00"
+              sparkSize={10}
+              sparkRadius={15}
+              sparkCount={8}
+              duration={400}
+            >
+              <Navbar />
+              <main role="main" id="main-content">
+                {children}
+              </main>
+            </ClickSpark>
+          </Preloader>
         </ThemeProvider>
       </body>
     </html>

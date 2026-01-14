@@ -351,3 +351,29 @@
   animation: none;
   mix-blend-mode: normal;
 }
+
+/* Custom cursor */
+* {
+  cursor: url('/cursor/arrowhead-dark.svg'), auto;
+}
+
+a,
+button,
+[role='button'],
+input[type='submit'],
+input[type='button'] {
+  cursor: url('/cursor/arrowhead-dark.svg'), pointer;
+}
+
+/* Light theme cursor - use primary color */
+:root:not(.dark) * {
+  cursor: url('/cursor/arrowhead.svg'), auto;
+}
+
+:root:not(.dark) a,
+:root:not(.dark) button,
+:root:not(.dark) [role='button'],
+:root:not(.dark) input[type='submit'],
+:root:not(.dark) input[type='button'] {
+  cursor: url('/cursor/arrowhead.svg'), pointer;
+}

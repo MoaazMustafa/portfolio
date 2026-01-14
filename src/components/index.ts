@@ -9,8 +9,10 @@ export { Navbar } from './navbar';
 export { Footer } from './sections/footer';
 
 // Sections
+export { About } from './sections/about';
 export { Hero } from './sections/hero';
 export { PageComingSoon } from './sections/page-coming-soon';
+export { ProjectShowcase } from './sections/project-showcase';
 
 // Effects
 export { default as Orb } from './orb';
