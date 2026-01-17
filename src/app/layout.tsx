@@ -1,8 +1,9 @@
+/* eslint-disable import/no-unresolved */
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Orbitron } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 
-import { DisableDevTools, ThemeProvider } from '@/components';
+import { DevToolsProvider, Footer, ThemeProvider } from '@/components';
 import { Navbar } from '@/components/navbar';
 import { Preloader } from '@/components/preloader';
 import ClickSpark from '@/components/ui/Spark';
@@ -61,21 +62,23 @@ export default function RootLayout({ children }: RootLayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
-          <DisableDevTools />
-          <Preloader>
-            <ClickSpark
-              sparkColor="#acec00"
-              sparkSize={10}
-              sparkRadius={15}
-              sparkCount={8}
-              duration={400}
-            >
-              <Navbar />
-              <main role="main" id="main-content">
-                {children}
-              </main>
-            </ClickSpark>
-          </Preloader>
+          <DevToolsProvider>
+            <Preloader>
+              <ClickSpark
+                sparkColor="#acec00"
+                sparkSize={10}
+                sparkRadius={15}
+                sparkCount={8}
+                duration={400}
+              >
+                <Navbar />
+                <main role="main" id="main-content">
+                  {children}
+                </main>
+                <Footer />
+              </ClickSpark>
+            </Preloader>
+          </DevToolsProvider>
         </ThemeProvider>
       </body>
     </html>

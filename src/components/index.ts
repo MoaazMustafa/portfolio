@@ -1,5 +1,5 @@
 // Theme Components
-export { DisableDevTools } from './disable-devtools';
+export { DevToolsProvider, DisableDevTools } from './disable-devtools';
 export { Preloader } from './preloader';
 export { ThemeProvider } from './theme-provider';
 export { ThemeToggle } from './theme-toggle';
