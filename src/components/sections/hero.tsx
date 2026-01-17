@@ -5,14 +5,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
 
+import GlassSurface from '../ui/glass-surface';
+import { TextGenerateEffect } from '../ui/text-generate-effect';
+
 import Orb from '@/components/orb';
 import { Button } from '@/components/ui/button';
 import { Spotlight } from '@/components/ui/spotlight';
 import TextType from '@/components/ui/text-type';
 import VariableProximity from '@/components/ui/variable-proximity';
-
-import GlassSurface from '../ui/glass-surface';
-import { TextGenerateEffect } from '../ui/text-generate-effect';
 
 const roles = [
   'Software Engineer',
@@ -49,7 +49,7 @@ export function Hero() {
               <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
                 <div className="shadow-primary/20 relative h-64 w-64 overflow-hidden rounded-full shadow-2xl sm:h-80 sm:w-80 lg:h-87 lg:w-87">
                   <Image
-                    src="/img/31a71a762a1fa2f82f95cb795987fc41.jpeg"
+                    src="/img/Moaaz Mustafa.jpeg"
                     alt="Moaaz Mustafa"
                     fill
                     className="object-cover"
