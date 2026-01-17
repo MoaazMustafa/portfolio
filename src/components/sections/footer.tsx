@@ -1,49 +1,42 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import {
   ArrowUpRight,
   Code2,
-  Coffee,
   Github,
-  Heart,
   Linkedin,
   Mail,
+  MapPin,
   Twitter,
+  Youtube,
 } from 'lucide-react';
 import Link from 'next/link';
-
-import { Dock, DockIcon } from '@/components/ui/dock';
-import { SparklesCore } from '@/components/ui/sparkles';
-import { cn } from '@/lib/utils';
 
 const socialLinks = [
   {
     name: 'GitHub',
     href: 'https://github.com/MoaazMustafa',
     icon: Github,
-    color: 'hover:text-[#333] dark:hover:text-white',
+  },
+  {
+    name: 'Twitter',
+    href: 'https://x.com/itx_moaaz',
+    icon: Twitter,
   },
   {
     name: 'LinkedIn',
     href: 'https://linkedin.com/in/moaazmustafa',
     icon: Linkedin,
-    color: 'hover:text-[#0A66C2]',
   },
   {
-    name: 'Twitter',
-    href: 'https://twitter.com/moaazmustafa',
-    icon: Twitter,
-    color: 'hover:text-[#1DA1F2]',
-  },
-  {
-    name: 'Email',
-    href: 'mailto:contact@moaazmustafa.com',
-    icon: Mail,
-    color: 'hover:text-primary',
+    name: 'YouTube',
+    href: 'https://youtube.com/@moaazmustafa',
+    icon: Youtube,
   },
 ];
 
-const quickLinks = [
+const navigationLinks = [
   { name: 'Home', href: '/' },
   { name: 'About', href: '/about' },
   { name: 'Experience', href: '/experience' },
@@ -54,104 +47,127 @@ const quickLinks = [
 const resourceLinks = [
   { name: 'Blog', href: '/blog' },
   { name: 'Uses', href: '/uses' },
-  { name: 'Resume', href: '/resume.pdf', external: true },
+  { name: 'Resume', href: '/Resume.pdf', external: true },
+];
+
+const moreLinks = [
+  { name: 'Privacy', href: '/privacy' },
+  { name: 'Terms', href: '/terms' },
 ];
 
 export function Footer() {
-  const currentYear = new Date().getFullYear();
-
   return (
-    <footer className="relative mt-auto overflow-hidden">
-      {/* Sparkles Background Effect */}
-      <div className="pointer-events-none absolute inset-0">
-        <SparklesCore
-          id="footer-sparkles"
-          background="transparent"
-          minSize={0.4}
-          maxSize={1}
-          particleDensity={50}
-          particleColor="#acec00"
-          className="h-full w-full"
-        />
-      </div>
+    <footer className="relative overflow-hidden px-4 py-8 sm:px-6 lg:px-8">
+      {/* Footer glow background */}
+      <motion.div
+        initial={{ scale: 1, opacity: 0.6 }}
+        animate={{
+          scale: [1, 1.1, 1],
+          opacity: [0.6, 0.8, 0.6],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+        className="bg-primary-600 absolute right-10 -bottom-20 hidden h-80 w-120 rounded-full blur-3xl dark:block"
+      />
+      <motion.div
+        initial={{ scale: 1, opacity: 0.6 }}
+        animate={{
+          scale: [1, 1.1, 1],
+          opacity: [0.6, 0.8, 0.6],
+        }}
+        transition={{
+          duration: 4,
+          delay: 0.5,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+        className="bg-primary-300 absolute -right-15 -bottom-20 hidden h-65 w-105 rounded-full blur-3xl dark:block"
+      />
+      <motion.div
+        initial={{ scale: 1, opacity: 0.6 }}
+        animate={{
+          scale: [1, 1.1, 1],
+          opacity: [0.6, 0.8, 0.6],
+        }}
+        transition={{
+          duration: 4,
+          delay: 1,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+        className="absolute -right-20 -bottom-25 hidden h-50 w-95 rounded-full bg-white blur-3xl dark:block"
+      />
 
-      {/* Decorative background elements */}
-      {/* <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="bg-primary/5 absolute -top-1/2 -left-1/4 h-96 w-96 rounded-full blur-3xl" />
-        <div className="bg-primary/5 absolute -right-1/4 -bottom-1/4 h-96 w-96 rounded-full blur-3xl" />
-      </div> */}
+      {/* Main Footer Card */}
+      <div className="mx-auto max-w-7xl">
+        <div className="bg-background/30 border-foreground/8 relative overflow-hidden rounded-3xl border p-8 backdrop-blur-sm sm:p-10 lg:p-12">
+          {/* Subtle gradient overlay */}
+          <div className="from-foreground/2 pointer-events-none absolute inset-0 bg-linear-to-br via-transparent to-transparent" />
 
-      {/* Top gradient border */}
-      <div className="via-primary/50 h-px w-full bg-linear-to-r from-transparent to-transparent" />
-
-      <div className="relative">
-        <div className="container mx-auto px-6 pt-9 pb-2 lg:pt-12 lg:pb-4">
-          {/* Main Footer Grid */}
-          <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
-            {/* Brand Section - Takes more space */}
-            <div className="lg:col-span-5">
+          <div className="relative grid gap-10 lg:grid-cols-12 lg:gap-8">
+            {/* Brand Section */}
+            <div className="lg:col-span-4">
               <div className="space-y-6">
                 {/* Logo */}
                 <div className="group flex items-center gap-3">
-                  <div className="from-primary/20 to-primary/5 ring-primary/20 group-hover:ring-primary/40 relative flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br ring-1 transition-all duration-300">
-                    <Code2 className="text-primary h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
-                    <div className="bg-primary/10 absolute inset-0 rounded-xl opacity-0 blur transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="bg-foreground/5 ring-foreground/10 group-hover:ring-foreground/20 relative flex h-10 w-10 items-center justify-center rounded-xl ring-1 transition-all duration-300">
+                    <Code2 className="text-foreground h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold tracking-tight">
-                      Maaz Mustafa
-                    </h3>
-                    <p className="text-muted-foreground text-sm">
-                      Full Stack Developer
-                    </p>
-                  </div>
+                  <span className="text-foreground text-xl font-bold tracking-tight">
+                    Maaz Mustafa
+                  </span>
                 </div>
 
-                {/* Description with Text Animation */}
-                <div className="max-w-sm">
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    Crafting exceptional digital experiences with modern
-                    technologies. Passionate about building products that make a
-                    difference.
-                  </p>
+                {/* Description */}
+                <p className="text-muted-foreground max-w-xs text-sm leading-relaxed">
+                  Full Stack Developer crafting exceptional digital experiences
+                  with modern technologies.
+                </p>
+
+                {/* Contact Email */}
+                <a
+                  href="mailto:contactwithmoaaz@gmail.com"
+                  className="group hover:text-primary-600 text-muted-foreground inline-flex items-center gap-2 text-sm transition-colors duration-200"
+                >
+                  <Mail className="h-4 w-4" />
+                  <span>contactwithmoaaz@gmail.com</span>
+                </a>
+
+                {/* Location */}
+                <div className="text-muted-foreground flex items-center gap-2 text-sm">
+                  <MapPin className="h-4 w-4" />
+                  <span>Pakistan</span>
                 </div>
 
-                {/* Social Links Dock */}
-                <div className="flex justify-start">
-                  <Dock>
-                    {socialLinks.map((social) => (
-                      <DockIcon key={social.name} href={social.href}>
-                        <social.icon
-                          className={cn(
-                            'h-full w-full p-2 text-zinc-700 transition-colors dark:text-zinc-300',
-                            social.color,
-                          )}
-                        />
-                      </DockIcon>
-                    ))}
-                  </Dock>
+                {/* Status Badge */}
+                <div className="bg-foreground/5 ring-foreground/10 text-muted-foreground inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs ring-1">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+                  </span>
+                  Available for work
                 </div>
               </div>
             </div>
 
             {/* Links Sections */}
-            <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-7">
+            <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:col-span-8">
               {/* Navigation */}
               <div className="space-y-4">
-                <h4 className="text-foreground text-base font-bold">
+                <h4 className="text-foreground text-sm font-semibold">
                   Navigation
                 </h4>
                 <ul className="space-y-3">
-                  {quickLinks.map((link) => (
+                  {navigationLinks.map((link) => (
                     <li key={link.name}>
                       <Link
                         href={link.href}
-                        className="group text-muted-foreground hover:text-foreground inline-flex items-center text-base transition-colors duration-200"
+                        className="hover:text-primary-600 text-muted-foreground text-sm transition-colors duration-200"
                       >
-                        <span className="relative">
-                          {link.name}
-                          <span className="bg-primary absolute -bottom-0.5 left-0 h-px w-0 transition-all duration-300 group-hover:w-full" />
-                        </span>
+                        {link.name}
                       </Link>
                     </li>
                   ))}
@@ -160,7 +176,7 @@ export function Footer() {
 
               {/* Resources */}
               <div className="space-y-4">
-                <h4 className="text-foreground text-base font-bold">
+                <h4 className="text-foreground text-sm font-semibold">
                   Resources
                 </h4>
                 <ul className="space-y-3">
@@ -171,23 +187,17 @@ export function Footer() {
                           href={link.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-base transition-colors duration-200"
+                          className="group hover:text-primary-600 text-muted-foreground inline-flex items-center gap-1 text-sm transition-colors duration-200"
                         >
-                          <span className="relative">
-                            {link.name}
-                            <span className="bg-primary absolute -bottom-0.5 left-0 h-px w-0 transition-all duration-300 group-hover:w-full" />
-                          </span>
-                          <ArrowUpRight className="h-3 w-3 opacity-0 transition-all duration-200 group-hover:opacity-100" />
+                          {link.name}
+                          <ArrowUpRight className="h-3 w-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                         </a>
                       ) : (
                         <Link
                           href={link.href}
-                          className="group text-muted-foreground hover:text-foreground inline-flex items-center text-sm transition-colors duration-200"
+                          className="hover:text-primary-600 text-muted-foreground text-sm transition-colors duration-200"
                         >
-                          <span className="relative">
-                            {link.name}
-                            <span className="bg-primary absolute -bottom-0.5 left-0 h-px w-0 transition-all duration-300 group-hover:w-full" />
-                          </span>
+                          {link.name}
                         </Link>
                       )}
                     </li>
@@ -195,64 +205,44 @@ export function Footer() {
                 </ul>
               </div>
 
-              {/* Get in Touch */}
-              <div className="col-span-2 flex flex-col items-center justify-center space-y-4 overflow-hidden rounded-4xl sm:col-span-1">
-                {/* <DitherShader
-                  src="/31a71a762a1fa2f82f95cb795987fc41.jpeg"
-                  gridSize={1}
-                  ditherMode="bayer"
-                  colorMode="duotone"
-                  //use colors that match the site theme black and white
-                  primaryColor={dark ? '#1a1a1a' : '#f0f0f0'}
-                  secondaryColor="#acec00"
-                  threshold={0.45}
-                  className="h-72 w-[400px] sm:h-80 sm:w-[500px]"
-                /> */}
-                {/* <h4 className="text-foreground text-sm font-semibold">
-                  Get in Touch
-                </h4>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  Have a project in mind? Let&apos;s create something amazing
-                  together.
-                </p>
-                <Link
-                  href="/contact"
-                  className="group bg-primary text-primary-foreground shadow-primary/20 hover:bg-primary/90 hover:shadow-primary/30 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium shadow-lg transition-all duration-300 hover:shadow-xl"
-                >
-                  Say Hello
-                </Link> */}
+              {/* More */}
+              <div className="space-y-4">
+                <h4 className="text-foreground text-sm font-semibold">More</h4>
+                <ul className="space-y-3">
+                  {moreLinks.map((link) => (
+                    <li key={link.name}>
+                      <Link
+                        href={link.href}
+                        className="hover:text-primary-600 text-muted-foreground text-sm transition-colors duration-200"
+                      >
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-          </div>
 
-          {/* Divider */}
-          <div className="via-border/50 my-10 h-px bg-linear-to-r from-transparent to-transparent" />
-
-          {/* Bottom Section */}
-          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            {/* Copyright */}
-            <div className="flex flex-col items-center gap-1 text-center sm:flex-row sm:gap-2 sm:text-left">
-              <p className="text-muted-foreground text-sm">
-                © {currentYear} Maaz Mustafa
-              </p>
-              <span className="text-muted-foreground/50 hidden sm:inline">
-                •
-              </span>
-              <p className="text-muted-foreground flex items-center gap-1.5 text-sm">
-                Built with
-                <Heart className="h-3.5 w-3.5 animate-pulse fill-red-500 text-red-500" />
-                and
-                <Coffee className="h-3.5 w-3.5 text-amber-600" />
-              </p>
-            </div>
-
-            {/* Tech Stack Badge */}
-            <div className="bg-muted/50 text-muted-foreground ring-border/50 flex items-center gap-2 rounded-full px-4 py-2 text-xs ring-1">
-              <span className="font-medium">Next.js</span>
-              <span className="text-border">•</span>
-              <span className="font-medium">TypeScript</span>
-              <span className="text-border">•</span>
-              <span className="font-medium">Tailwind</span>
+              {/* Social */}
+              <div className="space-y-4">
+                <h4 className="text-foreground text-sm font-semibold">
+                  Social
+                </h4>
+                <ul className="space-y-3">
+                  {socialLinks.map((social) => (
+                    <li key={social.name}>
+                      <a
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group hover:text-primary-600 text-muted-foreground inline-flex items-center gap-2 text-sm transition-colors duration-200"
+                      >
+                        <social.icon className="h-4 w-4" />
+                        {social.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
