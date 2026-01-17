@@ -377,3 +377,7 @@ input[type='button'] {
 :root:not(.dark) input[type='button'] {
   cursor: url('/cursor/arrowhead.svg'), pointer;
 }
+*::selection {
+  background-color: var(--color-primary-600);
+  color: var(--color-primary-foreground);
+}

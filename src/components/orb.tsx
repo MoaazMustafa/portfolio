@@ -207,9 +207,10 @@ export default function Orb({
 
     const mesh = new Mesh(gl, { geometry, program });
 
+    // Cap DPR for performance (max 2)
     function resize() {
       if (!container) return;
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const width = container.clientWidth;
       const height = container.clientHeight;
       renderer.setSize(width * dpr, height * dpr);
@@ -225,9 +226,18 @@ export default function Orb({
     resize();
 
     let targetHover = 0;
-    let lastTime = 0;
     let currentRot = 0;
     const rotationSpeed = 0.3;
+
+    // Visibility tracking for performance
+    let isVisible = true;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        isVisible = entries[0]?.isIntersecting ?? true;
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(container);
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = container.getBoundingClientRect();
@@ -255,12 +265,28 @@ export default function Orb({
     container.addEventListener('mousemove', handleMouseMove);
     container.addEventListener('mouseleave', handleMouseLeave);
 
+    // Throttle to ~30 FPS for better performance
+    const targetFPS = 30;
+    const frameInterval = 1000 / targetFPS;
+    let lastFrameTime = 0;
+    let animationTime = 0;
+
     let rafId: number;
     const update = (t: number) => {
       rafId = requestAnimationFrame(update);
-      const dt = (t - lastTime) * 0.001;
-      lastTime = t;
-      program.uniforms.iTime.value = t * 0.001;
+
+      // Skip render if not visible
+      if (!isVisible) return;
+
+      // Throttle FPS
+      const elapsed = t - lastFrameTime;
+      if (elapsed < frameInterval) return;
+
+      lastFrameTime = t - (elapsed % frameInterval);
+      const dt = elapsed * 0.001;
+      animationTime += dt;
+
+      program.uniforms.iTime.value = animationTime;
       program.uniforms.hue.value = hue;
       program.uniforms.hoverIntensity.value = hoverIntensity;
 
@@ -279,6 +305,7 @@ export default function Orb({
 
     return () => {
       cancelAnimationFrame(rafId);
+      observer.disconnect();
       window.removeEventListener('resize', resize);
       container.removeEventListener('mousemove', handleMouseMove);
       container.removeEventListener('mouseleave', handleMouseLeave);

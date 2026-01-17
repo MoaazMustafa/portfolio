@@ -12,6 +12,7 @@ interface PreloaderProps {
 export function Preloader({ children }: PreloaderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
   const [fontSize, setFontSize] = useState('128px');
 
   // Responsive font size to match: text-6xl sm:text-7xl lg:text-8xl xl:text-9xl
@@ -45,15 +46,16 @@ export function Preloader({ children }: PreloaderProps) {
     // Start fade out after vapor animation completes
     const animationTimeout = setTimeout(() => {
       setIsAnimatingOut(true);
-      // Remove preloader and restore scrolling after fade out completes
+      // Hide preloader completely after fade out
       setTimeout(() => {
+        setIsHidden(true);
         setIsLoading(false);
         if (typeof document !== 'undefined') {
           document.body.style.overflow = 'unset';
           document.body.classList.add('preloader-done');
         }
-      }, 1000); // Fade out duration
-    }, 2500); // Vapor animation duration (2s vaporize only)
+      }, 800); // Slightly shorter than animation for smoother feel
+    }, 2500); // Vapor animation duration
 
     return () => {
       clearTimeout(animationTimeout);
@@ -65,41 +67,49 @@ export function Preloader({ children }: PreloaderProps) {
 
   return (
     <>
-      {/* Preloader Overlay */}
-      {isLoading && (
-        <div
-          className={cn(
-            'bg-background fixed inset-0 z-100 flex items-center justify-center transition-opacity duration-1000',
-            isAnimatingOut && 'opacity-0',
-          )}
-        >
-          {/* Vapor effect animation */}
-          <div className="h-[80px] w-full max-w-[1200px] px-4 sm:h-[100px] lg:h-[130px] xl:h-[170px]">
-            <VaporizeTextCycle
-              texts={['Moaaz Mustafa']}
-              font={{
-                fontFamily: 'Georgia, Times New Roman, serif',
-                fontSize: fontSize,
-                fontWeight: 300,
-              }}
-              color="primary"
-              spread={8}
-              density={8}
-              animation={{
-                vaporizeDuration: 2,
-                fadeInDuration: 0,
-                waitDuration: 0,
-              }}
-              direction="left-to-right"
-              alignment="center"
-              tag={Tag.H1}
-            />
-          </div>
+      {/* Preloader Overlay - uses visibility and opacity for smooth transition */}
+      <div
+        className={cn(
+          'bg-background fixed inset-0 z-100 flex items-center justify-center will-change-[opacity,visibility]',
+          'transition-[opacity,visibility] duration-700 ease-out',
+          isAnimatingOut && 'pointer-events-none opacity-0',
+          isHidden && 'invisible',
+        )}
+        aria-hidden={isHidden}
+      >
+        {/* Vapor effect animation */}
+        <div className="h-[80px] w-full max-w-[1200px] px-4 sm:h-[100px] lg:h-[130px] xl:h-[170px]">
+          <VaporizeTextCycle
+            texts={['Moaaz Mustafa']}
+            font={{
+              fontFamily: 'Georgia, Times New Roman, serif',
+              fontSize: fontSize,
+              fontWeight: 300,
+            }}
+            color="primary"
+            spread={8}
+            density={8}
+            animation={{
+              vaporizeDuration: 2,
+              fadeInDuration: 0,
+              waitDuration: 0,
+            }}
+            direction="left-to-right"
+            alignment="center"
+            tag={Tag.H1}
+          />
         </div>
-      )}
+      </div>
 
-      {/* Render content only after preloader is done */}
-      {!isLoading && children}
+      {/* Content - always rendered but with fade-in effect */}
+      <div
+        className={cn(
+          'transition-opacity duration-500 ease-out',
+          isLoading ? 'opacity-0' : 'opacity-100',
+        )}
+      >
+        {children}
+      </div>
     </>
   );
 }
