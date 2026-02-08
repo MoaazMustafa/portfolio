@@ -44,7 +44,10 @@
   --radius-xl: calc(var(--radius) + 4px);
   /* Theme-aware colors (can be overridden by JS) */
   --color-theme-primary: var(--color-theme-primary, #acec00);
-  --color-theme-primary-rgb: var(--color-theme-primary-rgb, rgba(172, 236, 0, 1));
+  --color-theme-primary-rgb: var(
+    --color-theme-primary-rgb,
+    rgba(172, 236, 0, 1)
+  );
   --color-theme-orb-hue: var(--color-theme-orb-hue, 75);
   --color-theme-primary-50: var(--color-theme-primary-50, #cdf06a);
   --color-theme-primary-100: var(--color-theme-primary-100, #c6f051);
@@ -56,7 +59,7 @@
   --color-theme-primary-700: var(--color-theme-primary-700, #7aa503);
   --color-theme-primary-800: var(--color-theme-primary-800, #688d01);
   --color-theme-primary-900: var(--color-theme-primary-900, #567500);
-  
+
   /* Use theme color for primary */
   --color-primary: var(--color-theme-primary-500);
   --color-primary-50: var(--color-theme-primary-50);
@@ -209,10 +212,12 @@
       rgba(255, 255, 255, 0.08) 100%
     );
     box-shadow:
-      0 4px 32px 0 color-mix(in srgb, var(--color-theme-primary) 8%, transparent),
+      0 4px 32px 0
+        color-mix(in srgb, var(--color-theme-primary) 8%, transparent),
       0 1.5px 6px 0 rgba(0, 0, 0, 0.04);
     border-radius: 1.5rem;
-    border: 1px solid color-mix(in srgb, var(--color-theme-primary) 18%, transparent);
+    border: 1px solid
+      color-mix(in srgb, var(--color-theme-primary) 18%, transparent);
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
   }

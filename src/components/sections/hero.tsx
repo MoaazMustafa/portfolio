@@ -31,7 +31,7 @@ export function Hero() {
   //   };
   const containerRef = useRef(null);
   const { currentColors } = useColorTheme();
-  
+
   return (
     <section className="relative min-h-screen overflow-hidden">
       <Spotlight
@@ -45,7 +45,11 @@ export function Hero() {
             <div className="relative h-[400px] w-[400px] sm:h-[500px] sm:w-[500px] lg:h-[600px] lg:w-[600px]">
               {/* Orb Background - Sibling */}
               <div className="absolute inset-0 z-0">
-                <Orb hue={currentColors.orbHue} hoverIntensity={0.6} rotateOnHover={true} />
+                <Orb
+                  hue={currentColors.orbHue}
+                  hoverIntensity={0.6}
+                  rotateOnHover={true}
+                />
               </div>
 
               {/* Profile Image Container - Sibling with pointer-events-none */}

@@ -1,7 +1,12 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Orbitron } from 'next/font/google';
 
-import { DevToolsProvider, Footer, ThemeProvider, ClientLayoutProvider } from '@/components';
+import {
+  ClientLayoutProvider,
+  DevToolsProvider,
+  Footer,
+  ThemeProvider,
+} from '@/components';
 import { Navbar } from '@/components/navbar';
 import { Preloader } from '@/components/preloader';
 import { defaultMetadata } from '@/lib/metadata';
