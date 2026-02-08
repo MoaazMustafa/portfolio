@@ -1,12 +1,9 @@
-/* eslint-disable import/no-unresolved */
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Orbitron } from 'next/font/google';
-import NextTopLoader from 'nextjs-toploader';
 
-import { DevToolsProvider, Footer, ThemeProvider } from '@/components';
+import { DevToolsProvider, Footer, ThemeProvider, ClientLayoutProvider } from '@/components';
 import { Navbar } from '@/components/navbar';
 import { Preloader } from '@/components/preloader';
-import ClickSpark from '@/components/ui/Spark';
 import { defaultMetadata } from '@/lib/metadata';
 
 import '@/styles/globals.css';
@@ -49,13 +46,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} font-sans antialiased`}
       >
-        <NextTopLoader
-          color="#acec00"
-          shadow="0 0 10px #acec00, 0 0 5px #acec00"
-          height={4}
-          showSpinner
-          showForHashAnchor
-        />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -64,19 +54,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
         >
           <DevToolsProvider>
             <Preloader>
-              <ClickSpark
-                sparkColor="#acec00"
-                sparkSize={10}
-                sparkRadius={15}
-                sparkCount={8}
-                duration={400}
-              >
+              <ClientLayoutProvider>
                 <Navbar />
                 <main role="main" id="main-content">
                   {children}
                 </main>
                 <Footer />
-              </ClickSpark>
+              </ClientLayoutProvider>
             </Preloader>
           </DevToolsProvider>
         </ThemeProvider>

@@ -42,17 +42,33 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --color-primary: #acec00;
-  --color-primary-50: #cdf06a;
-  --color-primary-100: #c6f051;
-  --color-primary-200: #bff038;
-  --color-primary-300: #b9f11d;
-  --color-primary-400: #aee80c;
-  --color-primary-500: #acec00;
-  --color-primary-600: #8bbc06;
-  --color-primary-700: #7aa503;
-  --color-primary-800: #688d01;
-  --color-primary-900: #567500;
+  /* Theme-aware colors (can be overridden by JS) */
+  --color-theme-primary: var(--color-theme-primary, #acec00);
+  --color-theme-primary-rgb: var(--color-theme-primary-rgb, rgba(172, 236, 0, 1));
+  --color-theme-orb-hue: var(--color-theme-orb-hue, 75);
+  --color-theme-primary-50: var(--color-theme-primary-50, #cdf06a);
+  --color-theme-primary-100: var(--color-theme-primary-100, #c6f051);
+  --color-theme-primary-200: var(--color-theme-primary-200, #bff038);
+  --color-theme-primary-300: var(--color-theme-primary-300, #b9f11d);
+  --color-theme-primary-400: var(--color-theme-primary-400, #aee80c);
+  --color-theme-primary-500: var(--color-theme-primary-500, #acec00);
+  --color-theme-primary-600: var(--color-theme-primary-600, #8bbc06);
+  --color-theme-primary-700: var(--color-theme-primary-700, #7aa503);
+  --color-theme-primary-800: var(--color-theme-primary-800, #688d01);
+  --color-theme-primary-900: var(--color-theme-primary-900, #567500);
+  
+  /* Use theme color for primary */
+  --color-primary: var(--color-theme-primary-500);
+  --color-primary-50: var(--color-theme-primary-50);
+  --color-primary-100: var(--color-theme-primary-100);
+  --color-primary-200: var(--color-theme-primary-200);
+  --color-primary-300: var(--color-theme-primary-300);
+  --color-primary-400: var(--color-theme-primary-400);
+  --color-primary-500: var(--color-theme-primary-500);
+  --color-primary-600: var(--color-theme-primary-600);
+  --color-primary-700: var(--color-theme-primary-700);
+  --color-primary-800: var(--color-theme-primary-800);
+  --color-primary-900: var(--color-theme-primary-900);
   --animate-aurora: aurora 60s linear infinite;
   --animate-spotlight: spotlight 2s ease 0.25s 1 forwards;
   @keyframes aurora {
@@ -189,14 +205,14 @@
   .fluid-glass {
     background: linear-gradient(
       120deg,
-      rgba(172, 236, 0, 0.12) 0%,
+      color-mix(in srgb, var(--color-theme-primary) 12%, transparent) 0%,
       rgba(255, 255, 255, 0.08) 100%
     );
     box-shadow:
-      0 4px 32px 0 rgba(172, 236, 0, 0.08),
+      0 4px 32px 0 color-mix(in srgb, var(--color-theme-primary) 8%, transparent),
       0 1.5px 6px 0 rgba(0, 0, 0, 0.04);
     border-radius: 1.5rem;
-    border: 1px solid rgba(172, 236, 0, 0.18);
+    border: 1px solid color-mix(in srgb, var(--color-theme-primary) 18%, transparent);
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
   }
@@ -365,7 +381,7 @@ input[type='button'] {
   cursor: url('/cursor/arrowhead-dark.svg'), pointer;
 }
 
-/* Light theme cursor - use primary color */
+/* Light theme cursor - use primary color based on color theme */
 :root:not(.dark) * {
   cursor: url('/cursor/arrowhead.svg'), auto;
 }
@@ -377,6 +393,39 @@ input[type='button'] {
 :root:not(.dark) input[type='button'] {
   cursor: url('/cursor/arrowhead.svg'), pointer;
 }
+
+/* Color theme cursors - lime theme (default) */
+:root[data-color-theme='lime'] *,
+:root:not([data-color-theme]) * {
+  cursor: url('/cursor/arrowhead-lime.svg'), auto;
+}
+
+:root[data-color-theme='lime'] a,
+:root[data-color-theme='lime'] button,
+:root[data-color-theme='lime'] [role='button'],
+:root[data-color-theme='lime'] input[type='submit'],
+:root[data-color-theme='lime'] input[type='button'],
+:root:not([data-color-theme]) a,
+:root:not([data-color-theme]) button,
+:root:not([data-color-theme]) [role='button'],
+:root:not([data-color-theme]) input[type='submit'],
+:root:not([data-color-theme]) input[type='button'] {
+  cursor: url('/cursor/arrowhead-lime.svg'), pointer;
+}
+
+/* Color theme cursors - maroon theme */
+:root[data-color-theme='maroon'] * {
+  cursor: url('/cursor/arrowhead-maroon.svg'), auto;
+}
+
+:root[data-color-theme='maroon'] a,
+:root[data-color-theme='maroon'] button,
+:root[data-color-theme='maroon'] [role='button'],
+:root[data-color-theme='maroon'] input[type='submit'],
+:root[data-color-theme='maroon'] input[type='button'] {
+  cursor: url('/cursor/arrowhead-maroon.svg'), pointer;
+}
+
 *::selection {
   background-color: var(--color-primary-600);
   color: var(--color-primary-foreground);

@@ -20,7 +20,7 @@ export const Component = () => {
           fontSize: '120px',
           fontWeight: 600,
         }}
-        color="#acec00"
+        color="#800000"
         spread={5}
         density={7}
         animation={{
@@ -866,7 +866,7 @@ const calculateVaporizeSpread = (fontSize: number) => {
 // ------------------------------------------------------------ //
 /**
  * Converts color string to rgba format, fetching primary color from CSS if needed
- * @param color - Color string (e.g. "#acec00" or "primary")
+ * @param color - Color string (e.g. "#800000" or "primary")
  * @returns Valid RGBA color string
  */
 const parseColor = (color: string) => {
@@ -885,7 +885,7 @@ const parseColor = (color: string) => {
         // Fallback if CSS variable not found
       }
     }
-    return 'rgba(172, 236, 0, 1)'; // #acec00 fallback
+    return 'rgba(128, 0, 0, 1)'; // #800000 fallback
   }
 
   // Handle hex colors
@@ -910,7 +910,7 @@ const parseColor = (color: string) => {
   }
 
   // Default fallback to primary color
-  return 'rgba(172, 236, 0, 1)'; // #acec00
+  return 'rgba(128, 0, 0, 1)'; // #800000
 };
 
 /**

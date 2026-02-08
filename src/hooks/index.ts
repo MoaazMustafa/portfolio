@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+export { useColorTheme, type ColorTheme } from './use-color-theme';
 
 /**
  * Custom hook for managing local storage state

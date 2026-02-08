@@ -1,4 +1,6 @@
 // Theme Components
+export { ClientLayoutProvider } from './client-layout-provider';
+export { ColorThemeToggle } from './color-theme-toggle';
 export { DevToolsProvider, DisableDevTools } from './disable-devtools';
 export { Preloader } from './preloader';
 export { ThemeProvider } from './theme-provider';

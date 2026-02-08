@@ -5,14 +5,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
 
-import GlassSurface from '../ui/glass-surface';
-import { TextGenerateEffect } from '../ui/text-generate-effect';
-
 import Orb from '@/components/orb';
 import { Button } from '@/components/ui/button';
 import { Spotlight } from '@/components/ui/spotlight';
 import TextType from '@/components/ui/text-type';
 import VariableProximity from '@/components/ui/variable-proximity';
+import { useColorTheme } from '@/hooks';
+
+import GlassSurface from '../ui/glass-surface';
+import { TextGenerateEffect } from '../ui/text-generate-effect';
 
 const roles = [
   'Software Engineer',
@@ -29,11 +30,13 @@ export function Hero() {
   //     }, 2000);
   //   };
   const containerRef = useRef(null);
+  const { currentColors } = useColorTheme();
+  
   return (
     <section className="relative min-h-screen overflow-hidden">
       <Spotlight
         className="-top-40 left-0 md:-top-20 md:left-60"
-        fill="#acec00"
+        fill={currentColors.primary}
       />
       <div className="container mx-auto mt-12 max-w-6xl px-4 py-12 sm:py-16 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
@@ -42,7 +45,7 @@ export function Hero() {
             <div className="relative h-[400px] w-[400px] sm:h-[500px] sm:w-[500px] lg:h-[600px] lg:w-[600px]">
               {/* Orb Background - Sibling */}
               <div className="absolute inset-0 z-0">
-                <Orb hue={75} hoverIntensity={0.6} rotateOnHover={true} />
+                <Orb hue={currentColors.orbHue} hoverIntensity={0.6} rotateOnHover={true} />
               </div>
 
               {/* Profile Image Container - Sibling with pointer-events-none */}
@@ -139,7 +142,7 @@ export function Hero() {
                   blueOffset={0}
                   opacity={0.8}
                   mixBlendMode="screen"
-                  className="text-foreground hover:text-primary !h-full !w-full !rounded-md px-4 py-2 text-center text-lg font-medium transition-colors"
+                  className="text-foreground hover:text-primary h-full! w-full! rounded-md! px-4 py-2 text-center text-lg font-medium transition-colors"
                 >
                   Get In Touch
                 </GlassSurface>

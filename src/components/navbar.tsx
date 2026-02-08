@@ -69,7 +69,7 @@ export function Navbar() {
           blueOffset={0}
           opacity={0.8}
           mixBlendMode="screen"
-          className="!w-full"
+          className="w-full!"
         >
           <div className="flex h-10 w-full items-center justify-between px-4 sm:h-12 sm:px-6 lg:px-8">
             {/* Logo */}
@@ -119,7 +119,7 @@ export function Navbar() {
                       <span
                         className="absolute inset-0 rounded-xl"
                         style={{
-                          background: `radial-gradient(200px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(172, 236, 0, 0.15), transparent 80%)`,
+                          background: `radial-gradient(200px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), color-mix(in srgb, var(--color-theme-primary) 15%, transparent), transparent 80%)`,
                         }}
                       />
                     </span>

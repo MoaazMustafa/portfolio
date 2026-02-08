@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
+import { ColorThemeToggle } from '../color-theme-toggle';
+
 const socialLinks = [
   {
     name: 'GitHub',
@@ -150,6 +152,7 @@ export function Footer() {
                   </span>
                   Available for work
                 </div>
+                <ColorThemeToggle />
               </div>
             </div>
 
