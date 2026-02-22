@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button';
 import GlassSurface from '@/components/ui/glass-surface';
 import { cn } from '@/lib/utils';
 
+import { ColorThemeToggle } from './color-theme-toggle';
+
 const navItems = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
@@ -20,7 +22,7 @@ const navItems = [
 ];
 
 export function Navbar() {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
@@ -131,6 +133,7 @@ export function Navbar() {
 
             {/* Right Section */}
             <div className="flex items-center gap-3">
+              <ColorThemeToggle />
               <ThemeToggle />
 
               {/* Single CTA Button */}

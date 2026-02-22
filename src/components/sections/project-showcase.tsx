@@ -62,7 +62,7 @@ export function ProjectShowcase() {
             transition={{ duration: 0.6 }}
             className="font-orbitron relative mb-6 inline-block text-4xl font-black sm:text-5xl lg:text-6xl"
           >
-            <span className="from-primary via-primary-400 to-primary-600 bg-gradient-to-r bg-clip-text text-transparent">
+            <span className="from-primary via-primary-400 to-primary-600 bg-linear-to-r bg-clip-text text-transparent">
               Featured Projects
             </span>
             <motion.div
@@ -107,7 +107,7 @@ export function ProjectShowcase() {
                 className="hover:shadow-primary/20 !h-full !w-full overflow-hidden p-4 transition-all duration-300 hover:shadow-2xl"
               > */}
               {/* Project Image */}
-              <div className="from-primary/20 to-primary/5 relative h-48 w-full overflow-hidden bg-gradient-to-br">
+              <div className="from-primary/20 to-primary/5 relative h-48 w-full overflow-hidden bg-linear-to-br">
                 <div className="flex h-full items-center justify-center">
                   <div className="text-primary/20 text-6xl font-bold">
                     {project.id}

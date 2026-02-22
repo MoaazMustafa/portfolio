@@ -24,6 +24,17 @@ export function DevToolsProvider({ children }: DevToolsProviderProps) {
       return;
     }
 
+    // Check if user is on a mobile device
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      ) || window.innerWidth <= 768;
+
+    // Skip devtools detection on mobile devices
+    if (isMobile) {
+      return;
+    }
+
     // Detect DevTools open/close
     const detectDevTools = () => {
       const threshold = 160;
@@ -140,7 +151,7 @@ function AccessRestrictedScreen() {
   return (
     <div className="bg-background fixed inset-0 z-9999 flex items-center justify-center overflow-hidden">
       {/* Animated gradient background */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-950/50 via-black to-black" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-red-950/50 via-black to-black" />
 
       {/* Animated grid pattern */}
       <div
@@ -202,7 +213,7 @@ function AccessRestrictedScreen() {
               <div className="absolute -inset-4 animate-pulse rounded-full bg-red-500/20 blur-xl" />
 
               {/* Icon container */}
-              <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-red-500/30 via-red-600/20 to-transparent shadow-2xl ring-2 shadow-red-500/30 ring-red-500/50">
+              <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-linear-to-br from-red-500/30 via-red-600/20 to-transparent shadow-2xl ring-2 shadow-red-500/30 ring-red-500/50">
                 <svg
                   className="h-12 w-12 text-red-400 drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]"
                   fill="none"
@@ -222,7 +233,7 @@ function AccessRestrictedScreen() {
 
           {/* Text content */}
           <div className="space-y-4">
-            <h2 className="font-nyghtserif bg-gradient-to-r from-red-400 via-rose-300 to-red-400 bg-clip-text text-4xl font-bold text-transparent drop-shadow-sm">
+            <h2 className="font-nyghtserif bg-linear-to-r from-red-400 via-rose-300 to-red-400 bg-clip-text text-4xl font-bold text-transparent drop-shadow-sm">
               Access Restricted
             </h2>
             <p className="text-muted-foreground mx-auto max-w-sm text-base leading-relaxed">
@@ -233,9 +244,9 @@ function AccessRestrictedScreen() {
 
           {/* Decorative line */}
           <div className="my-8 flex items-center justify-center gap-3">
-            <div className="h-px w-16 bg-gradient-to-r from-transparent to-red-500/50" />
+            <div className="h-px w-16 bg-linear-to-r from-transparent to-red-500/50" />
             <div className="h-2 w-2 animate-pulse rounded-full bg-red-500/50" />
-            <div className="h-px w-16 bg-gradient-to-l from-transparent to-red-500/50" />
+            <div className="h-px w-16 bg-linear-to-l from-transparent to-red-500/50" />
           </div>
 
           {/* Footer */}

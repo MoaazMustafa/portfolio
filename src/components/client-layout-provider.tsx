@@ -1,7 +1,7 @@
 'use client';
 
 import NextTopLoader from 'nextjs-toploader';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import ClickSpark from '@/components/ui/Spark';
 import { useColorTheme } from '@/hooks';

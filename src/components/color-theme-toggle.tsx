@@ -12,7 +12,7 @@ export function ColorThemeToggle() {
 
   return (
     <Button
-      variant="ghost"
+      variant="default"
       size="icon"
       onClick={toggleColorTheme}
       className="relative"
@@ -22,18 +22,10 @@ export function ColorThemeToggle() {
       <Palette
         className={cn(
           'h-5 w-5 transition-all duration-300',
-          colorTheme === 'lime' ? 'text-[#acec00]' : 'text-[#800000]',
+          // colorTheme === 'lime' ? 'text-[#acec00]' : 'text-[#800000]',
         )}
       />
       <span className="sr-only">Toggle color theme</span>
-
-      {/* Color indicator */}
-      <span
-        className={cn(
-          'ring-background absolute right-1 bottom-1 h-2 w-2 rounded-full ring-1 transition-colors duration-300',
-          colorTheme === 'lime' ? 'bg-[#acec00]' : 'bg-[#800000]',
-        )}
-      />
     </Button>
   );
 }

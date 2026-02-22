@@ -79,6 +79,7 @@ export const ThemeToggle = ({
       ref={buttonRef}
       onClick={toggleTheme}
       className={cn(className)}
+      title={`Current: ${isDark ? 'Dark' : 'Light'} theme`}
       {...props}
     >
       {isDark ? <Sun /> : <Moon />}

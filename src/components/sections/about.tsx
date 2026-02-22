@@ -64,7 +64,7 @@ export function About() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="font-orbitron text-4xl font-black sm:text-5xl lg:text-6xl"
           >
-            <span className="from-primary via-primary-400 to-primary-600 bg-gradient-to-r bg-clip-text text-transparent">
+            <span className="from-primary via-primary-400 to-primary-600 bg-linear-to-r bg-clip-text text-transparent">
               About Me
             </span>
           </motion.h2>
@@ -88,7 +88,7 @@ export function About() {
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
-              <div className="from-primary/20 absolute inset-0 bg-gradient-to-t to-transparent" />
+              <div className="from-primary/20 absolute inset-0 bg-linear-to-t to-transparent" />
             </div>
           </motion.div>
 
@@ -185,7 +185,7 @@ export function About() {
               whileHover={{ y: -5 }}
               className="bg-card/50 border-border group hover:shadow-primary/10 relative overflow-hidden rounded-xl border p-8 text-center backdrop-blur-sm transition-all duration-300 hover:shadow-lg"
             >
-              <div className="from-primary/5 to-primary/0 absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <div className="from-primary/5 to-primary/0 absolute inset-0 bg-linear-to-br opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               <div className="relative">
                 <div className="text-primary mb-2 text-4xl font-bold lg:text-5xl">
                   {stat.value}
@@ -200,7 +200,7 @@ export function About() {
       </div>
 
       {/* Background Effects */}
-      <div className="from-primary/5 to-primary/5 pointer-events-none absolute inset-0 bg-gradient-to-b via-transparent opacity-50" />
+      <div className="from-primary/5 to-primary/5 pointer-events-none absolute inset-0 bg-linear-to-b via-transparent opacity-50" />
     </section>
   );
 }

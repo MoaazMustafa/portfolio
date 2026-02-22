@@ -5,6 +5,7 @@ import {
   ArrowUpRight,
   Code2,
   Github,
+  Instagram,
   Linkedin,
   Mail,
   MapPin,
@@ -12,8 +13,6 @@ import {
   Youtube,
 } from 'lucide-react';
 import Link from 'next/link';
-
-import { ColorThemeToggle } from '../color-theme-toggle';
 
 const socialLinks = [
   {
@@ -35,6 +34,16 @@ const socialLinks = [
     name: 'YouTube',
     href: 'https://youtube.com/@moaazmustafa',
     icon: Youtube,
+  },
+  {
+    name: 'Email',
+    href: 'mailto:contactwithmoaaz@gmail.com',
+    icon: Mail,
+  },
+  {
+    name: 'Instagram',
+    href: 'https://instagram.com/itx_moaaz',
+    icon: Instagram,
   },
 ];
 
@@ -152,7 +161,6 @@ export function Footer() {
                   </span>
                   Available for work
                 </div>
-                <ColorThemeToggle />
               </div>
             </div>
 

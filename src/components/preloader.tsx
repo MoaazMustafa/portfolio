@@ -78,7 +78,7 @@ export function Preloader({ children }: PreloaderProps) {
         aria-hidden={isHidden}
       >
         {/* Vapor effect animation */}
-        <div className="h-[80px] w-full max-w-[1200px] px-4 sm:h-[100px] lg:h-[130px] xl:h-[170px]">
+        <div className="h-20 w-full max-w-[1200px] px-4 sm:h-[100px] lg:h-[130px] xl:h-[170px]">
           <VaporizeTextCycle
             texts={['Moaaz Mustafa']}
             font={{
