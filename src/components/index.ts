@@ -12,6 +12,7 @@ export { Footer } from './sections/footer';
 
 // Sections
 export { About } from './sections/about';
+export { AtAGlance } from './sections/at-a-glance';
 export { Hero } from './sections/hero';
 export { PageComingSoon } from './sections/page-coming-soon';
 export { ProjectShowcase } from './sections/project-showcase';

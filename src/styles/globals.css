@@ -193,6 +193,17 @@
 }
 
 @layer components {
+  /* GitHub calendar containment */
+  .react-activity-calendar {
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .react-activity-calendar svg {
+    max-width: 100%;
+    height: auto;
+  }
+
   .shadow-glow {
     filter: drop-shadow(0 0 8px currentColor);
   }
@@ -467,4 +478,31 @@ input[type='button'] {
   .scroll-bar {
     display: none;
   }
+}
+
+/* ── Marquee animation for stacks ── */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+.animate-marquee-reverse {
+  animation: marquee-reverse 25s linear infinite;
 }

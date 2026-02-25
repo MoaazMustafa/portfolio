@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 import { pageMetadata } from '@/lib/metadata';
 
-import { Hero } from '../components';
+import { AtAGlance, Hero } from '../components';
 
 export const metadata: Metadata = pageMetadata.home;
 
@@ -13,6 +13,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <AtAGlance />
     </>
   );
 }
