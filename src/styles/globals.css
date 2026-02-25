@@ -170,11 +170,12 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    /* Scrollbar styles */
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-primary-600) transparent;
-    scrollbar-track-color: transparent;
-    scrollbar-thumb-color: transparent;
+    /* Hide native scrollbar — replaced by .scroll-bar component */
+    scrollbar-width: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
   }
   body {
     @apply bg-background text-foreground;
@@ -434,4 +435,40 @@ input[type='button'] {
 *::selection {
   background-color: var(--color-primary-600);
   color: var(--color-primary-foreground);
+}
+
+/* ── Custom scroll indicator (mirrors abdullah-portfolio design) ── */
+.scroll-bar {
+  --p: 0vh;
+  position: fixed;
+  width: 7px;
+  height: 7px;
+  right: 0;
+  top: 0;
+  background: var(--color-theme-primary);
+  border-radius: 50%;
+  z-index: 9999;
+  pointer-events: none;
+  transition: top 0.05s linear;
+}
+
+.scroll-bar::before {
+  content: '';
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 7px;
+  height: var(--p);
+  background: linear-gradient(
+    0deg,
+    var(--color-theme-primary),
+    transparent
+  );
+}
+
+@media screen and (max-width: 700px) {
+  .scroll-bar {
+    display: none;
+  }
 }

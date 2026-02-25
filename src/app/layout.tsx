@@ -5,6 +5,7 @@ import {
   ClientLayoutProvider,
   DevToolsProvider,
   Footer,
+  ScrollBar,
   ThemeProvider,
 } from '@/components';
 import { Navbar } from '@/components/navbar';
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           disableTransitionOnChange
         >
           <DevToolsProvider>
+            <ScrollBar />
             <Preloader>
               <ClientLayoutProvider>
                 <Navbar />
