@@ -274,6 +274,7 @@ export function AtAGlance() {
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
   const { resolvedTheme } = useTheme();
   const { currentColors } = useColorTheme();
+  const [githubContributions, setGithubContributions] = useState<number | null>(null);
 
   // Build globe config with primary-colored marker
   const hexToRgb = (hex: string): [number, number, number] => {
@@ -402,6 +403,11 @@ export function AtAGlance() {
                   showMonthLabels={false}
                   colorScheme={(resolvedTheme as 'light' | 'dark') ?? 'dark'}
                   theme={githubTheme}
+                  transformData={(data) => {
+                    const total = data.reduce((sum, day) => sum + day.count, 0);
+                    setGithubContributions(total);
+                    return data;
+                  }}
                 />
               </div>
             </BentoCard>
@@ -479,7 +485,13 @@ export function AtAGlance() {
               <div className="mt-3 flex flex-col gap-2.5">
                 {[
                   { value: '5+', label: 'Production Apps' },
-                  { value: '641+', label: 'GitHub Contributions' },
+                  {
+                    value:
+                      githubContributions !== null
+                        ? `${githubContributions.toLocaleString()}+`
+                        : '…',
+                    label: 'GitHub Contributions',
+                  },
                   { value: '3+', label: 'Years Experience' },
                 ].map((stat) => (
                   <div
