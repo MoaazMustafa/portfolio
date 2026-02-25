@@ -460,11 +460,7 @@ input[type='button'] {
   transform: translateX(-50%);
   width: 7px;
   height: var(--p);
-  background: linear-gradient(
-    0deg,
-    var(--color-theme-primary),
-    transparent
-  );
+  background: linear-gradient(0deg, var(--color-theme-primary), transparent);
 }
 
 @media screen and (max-width: 700px) {
