@@ -196,12 +196,17 @@
   /* GitHub calendar containment */
   .react-activity-calendar {
     max-width: 100% !important;
-    overflow: hidden !important;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: center;
   }
 
   .react-activity-calendar svg {
-    max-width: 100%;
-    height: auto;
+    max-width: none;
+    flex: 1;
+    height: 100%;
+    width: auto;
   }
 
   .shadow-glow {

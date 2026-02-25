@@ -42,7 +42,11 @@ const COLOR_THEMES = {
 } as const;
 
 export function useColorTheme() {
-  const [colorTheme, setColorTheme] = useState<ColorTheme>('lime');
+  const [colorTheme, setColorTheme] = useState<ColorTheme>(() => {
+    if (typeof window === 'undefined') return 'lime';
+    const stored = localStorage.getItem('color-theme') as ColorTheme;
+    return stored === 'lime' || stored === 'maroon' ? stored : 'lime';
+  });
 
   useEffect(() => {
     // Load theme from localStorage

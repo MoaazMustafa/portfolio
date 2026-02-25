@@ -1,6 +1,7 @@
 'use client';
 
 import { Moon, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 
@@ -18,34 +19,22 @@ export const ThemeToggle = ({
   duration = 700,
   ...props
 }: AnimatedThemeTogglerProps) => {
-  const [isDark, setIsDark] = useState(false);
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    const updateTheme = () => {
-      setIsDark(document.documentElement.classList.contains('dark'));
-    };
+  useEffect(() => setMounted(true), []);
 
-    updateTheme();
-
-    const observer = new MutationObserver(updateTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  const isDark = resolvedTheme === 'dark';
 
   const toggleTheme = useCallback(async () => {
     if (!buttonRef.current) return;
 
+    const newTheme = isDark ? 'light' : 'dark';
+
     await document.startViewTransition(() => {
       flushSync(() => {
-        const newTheme = !isDark;
-        setIsDark(newTheme);
-        document.documentElement.classList.toggle('dark');
-        localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+        setTheme(newTheme);
       });
     }).ready;
 
@@ -71,7 +60,16 @@ export const ThemeToggle = ({
         pseudoElement: '::view-transition-new(root)',
       },
     );
-  }, [isDark, duration]);
+  }, [isDark, setTheme, duration]);
+
+  if (!mounted) {
+    return (
+      <Button variant={'default'} className={cn(className)} {...props}>
+        <Moon />
+        <span className="sr-only">Toggle theme</span>
+      </Button>
+    );
+  }
 
   return (
     <Button
