@@ -2,16 +2,12 @@
 
 import type { COBEOptions } from 'cobe';
 import { AnimatePresence, motion, useInView } from 'framer-motion';
-import { MapPin, Zap } from 'lucide-react';
+import { MapPin, Trophy, Zap } from 'lucide-react';
+import Image from 'next/image';
 import { useTheme } from 'next-themes';
-import { useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GitHubCalendar } from 'react-github-calendar';
-import {
-  RiGithubFill,
-  RiLinkedinBoxFill,
-  RiMailFill,
-  RiTwitterXFill,
-} from 'react-icons/ri';
+import { RiGithubFill } from 'react-icons/ri';
 import {
   SiBootstrap,
   SiCss3,
@@ -95,35 +91,12 @@ const STACKS_ROW_2 = [
   { icon: SiFigma, label: 'Figma', color: '#F24E1E' },
 ];
 
-// ── Social links with brand colors ──
-const SOCIALS = [
-  {
-    icon: RiGithubFill,
-    href: 'https://github.com/MoaazMustafa',
-    label: 'GitHub',
-    color: '#000000',
-    darkColor: '#ffffff',
-  },
-  {
-    icon: RiLinkedinBoxFill,
-    href: 'https://www.linkedin.com/in/moaaz-mustafa-20a742367',
-    label: 'LinkedIn',
-    color: '#0A66C2',
-  },
-  {
-    icon: RiTwitterXFill,
-    href: 'https://x.com/_moaaz_mustafa',
-    label: 'Twitter',
-    color: '#000000',
-    darkColor: '#ffffff',
-  },
-  {
-    icon: RiMailFill,
-    href: 'mailto:contactwithmoaaz@gmail.com',
-    label: 'Email',
-    color: '#EA4335',
-  },
-];
+// ── GitHub achievement type (fetched at runtime from /api/github/achievements) ──
+interface GitHubAchievement {
+  name: string;
+  tier: string;
+  badgeUrl: string;
+}
 
 // ── Shared card wrapper ──
 function BentoCard({
@@ -277,6 +250,33 @@ export function AtAGlance() {
   const [githubContributions, setGithubContributions] = useState<number | null>(
     null,
   );
+  const [hoveredAchievement, setHoveredAchievement] = useState<string | null>(
+    null,
+  );
+  const [achievements, setAchievements] = useState<GitHubAchievement[]>([]);
+  const [achievementsLoading, setAchievementsLoading] = useState(true);
+  const pendingContributions = useRef<number | null>(null);
+
+  // Stable callback to sync contribution count from transformData into state.
+  // Uses a ref so we only call setState once (after the first render/data load).
+  const syncContributions = useCallback((total: number) => {
+    if (pendingContributions.current !== total) {
+      pendingContributions.current = total;
+      // Schedule state update outside the render cycle
+      queueMicrotask(() => setGithubContributions(total));
+    }
+  }, []);
+
+  // Fetch achievements from our API route (server scrapes GitHub)
+  useEffect(() => {
+    fetch('/api/github/achievements')
+      .then((res) => res.json())
+      .then((data: GitHubAchievement[]) => {
+        setAchievements(data);
+        setAchievementsLoading(false);
+      })
+      .catch(() => setAchievementsLoading(false));
+  }, []);
 
   // Build globe config with primary-colored marker
   const hexToRgb = (hex: string): [number, number, number] => {
@@ -407,7 +407,7 @@ export function AtAGlance() {
                   theme={githubTheme}
                   transformData={(data) => {
                     const total = data.reduce((sum, day) => sum + day.count, 0);
-                    setGithubContributions(total);
+                    syncContributions(total);
                     return data;
                   }}
                 />
@@ -429,47 +429,92 @@ export function AtAGlance() {
             </BentoCard>
           </motion.div>
 
-          {/* ── Row 2, Middle: Connect ── */}
+          {/* ── Row 2, Middle: Achievements ── */}
           <motion.div variants={itemVariants} className="md:col-span-3">
             <BentoCard className="flex h-60 flex-col">
               <div className="text-muted-foreground mb-4 flex items-center gap-2 text-sm">
-                <RiMailFill className="size-4" />
-                <span className="text-foreground font-semibold">Connect</span>
+                <Trophy className="size-4" />
+                <span className="text-foreground font-semibold">
+                  Achievements
+                </span>
               </div>
-              <div className="flex flex-1 items-center justify-center">
-                <div className="grid grid-cols-2 gap-3">
-                  {SOCIALS.map((social) => {
-                    const socialColor =
-                      resolvedTheme === 'dark' && social.darkColor
-                        ? social.darkColor
-                        : social.color;
-                    return (
-                      <a
-                        key={social.label}
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={social.label}
-                        className="group/social border-border bg-muted/50 relative flex size-14 items-center justify-center rounded-xl border transition-all duration-300 hover:-translate-y-1"
-                        style={
-                          {
-                            '--social-color': socialColor,
-                          } as React.CSSProperties
-                        }
-                      >
-                        <social.icon className="text-muted-foreground relative z-10 size-6 transition-all duration-300 group-hover/social:text-(--social-color) group-hover/social:drop-shadow-[0_0_8px_var(--social-color)]" />
-                        {/* Glow background on hover */}
-                        <span
-                          className="absolute inset-0 rounded-xl opacity-0 transition-all duration-300 group-hover/social:opacity-100"
-                          style={{
-                            background: `radial-gradient(circle at center, ${socialColor}15 0%, transparent 70%)`,
-                            boxShadow: `0 0 20px ${socialColor}30, inset 0 0 20px ${socialColor}10`,
-                            border: `1px solid ${socialColor}40`,
-                          }}
+              <div className="flex flex-1 flex-col items-center justify-center gap-3">
+                <div className="grid grid-cols-3 gap-3">
+                  {achievementsLoading
+                    ? Array.from({ length: 3 }).map((_, i) => (
+                        <div
+                          key={i}
+                          className="border-border bg-muted/50 size-12 animate-pulse rounded-xl border"
                         />
-                      </a>
-                    );
-                  })}
+                      ))
+                    : achievements.slice(0, 6).map((achievement) => (
+                        <motion.div
+                          key={achievement.name}
+                          className="group/ach relative"
+                          whileHover={{ y: -4, scale: 1.05 }}
+                          transition={{
+                            type: 'spring',
+                            stiffness: 300,
+                            damping: 20,
+                          }}
+                          onMouseEnter={() =>
+                            setHoveredAchievement(achievement.name)
+                          }
+                          onMouseLeave={() => setHoveredAchievement(null)}
+                        >
+                          <div className="border-border bg-muted/50 flex size-15 cursor-default items-center justify-center rounded-xl border transition-colors duration-300">
+                            {}
+                            <Image
+                              src={achievement.badgeUrl}
+                              alt={achievement.name}
+                              width={45}
+                              height={45}
+                              className="transition-transform duration-300 select-none group-hover/ach:scale-110"
+                            />
+                          </div>
+                          {achievement.tier && (
+                            <span
+                              className="absolute -top-1 -right-1 z-10 rounded-full px-1 text-[8px] font-bold"
+                              style={{
+                                backgroundColor: currentColors.primary,
+                                color:
+                                  currentColors.primary === '#acec00'
+                                    ? '#000'
+                                    : '#fff',
+                              }}
+                            >
+                              {achievement.tier}
+                            </span>
+                          )}
+                          {/* Glow on hover */}
+                          <span
+                            className="pointer-events-none absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300 group-hover/ach:opacity-100"
+                            style={{
+                              background: `radial-gradient(circle at center, ${currentColors.primary}20 0%, transparent 70%)`,
+                              boxShadow: `0 0 15px ${currentColors.primary}25`,
+                              border: `1px solid ${currentColors.primary}30`,
+                            }}
+                          />
+                        </motion.div>
+                      ))}
+                </div>
+                {/* Achievement name caption */}
+                <div className="h-5 text-center">
+                  <AnimatePresence mode="wait">
+                    {hoveredAchievement && (
+                      <motion.p
+                        key={hoveredAchievement}
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -4 }}
+                        transition={{ duration: 0.15 }}
+                        className="text-xs font-medium"
+                        style={{ color: currentColors.primary }}
+                      >
+                        {hoveredAchievement}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
             </BentoCard>
