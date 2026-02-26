@@ -33,7 +33,7 @@ export function Hero() {
   const { currentColors } = useColorTheme();
 
   return (
-    <section className="relative min-h-screen overflow-hidden">
+    <section className="relative overflow-hidden">
       <Spotlight
         className="-top-40 left-0 md:-top-20 md:left-60"
         fill={currentColors.primary}

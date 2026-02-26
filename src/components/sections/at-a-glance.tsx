@@ -274,7 +274,9 @@ export function AtAGlance() {
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
   const { resolvedTheme } = useTheme();
   const { currentColors } = useColorTheme();
-  const [githubContributions, setGithubContributions] = useState<number | null>(null);
+  const [githubContributions, setGithubContributions] = useState<number | null>(
+    null,
+  );
 
   // Build globe config with primary-colored marker
   const hexToRgb = (hex: string): [number, number, number] => {
