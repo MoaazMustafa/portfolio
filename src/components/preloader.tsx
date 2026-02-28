@@ -22,13 +22,17 @@ export function Preloader({ children }: PreloaderProps) {
     const updateFontSize = () => {
       const width = window.innerWidth;
       if (width >= 1280) {
-        setFontSize('128px'); // xl: text-9xl = 8rem = 128px
+        setFontSize('128px'); // xl
       } else if (width >= 1024) {
-        setFontSize('85px'); // lg: text-8xl = 6rem = 96px
+        setFontSize('85px');  // lg
       } else if (width >= 640) {
-        setFontSize('64px'); // sm: text-7xl = 4.5rem = 72px
+        setFontSize('64px');  // sm
+      } else if (width >= 480) {
+        setFontSize('44px');  // xs
+      } else if (width >= 375) {
+        setFontSize('34px');  // small mobile
       } else {
-        setFontSize('52px'); // base: text-6xl = 3.25rem = 52px
+        setFontSize('26px');  // very small mobile
       }
     };
 
@@ -78,7 +82,7 @@ export function Preloader({ children }: PreloaderProps) {
         aria-hidden={isHidden}
       >
         {/* Vapor effect animation */}
-        <div className="h-20 w-full max-w-[1200px] px-4 sm:h-[100px] lg:h-[130px] xl:h-[170px]">
+        <div className="h-12 w-full max-w-[1200px] px-4 xs:h-16 sm:h-[100px] lg:h-[130px] xl:h-[170px]">
           <VaporizeTextCycle
             texts={['Moaaz Mustafa']}
             font={{
