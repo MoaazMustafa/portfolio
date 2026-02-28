@@ -42,7 +42,7 @@ export function Hero() {
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Right Side - Image with Orb Background - Shows first on mobile */}
           <div className="relative flex items-center justify-center overflow-visible lg:order-2 lg:justify-end">
-            <div className="relative h-[400px] w-[400px] sm:h-[500px] sm:w-[500px] lg:h-[600px] lg:w-[600px]">
+            <div className="xs:h-[300px] xs:w-[300px] relative h-[280px] w-[280px] sm:h-[440px] sm:w-[440px] lg:h-[560px] lg:w-[560px]">
               {/* Orb Background - Sibling */}
               <div className="absolute inset-0 z-0">
                 <Orb
@@ -54,7 +54,7 @@ export function Hero() {
 
               {/* Profile Image Container - Sibling with pointer-events-none */}
               <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
-                <div className="shadow-primary/20 relative h-64 w-64 overflow-hidden rounded-full shadow-2xl sm:h-80 sm:w-80 lg:h-87 lg:w-87">
+                <div className="shadow-primary/20 xs:h-56 xs:w-56 relative h-46 w-46 overflow-hidden rounded-full shadow-2xl sm:h-72 sm:w-72 lg:h-87 lg:w-87">
                   <Image
                     src="/img/Moaaz Mustafa.jpeg"
                     alt="Moaaz Mustafa"
