@@ -17,7 +17,8 @@ export default function OgImage() {
           justifyContent: 'center',
           width: '100%',
           height: '100%',
-          background: 'linear-gradient(135deg, #0a0a0a 0%, #0d1a0a 50%, #0a0a0a 100%)',
+          background:
+            'linear-gradient(135deg, #0a0a0a 0%, #0d1a0a 50%, #0a0a0a 100%)',
           fontFamily: 'sans-serif',
           color: '#ffffff',
           position: 'relative',
@@ -33,7 +34,8 @@ export default function OgImage() {
             width: '400px',
             height: '400px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(172,236,0,0.25) 0%, transparent 70%)',
+            background:
+              'radial-gradient(circle, rgba(172,236,0,0.25) 0%, transparent 70%)',
             display: 'flex',
           }}
         />
@@ -45,7 +47,8 @@ export default function OgImage() {
             width: '500px',
             height: '500px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(139,188,6,0.2) 0%, transparent 70%)',
+            background:
+              'radial-gradient(circle, rgba(139,188,6,0.2) 0%, transparent 70%)',
             display: 'flex',
           }}
         />
