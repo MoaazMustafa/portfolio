@@ -82,12 +82,15 @@ export const defaultMetadata: Metadata = generatePageMetadata({
 // Reusable metadata for common pages
 export const pageMetadata = {
   home: generatePageMetadata({
-    title: 'Moaaz Mustafa',
+    title: 'Moaaz Mustafa - Software Engineer & Tech Enthusiast',
     description:
-      "Discover Moaaz Mustafa's portfolio showcasing projects, skills, and experiences in software engineering and technology.",
+      'Explore the portfolio of Moaaz Mustafa — a software engineer crafting innovative digital solutions with modern web technologies. Discover projects, skills, and experiences.',
     keywords: [
       'Moaaz Mustafa',
       'Moaaz Mustafa Portfolio',
+      'Software Engineer',
+      'Full Stack Developer',
+      'Web Developer',
       'Moaz Mustafa',
       'Muaz Mustafa',
       'Moaaz',
@@ -96,7 +99,11 @@ export const pageMetadata = {
       'moaazmustafa',
       'maaz',
       'Muaz',
+      'Next.js',
+      'React',
+      'TypeScript',
     ],
+    ogImage: `${baseUrl}/opengraph-image`,
     canonical: '/',
   }),
 };
