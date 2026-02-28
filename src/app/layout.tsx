@@ -35,6 +35,7 @@ const orbitron = Orbitron({
 
 export const metadata: Metadata = {
   ...defaultMetadata,
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://moaazmustafa.dev'),
   icons: {
     icon: '/favicon/favicon.ico',
     shortcut: '/favicon/favicon-16x16.png',

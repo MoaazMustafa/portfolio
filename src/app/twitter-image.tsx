@@ -17,7 +17,8 @@ export default function TwitterImage() {
           justifyContent: 'center',
           width: '100%',
           height: '100%',
-          background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%)',
+          background:
+            'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%)',
           fontFamily: 'sans-serif',
           color: '#ffffff',
           position: 'relative',
@@ -32,7 +33,8 @@ export default function TwitterImage() {
             width: '400px',
             height: '400px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(99,102,241,0.3) 0%, transparent 70%)',
+            background:
+              'radial-gradient(circle, rgba(99,102,241,0.3) 0%, transparent 70%)',
             display: 'flex',
           }}
         />
@@ -44,7 +46,8 @@ export default function TwitterImage() {
             width: '500px',
             height: '500px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(168,85,247,0.2) 0%, transparent 70%)',
+            background:
+              'radial-gradient(circle, rgba(168,85,247,0.2) 0%, transparent 70%)',
             display: 'flex',
           }}
         />
