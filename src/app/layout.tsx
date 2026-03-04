@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Orbitron } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 
 import {
   ClientLayoutProvider,
@@ -74,6 +75,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </Preloader>
           </DevToolsProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
