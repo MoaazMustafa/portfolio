@@ -35,11 +35,11 @@ export default async function DashboardPage() {
 
     // Check if project model exists before calling count
     if ((prisma as any).project) {
-      projectCount = await prisma.project.count();
-      activeProjects = await prisma.project.count({
+      projectCount = await (prisma as any).project.count();
+      activeProjects = await (prisma as any).project.count({
         where: { status: 'Under_Development' },
       });
-      completedProjects = await prisma.project.count({
+      completedProjects = await (prisma as any).project.count({
         where: { status: 'Completed' },
       });
     } else {

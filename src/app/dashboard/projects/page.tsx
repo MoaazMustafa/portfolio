@@ -39,7 +39,7 @@ export default async function ProjectsPage() {
     );
   }
 
-  const projects = await prisma.project.findMany({
+  const projects = await (prisma as any).project.findMany({
     orderBy: { createdAt: 'desc' },
     include: {
       technologies: true,
@@ -56,11 +56,11 @@ export default async function ProjectsPage() {
     updatedAt: project.updatedAt.toISOString(),
   }));
 
-  const technologies = await prisma.technology.findMany({
+  const technologies = await (prisma as any).technology.findMany({
     orderBy: { name: 'asc' },
   });
 
-  const categories = await prisma.category.findMany({
+  const categories = await (prisma as any).category.findMany({
     orderBy: { name: 'asc' },
   });
 

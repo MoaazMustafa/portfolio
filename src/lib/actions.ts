@@ -11,7 +11,7 @@ export async function createProject(data: ProjectFormValues) {
   try {
     const validatedData = projectSchema.parse(data)
 
-    await prisma.project.create({
+    await (prisma as any).project.create({
       data: {
         title: validatedData.title,
         slug: validatedData.slug,
@@ -56,7 +56,7 @@ export async function updateProject(id: string, data: ProjectFormValues) {
     try {
         const validatedData = projectSchema.parse(data)
 
-        await prisma.project.update({
+        await (prisma as any).project.update({
             where: { id },
             data: {
                 title: validatedData.title,
@@ -96,7 +96,7 @@ export async function updateProject(id: string, data: ProjectFormValues) {
 
 export async function deleteProject(id: string) {
     try {
-        await prisma.project.delete({
+        await (prisma as any).project.delete({
             where: { id },
         })
         revalidatePath("/dashboard/projects")
