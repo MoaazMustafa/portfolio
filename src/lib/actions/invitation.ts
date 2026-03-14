@@ -1,8 +1,8 @@
 'use server'
 
-import { UserRole } from "@prisma/client"
 import { randomBytes } from "crypto"
 
+import type { UserRole } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
 
