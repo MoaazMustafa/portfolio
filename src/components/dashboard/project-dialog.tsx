@@ -1,9 +1,10 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Plus, Pencil } from "lucide-react"
+import { Pencil, Plus } from 'lucide-react';
+import { useState } from 'react';
 
-import { Button } from "@/components/ui/button"
+import { ProjectForm } from '@/components/dashboard/project-form';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -11,58 +12,76 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { ProjectForm } from "@/components/dashboard/project-form"
-import { Project, Technology, Category } from "@prisma/client"
+} from '@/components/ui/dialog';
+import { Category, Project, Technology } from '@prisma/client';
 
 // Helper type for serialized dates from Server Components
-type SerializedProject = Omit<Project, 'startDate' | 'endDate' | 'createdAt' | 'updatedAt'> & {
-    startDate: string | Date
-    endDate: string | Date | null
-    createdAt: string | Date
-    updatedAt: string | Date
-}
+type SerializedProject = Omit<
+  Project,
+  'startDate' | 'endDate' | 'createdAt' | 'updatedAt'
+> & {
+  startDate: string | Date;
+  endDate: string | Date | null;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+};
 
 interface ProjectDialogProps {
   project?: SerializedProject & {
-    technologies: Technology[]
-    categories: Category[]
-  }
-  technologies: Technology[]
-  categories: Category[]
-  trigger?: React.ReactNode
+    technologies: Technology[];
+    categories: Category[];
+  };
+  technologies: Technology[];
+  categories: Category[];
+  trigger?: React.ReactNode;
 }
 
-export function ProjectDialog({ project, technologies, categories, trigger }: ProjectDialogProps) {
-  const [open, setOpen] = useState(false)
+export function ProjectDialog({
+  project,
+  technologies,
+  categories,
+  trigger,
+}: ProjectDialogProps) {
+  const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger ? (
-            trigger
+          trigger
         ) : (
-             <Button variant={project ? "ghost" : "default"} size={project ? "icon" : "default"}>
-                {project ? <Pencil className="h-4 w-4" /> : <><Plus className="mr-2 h-4 w-4" /> Add Project</>}
-            </Button>
+          <Button
+            variant={project ? 'ghost' : 'default'}
+            size={project ? 'icon' : 'default'}
+          >
+            {project ? (
+              <Pencil className="h-4 w-4" />
+            ) : (
+              <>
+                <Plus className="mr-2 h-4 w-4" /> Add Project
+              </>
+            )}
+          </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{project ? "Edit Project" : "Create Project"}</DialogTitle>
+          <DialogTitle>
+            {project ? 'Edit Project' : 'Create Project'}
+          </DialogTitle>
           <DialogDescription>
             {project
-              ? "Make changes to the project details."
-              : "Add a new project to your portfolio."}
+              ? 'Make changes to the project details.'
+              : 'Add a new project to your portfolio.'}
           </DialogDescription>
         </DialogHeader>
-        <ProjectForm 
-            project={project} 
-            technologies={technologies} 
-            categories={categories}
-            onSuccess={() => setOpen(false)}
+        <ProjectForm
+          project={project}
+          technologies={technologies}
+          categories={categories}
+          onSuccess={() => setOpen(false)}
         />
       </DialogContent>
     </Dialog>
-  )
+  );
 }

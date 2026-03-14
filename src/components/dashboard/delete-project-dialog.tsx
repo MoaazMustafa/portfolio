@@ -1,8 +1,8 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Loader2, Trash } from "lucide-react"
-import { toast } from "sonner"
+import { Loader2, Trash } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 import {
   AlertDialog,
@@ -14,33 +14,33 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
-import { deleteProject } from "@/lib/actions"
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { deleteProject } from '@/lib/actions';
 
 interface DeleteProjectDialogProps {
-  id: string
-  title: string
+  id: string;
+  title: string;
 }
 
 export function DeleteProjectDialog({ id, title }: DeleteProjectDialogProps) {
-  const [loading, setLoading] = useState(false)
-  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   async function handleDelete() {
-    setLoading(true)
+    setLoading(true);
     try {
-      const result = await deleteProject(id)
+      const result = await deleteProject(id);
       if (result.success) {
-        toast.success("Project deleted successfully")
-        setOpen(false)
+        toast.success('Project deleted successfully');
+        setOpen(false);
       } else {
-        toast.error("Failed to delete project")
+        toast.error('Failed to delete project');
       }
     } catch (error) {
-      toast.error("Something went wrong")
+      toast.error('Something went wrong');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -55,7 +55,8 @@ export function DeleteProjectDialog({ id, title }: DeleteProjectDialogProps) {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the project
+            This action cannot be undone. This will permanently delete the
+            project
             <span className="font-semibold"> {title}</span>.
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -64,8 +65,8 @@ export function DeleteProjectDialog({ id, title }: DeleteProjectDialogProps) {
           <AlertDialogAction
             disabled={loading}
             onClick={(e) => {
-              e.preventDefault()
-              handleDelete()
+              e.preventDefault();
+              handleDelete();
             }}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
@@ -75,5 +76,5 @@ export function DeleteProjectDialog({ id, title }: DeleteProjectDialogProps) {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

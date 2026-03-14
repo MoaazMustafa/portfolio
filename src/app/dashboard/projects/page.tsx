@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/prisma"
-import { ProjectDialog } from "@/components/dashboard/project-dialog"
-import { DeleteProjectDialog } from "@/components/dashboard/delete-project-dialog"
+import { DeleteProjectDialog } from '@/components/dashboard/delete-project-dialog';
+import { ProjectDialog } from '@/components/dashboard/project-dialog';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -8,18 +8,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+} from '@/components/ui/table';
+import { prisma } from '@/lib/prisma';
 
 export default async function ProjectsPage() {
   const projects = await prisma.project.findMany({
-    orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: 'desc' },
     include: {
-        technologies: true,
-        categories: true
-    }
-  })
+      technologies: true,
+      categories: true,
+    },
+  });
 
   // Format dates for client components
   const formattedProjects = projects.map((project) => ({
@@ -28,16 +27,15 @@ export default async function ProjectsPage() {
     endDate: project.endDate?.toISOString() || null,
     createdAt: project.createdAt.toISOString(),
     updatedAt: project.updatedAt.toISOString(),
-  }))
+  }));
 
   const technologies = await prisma.technology.findMany({
-    orderBy: { name: "asc" },
-  })
-  
-  const categories = await prisma.category.findMany({
-    orderBy: { name: "asc" },
-  })
+    orderBy: { name: 'asc' },
+  });
 
+  const categories = await prisma.category.findMany({
+    orderBy: { name: 'asc' },
+  });
 
   return (
     <div className="space-y-6">
@@ -60,65 +58,86 @@ export default async function ProjectsPage() {
           </TableHeader>
           <TableBody>
             {formattedProjects.length === 0 ? (
-                <TableRow>
-                    <TableCell colSpan={6} className="text-center h-24">
-                        No projects found. Add one to get started.
-                    </TableCell>
-                </TableRow>
+              <TableRow>
+                <TableCell colSpan={6} className="h-24 text-center">
+                  No projects found. Add one to get started.
+                </TableCell>
+              </TableRow>
             ) : (
-                formattedProjects.map((project) => (
+              formattedProjects.map((project) => (
                 <TableRow key={project.id}>
-                    <TableCell>
-                        {project.coverImage ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img 
-                                src={project.coverImage} 
-                                alt={project.title} 
-                                className="h-10 w-16 object-cover rounded-md bg-muted" 
-                            />
-                        ) : (
-                            <div className="h-10 w-16 rounded-md bg-muted flex items-center justify-center text-xs text-muted-foreground">
-                                No img
-                            </div>
-                        )}
-                    </TableCell>
-                    <TableCell className="font-medium">{project.title}</TableCell>
-                    <TableCell>
-                        <Badge variant={project.status === "Completed" ? "default" : "secondary"}>
-                            {project.status}
-                        </Badge>
-                    </TableCell>
-                    <TableCell>
-                         {project.isFeatured ? (
-                            <Badge variant="default" className="bg-amber-500 hover:bg-amber-600">Featured</Badge>
-                         ) : (
-                            <span className="text-muted-foreground text-sm">No</span>
-                         )}
-                    </TableCell>
-                    <TableCell>
-                        {project.isVisible ? (
-                             <Badge variant="outline" className="border-green-500 text-green-500">Visible</Badge>
-                         ) : (
-                             <Badge variant="outline" className="border-red-500 text-red-500">Hidden</Badge>
-                         )}
-                    </TableCell>
-                    <TableCell className="text-right space-x-2">
-                        <div className="flex justify-end gap-2">
-                            <ProjectDialog 
-                                project={project} 
-                                technologies={technologies} 
-                                categories={categories} 
-                            />
-                            <DeleteProjectDialog id={project.id} title={project.title} />
-                        </div>
-                    </TableCell>
+                  <TableCell>
+                    {project.coverImage ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={project.coverImage}
+                        alt={project.title}
+                        className="bg-muted h-10 w-16 rounded-md object-cover"
+                      />
+                    ) : (
+                      <div className="bg-muted text-muted-foreground flex h-10 w-16 items-center justify-center rounded-md text-xs">
+                        No img
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell className="font-medium">{project.title}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={
+                        project.status === 'Completed' ? 'default' : 'secondary'
+                      }
+                    >
+                      {project.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {project.isFeatured ? (
+                      <Badge
+                        variant="default"
+                        className="bg-amber-500 hover:bg-amber-600"
+                      >
+                        Featured
+                      </Badge>
+                    ) : (
+                      <span className="text-muted-foreground text-sm">No</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {project.isVisible ? (
+                      <Badge
+                        variant="outline"
+                        className="border-green-500 text-green-500"
+                      >
+                        Visible
+                      </Badge>
+                    ) : (
+                      <Badge
+                        variant="outline"
+                        className="border-red-500 text-red-500"
+                      >
+                        Hidden
+                      </Badge>
+                    )}
+                  </TableCell>
+                  <TableCell className="space-x-2 text-right">
+                    <div className="flex justify-end gap-2">
+                      <ProjectDialog
+                        project={project}
+                        technologies={technologies}
+                        categories={categories}
+                      />
+                      <DeleteProjectDialog
+                        id={project.id}
+                        title={project.title}
+                      />
+                    </div>
+                  </TableCell>
                 </TableRow>
-                ))
+              ))
             )}
           </TableBody>
         </Table>
       </div>
     </div>
-  )
+  );
 }
-
