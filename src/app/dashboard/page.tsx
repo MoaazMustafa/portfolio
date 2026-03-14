@@ -31,21 +31,22 @@ export default async function DashboardPage() {
 
   try {
     // If prisma is somehow undefined, throw explicitly to catch below
-    if (!prisma) throw new Error("Prisma client not initialized");
-    
+    if (!prisma) throw new Error('Prisma client not initialized');
+
     // Check if project model exists before calling count
     if (prisma.project) {
-        projectCount = await prisma.project.count();
-        activeProjects = await prisma.project.count({
-          where: { status: 'Under_Development' },
-        });
-        completedProjects = await prisma.project.count({
+      projectCount = await prisma.project.count();
+      activeProjects = await prisma.project.count({
+        where: { status: 'Under_Development' },
+      });
+      completedProjects = await prisma.project.count({
         where: { status: 'Completed' },
-        });
+      });
     } else {
-        console.error("Prisma project model is undefined. Did you run `npx prisma generate`?");
+      console.error(
+        'Prisma project model is undefined. Did you run `npx prisma generate`?',
+      );
     }
-
   } catch (error) {
     console.error('Failed to fetch dashboard stats:', error);
     // Fallback or just show 0
