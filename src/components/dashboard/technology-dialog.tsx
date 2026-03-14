@@ -1,13 +1,13 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { toast } from "sonner"
-import { Loader2, Plus, Pencil } from "lucide-react"
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2, Pencil, Plus } from 'lucide-react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -16,7 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -24,85 +24,85 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { createTechnology, updateTechnology } from "@/lib/actions/technology"
+} from '@/components/ui/select';
+import { createTechnology, updateTechnology } from '@/lib/actions/technology';
 
 const formSchema = z.object({
   id: z.string().optional(),
-  name: z.string().min(1, "Name is required"),
-  slug: z.string().min(1, "Slug is required"),
-  category: z.string().min(1, "Category is required"),
+  name: z.string().min(1, 'Name is required'),
+  slug: z.string().min(1, 'Slug is required'),
+  category: z.string().min(1, 'Category is required'),
   icon: z.string().optional(),
-})
+});
 
 interface TechnologyDialogProps {
   technology?: {
-    id: string
-    name: string
-    slug: string
-    category: string
-    icon: string | null
-  }
+    id: string;
+    name: string;
+    slug: string;
+    category: string;
+    icon: string | null;
+  };
 }
 
 const CATEGORIES = [
-  "Frontend",
-  "Backend",
-  "Database",
-  "DevOps",
-  "Tools",
-  "AI/ML",
-  "Other",
-]
+  'Frontend',
+  'Backend',
+  'Database',
+  'DevOps',
+  'Tools',
+  'AI/ML',
+  'Other',
+];
 
 export function TechnologyDialog({ technology }: TechnologyDialogProps) {
-  const [open, setOpen] = useState(false)
-  const isEditing = !!technology
+  const [open, setOpen] = useState(false);
+  const isEditing = !!technology;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       id: technology?.id,
-      name: technology?.name || "",
-      slug: technology?.slug || "",
-      category: technology?.category || "Other",
-      icon: technology?.icon || "",
+      name: technology?.name || '',
+      slug: technology?.slug || '',
+      category: technology?.category || 'Other',
+      icon: technology?.icon || '',
     },
-  })
+  });
 
   // Auto-generate slug from name if creating
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    form.setValue("name", e.target.value)
+    form.setValue('name', e.target.value);
     if (!isEditing) {
-      const slug = e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-')
-      form.setValue("slug", slug)
+      const slug = e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      form.setValue('slug', slug);
     }
-  }
+  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const result = isEditing 
+      const result = isEditing
         ? await updateTechnology(values)
-        : await createTechnology(values)
-      
+        : await createTechnology(values);
+
       if (result.error) {
-        toast.error(result.error)
-        return
+        toast.error(result.error);
+        return;
       }
 
-      toast.success(isEditing ? "Technology updated" : "Technology created")
-      setOpen(false)
-      if (!isEditing) form.reset()
+      toast.success(isEditing ? 'Technology updated' : 'Technology created');
+      setOpen(false);
+      if (!isEditing) form.reset();
     } catch (error) {
-      toast.error("Something went wrong")
+      toast.error('Something went wrong');
     }
   }
 
@@ -122,9 +122,13 @@ export function TechnologyDialog({ technology }: TechnologyDialogProps) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{isEditing ? "Edit Technology" : "Add Technology"}</DialogTitle>
+          <DialogTitle>
+            {isEditing ? 'Edit Technology' : 'Add Technology'}
+          </DialogTitle>
           <DialogDescription>
-            {isEditing ? "Update technology details." : "Add a new technology to your stack."}
+            {isEditing
+              ? 'Update technology details.'
+              : 'Add a new technology to your stack.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -137,10 +141,10 @@ export function TechnologyDialog({ technology }: TechnologyDialogProps) {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input 
-                        placeholder="React" 
-                        {...field} 
-                        onChange={handleNameChange}
+                    <Input
+                      placeholder="React"
+                      {...field}
+                      onChange={handleNameChange}
                     />
                   </FormControl>
                   <FormMessage />
@@ -149,44 +153,47 @@ export function TechnologyDialog({ technology }: TechnologyDialogProps) {
             />
 
             <div className="grid grid-cols-2 gap-4">
-                <FormField
+              <FormField
                 control={form.control}
                 name="slug"
                 render={({ field }) => (
-                    <FormItem>
+                  <FormItem>
                     <FormLabel>Slug</FormLabel>
                     <FormControl>
-                        <Input placeholder="react" {...field} />
+                      <Input placeholder="react" {...field} />
                     </FormControl>
                     <FormMessage />
-                    </FormItem>
+                  </FormItem>
                 )}
-                />
+              />
 
-                <FormField
+              <FormField
                 control={form.control}
                 name="category"
                 render={({ field }) => (
-                    <FormItem>
+                  <FormItem>
                     <FormLabel>Category</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
                         <SelectTrigger>
-                            <SelectValue placeholder="Select category" />
+                          <SelectValue placeholder="Select category" />
                         </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
+                      </FormControl>
+                      <SelectContent>
                         {CATEGORIES.map((cat) => (
-                            <SelectItem key={cat} value={cat}>
+                          <SelectItem key={cat} value={cat}>
                             {cat}
-                            </SelectItem>
+                          </SelectItem>
                         ))}
-                        </SelectContent>
+                      </SelectContent>
                     </Select>
                     <FormMessage />
-                    </FormItem>
+                  </FormItem>
                 )}
-                />
+              />
             </div>
 
             <FormField
@@ -208,12 +215,12 @@ export function TechnologyDialog({ technology }: TechnologyDialogProps) {
                 {form.formState.isSubmitting && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                {isEditing ? "Save Changes" : "Create"}
+                {isEditing ? 'Save Changes' : 'Create'}
               </Button>
             </DialogFooter>
           </form>
         </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

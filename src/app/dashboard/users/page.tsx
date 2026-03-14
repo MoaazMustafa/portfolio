@@ -1,6 +1,6 @@
-import { InviteUserDialog } from '@/components/dashboard/invite-user-dialog';
 import { CreateUserDialog } from '@/components/dashboard/create-user-dialog';
 import { EditUserDialog } from '@/components/dashboard/edit-user-dialog';
+import { InviteUserDialog } from '@/components/dashboard/invite-user-dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Table,
@@ -68,8 +68,12 @@ export default async function UsersPage() {
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                        <span>{user.name}</span>
-                        {user.title && <span className="text-xs text-muted-foreground">{user.title}</span>}
+                      <span>{user.name}</span>
+                      {user.title && (
+                        <span className="text-muted-foreground text-xs">
+                          {user.title}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </TableCell>
@@ -81,7 +85,7 @@ export default async function UsersPage() {
                   {new Date(user.createdAt).toLocaleDateString()}
                 </TableCell>
                 <TableCell>
-                    <EditUserDialog user={user} />
+                  <EditUserDialog user={user} />
                 </TableCell>
               </TableRow>
             ))}
