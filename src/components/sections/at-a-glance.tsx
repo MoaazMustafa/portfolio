@@ -3,14 +3,14 @@
 import type { COBEOptions } from 'cobe';
 import { AnimatePresence, motion, useInView } from 'framer-motion';
 import { MapPin, Trophy, Zap } from 'lucide-react';
-import Image from 'next/image';
 import { useTheme } from 'next-themes';
+import Image from 'next/image';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GitHubCalendar } from 'react-github-calendar';
 import { RiGithubFill } from 'react-icons/ri';
 import {
   SiBootstrap,
-  SiCss3,
+  SiCss,
   SiExpress,
   SiFigma,
   SiGit,
@@ -27,6 +27,7 @@ import {
   SiTypescript,
 } from 'react-icons/si';
 
+import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
 import { Globe } from '@/components/ui/globe';
 import { useColorTheme } from '@/hooks';
 import { cn } from '@/lib/utils';
@@ -70,7 +71,7 @@ const STACKS_ROW_1 = [
   { icon: SiTypescript, label: 'TypeScript', color: '#3178C6' },
   { icon: SiJavascript, label: 'JavaScript', color: '#F7DF1E' },
   { icon: SiHtml5, label: 'HTML5', color: '#E34F26' },
-  { icon: SiCss3, label: 'CSS3', color: '#1572B6' },
+  { icon: SiCss, label: 'CSS3', color: '#1572B6' },
   { icon: SiTailwindcss, label: 'Tailwind CSS', color: '#06B6D4' },
   { icon: SiBootstrap, label: 'Bootstrap', color: '#7952B3' },
 ];
@@ -107,14 +108,19 @@ function BentoCard({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      className={cn(
-        'border-border bg-card/80 relative overflow-hidden rounded-xl border p-4 lg:p-6',
-        className,
-      )}
+    <CardContainer
+      className="block h-full w-full"
+      containerClassName="h-full w-full py-0"
     >
-      {children}
-    </div>
+      <CardBody className="border-border bg-card/80 relative h-full w-full overflow-hidden rounded-xl border">
+        <CardItem
+          translateZ="50"
+          className={cn('h-full w-full p-4 lg:p-6', className)}
+        >
+          {children}
+        </CardItem>
+      </CardBody>
+    </CardContainer>
   );
 }
 
