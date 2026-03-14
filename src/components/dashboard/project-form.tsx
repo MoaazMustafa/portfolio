@@ -111,14 +111,16 @@ export function ProjectForm({
     }
   };
 
-  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleGalleryUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const files = e.target.files;
     if (files) {
       if (files.length > 5) {
         toast.error('Maximum 5 images allowed at once');
         return;
       }
-      
+
       Array.from(files).forEach((file) => {
         if (file.size > 5 * 1024 * 1024) {
           toast.error(`Image ${file.name} is too large (>5MB)`);
@@ -346,10 +348,7 @@ export function ProjectForm({
                       </FormControl>
                     ) : (
                       <FormControl>
-                        <Input 
-                            type="hidden" 
-                            {...field} 
-                        />
+                        <Input type="hidden" {...field} />
                       </FormControl>
                     )}
                   </div>
@@ -383,7 +382,7 @@ export function ProjectForm({
             <div className="space-y-2">
               <FormLabel>Gallery Images</FormLabel>
               {fields.map((field, index) => (
-                <div key={field.id} className="flex gap-2 items-center">
+                <div key={field.id} className="flex items-center gap-2">
                   <FormField
                     control={form.control}
                     name={`images.${index}.value`}
@@ -392,9 +391,13 @@ export function ProjectForm({
                         <FormControl>
                           {field.value && field.value.startsWith('data:') ? (
                             <div className="relative h-20 w-32 overflow-hidden rounded-md border">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img src={field.value} alt="Thumb" className="h-full w-full object-cover" />
-                                <input type="hidden" {...field} />
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={field.value}
+                                alt="Thumb"
+                                className="h-full w-full object-cover"
+                              />
+                              <input type="hidden" {...field} />
                             </div>
                           ) : (
                             <Input placeholder="Image URL" {...field} />
@@ -414,7 +417,7 @@ export function ProjectForm({
                   </Button>
                 </div>
               ))}
-              <div className="flex gap-2 mt-2">
+              <div className="mt-2 flex gap-2">
                 <Button
                   type="button"
                   variant="outline"

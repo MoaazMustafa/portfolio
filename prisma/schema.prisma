@@ -51,13 +51,13 @@ model User {
 
     // User Profile
     title       String?
-    bio         String?   @db.Text
+    bio         String? @db.Text
     linkedinUrl String?
     githubUrl   String?
     websiteUrl  String?
 
-    accounts Account[]
-    sessions Session[]
+    accounts    Account[]
+    sessions    Session[]
     invitations Invitation[]
 
     // Relations
@@ -79,13 +79,13 @@ model VerificationToken {
 }
 
 model Invitation {
-    id        String   @id @default(cuid())
-    email     String
-    token     String   @unique
-    expires   DateTime
-    user      User?    @relation(fields: [userId], references: [id])
-    userId    String?
-    role      UserRole @default(USER)
+    id      String   @id @default(cuid())
+    email   String
+    token   String   @unique
+    expires DateTime
+    user    User?    @relation(fields: [userId], references: [id])
+    userId  String?
+    role    UserRole @default(USER)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -133,10 +133,11 @@ model Project {
 }
 
 model Technology {
-    id   String  @id @default(cuid())
-    name String  @unique // React, Node.js
-    slug String  @unique
-    icon String? // Iconify name or URL
+    id       String  @id @default(cuid())
+    name     String  @unique // React, Node.js
+    slug     String  @unique
+    category String  @default("Other") // Frontend, Backend, Database, Tools
+    icon     String? // Iconify name or URL
 
     projects Project[]
 

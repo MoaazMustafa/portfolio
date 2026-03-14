@@ -1,0 +1,114 @@
+'use server'
+
+import { randomBytes } from "crypto"
+
+import { revalidatePath } from "next/cache"
+import { z } from "zod"
+
+import { prisma } from "@/lib/prisma"
+
+
+export async function createInvitation(email: string) {
+    if (!email) return { error: "Email is required" }
+
+    // Generate random token
+    const token = randomBytes(32).toString("hex")
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24h
+
+    try {
+        await (prisma as any).invitation.create({
+            data: {
+                email,
+                token,
+                expires,
+            },
+        })
+
+        revalidatePath("/dashboard/users")
+        // Return full URL
+        const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
+        return { success: true, url: `${baseUrl}/invite/${token}` }
+    } catch (error) {
+        console.error(error)
+        return { error: "Failed to create invitation" }
+    }
+}
+
+export async function getInvitation(token: string) {
+    const invitation = await (prisma as any).invitation.findUnique({
+        where: { token },
+    })
+
+    if (!invitation || new Date(invitation.expires) < new Date()) {
+        return { error: "Invalid or expired token" }
+    }
+
+    return { invitation }
+}
+
+const onboardingSchema = z.object({
+    name: z.string().min(2, "Name is required"),
+    title: z.string().optional(),
+    bio: z.string().optional(),
+    linkedinUrl: z.string().url().optional().or(z.literal('')),
+    githubUrl: z.string().url().optional().or(z.literal('')),
+    websiteUrl: z.string().url().optional().or(z.literal('')),
+})
+
+export type OnboardingData = z.infer<typeof onboardingSchema>
+
+export async function submitOnboarding(token: string, data: OnboardingData) {
+    // 1. Validate token again
+    const invitation = await (prisma as any).invitation.findUnique({
+        where: { token },
+    })
+
+    if (!invitation || new Date(invitation.expires) < new Date()) {
+        return { error: "Invalid or expired token" }
+    }
+
+    // 2. Validate data
+    const validated = onboardingSchema.safeParse(data)
+    if (!validated.success) {
+        return { error: "Invalid data" }
+    }
+
+    try {
+        // 3. Create User
+        // Check if user already exists (maybe they signed up before invite?)
+        const existingUser = await (prisma as any).user.findUnique({
+            where: { email: invitation.email },
+        })
+
+        if (existingUser) {
+            // Update existing user
+            await (prisma as any).user.update({
+                where: { email: invitation.email },
+                data: {
+                    ...validated.data,
+                    role: invitation.role || 'USER', // Ensure role is set from invitation
+                },
+            })
+        } else {
+            // Create new user
+            await (prisma as any).user.create({
+                data: {
+                    email: invitation.email,
+                    ...validated.data,
+                    role: invitation.role || 'USER',
+                    emailVerified: new Date(), // They possessed the token
+                },
+            })
+        }
+
+        // 4. Delete Invitation
+        await (prisma as any).invitation.delete({
+            where: { token },
+        })
+
+        return { success: true }
+    } catch (error) {
+        console.error(error)
+        return { error: "Failed to complete onboarding" }
+    }
+}
