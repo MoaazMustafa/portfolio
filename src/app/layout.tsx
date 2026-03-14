@@ -1,15 +1,8 @@
+import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Orbitron } from 'next/font/google';
-import { Analytics } from '@vercel/analytics/next';
 
-import {
-  ClientLayoutProvider,
-  DevToolsProvider,
-  Footer,
-  ScrollBar,
-  ThemeProvider,
-} from '@/components';
-import { Navbar } from '@/components/navbar';
+import { ClientLayoutProvider, ScrollBar, ThemeProvider } from '@/components';
 import { Preloader } from '@/components/preloader';
 import { defaultMetadata } from '@/lib/metadata';
 
@@ -62,18 +55,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
-          <DevToolsProvider>
-            <ScrollBar />
-            <Preloader>
-              <ClientLayoutProvider>
-                <Navbar />
-                <main role="main" id="main-content">
-                  {children}
-                </main>
-                <Footer />
-              </ClientLayoutProvider>
-            </Preloader>
-          </DevToolsProvider>
+          <ScrollBar />
+          <Preloader>
+            <ClientLayoutProvider>{children}</ClientLayoutProvider>
+          </Preloader>
         </ThemeProvider>
         <Analytics />
       </body>

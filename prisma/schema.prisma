@@ -9,3 +9,147 @@ datasource db {
     provider = "postgresql"
     url      = env("DATABASE_URL")
 }
+
+// User & Auth (Prepared for future NextAuth Adapter) //
+model Account {
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? @db.Text
+    access_token      String? @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? @db.Text
+    session_state     String?
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+    @@map("accounts")
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("sessions")
+}
+
+model User {
+    id            String    @id @default(cuid())
+    name          String?
+    email         String?   @unique
+    emailVerified DateTime?
+    image         String?
+    role          UserRole  @default(USER)
+
+    accounts Account[]
+    sessions Session[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("users")
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+    @@map("verification_tokens")
+}
+
+enum UserRole {
+    ADMIN
+    USER
+}
+
+// Content Models //
+
+model Project {
+    id          String  @id @default(cuid())
+    title       String
+    slug        String  @unique // URL-friendly name
+    description String  @db.Text
+    content     String? @db.Text // Extended Markdown/Rich Text content
+
+    coverImage String?
+    images     String[] // Simple array of URLs often suffices, or use relation
+
+    liveUrl   String?
+    githubUrl String?
+
+    startDate DateTime
+    endDate   DateTime?
+
+    isFeatured Boolean @default(false)
+    isVisible  Boolean @default(true)
+
+    status ProjectStatus @default(Planned)
+
+    // Relations
+    technologies Technology[] // Many-to-many
+    categories   Category[] // Many-to-many
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("projects")
+}
+
+model Technology {
+    id   String  @id @default(cuid())
+    name String  @unique // React, Node.js
+    slug String  @unique
+    icon String? // Iconify name or URL
+
+    projects Project[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("technologies")
+}
+
+model Category {
+    id   String @id @default(cuid())
+    name String @unique // Web App, Mobile App
+    slug String @unique
+
+    projects Project[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("categories")
+}
+
+enum ProjectStatus {
+    Planned
+    Under_Development
+    Completed
+    On_Hold
+    Cancelled
+}
+
+// If expanding to a blog later
+model Post {
+    id        String  @id @default(cuid())
+    title     String
+    slug      String  @unique
+    content   String  @db.Text
+    published Boolean @default(false)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("posts")
+}

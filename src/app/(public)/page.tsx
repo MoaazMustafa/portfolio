@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 
 import { pageMetadata } from '@/lib/metadata';
-
-import { AtAGlance, Hero } from '../components';
+import { AtAGlance, Hero } from '../../components';
 
 export const metadata: Metadata = pageMetadata.home;
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { SessionProvider } from 'next-auth/react';
 import NextTopLoader from 'nextjs-toploader';
 import type { ReactNode } from 'react';
 
@@ -14,7 +15,7 @@ export function ClientLayoutProvider({ children }: ClientLayoutProviderProps) {
   const { currentColors } = useColorTheme();
 
   return (
-    <>
+    <SessionProvider>
       <NextTopLoader
         color={currentColors.primary}
         shadow={`0 0 10px ${currentColors.primary}, 0 0 5px ${currentColors.primary}`}
@@ -31,6 +32,6 @@ export function ClientLayoutProvider({ children }: ClientLayoutProviderProps) {
       >
         {children}
       </ClickSpark>
-    </>
+    </SessionProvider>
   );
 }
