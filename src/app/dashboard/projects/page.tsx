@@ -12,6 +12,24 @@ import {
 import { prisma } from '@/lib/prisma';
 
 export default async function ProjectsPage() {
+  if (!prisma || !prisma.project) {
+    const availableKeys = prisma ? Object.keys(prisma).join(', ') : 'prisma is undefined';
+    return (
+      <div className="p-8 text-center border border-dashed rounded-lg">
+        <h2 className="text-xl font-semibold text-destructive">Database Connection Error</h2>
+        <p className="text-muted-foreground mt-2">
+          Unable to connect to the database. Please ensure the Prisma client is generated (`npx prisma generate`).
+        </p>
+        <div className="mt-4 p-4 bg-muted/50 rounded text-left text-xs font-mono overflow-auto max-w-xl mx-auto">
+            <p><strong>Debug Info:</strong></p>
+            <p>Prisma Instance: {prisma ? 'Present' : 'Missing'}</p>
+            <p>Project Model: {prisma?.project ? 'Present' : 'Missing'}</p>
+            <p>Available Keys: {availableKeys}</p>
+        </div>
+      </div>
+    )
+  }
+
   const projects = await prisma.project.findMany({
     orderBy: { createdAt: 'desc' },
     include: {
