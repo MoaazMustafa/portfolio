@@ -10,7 +10,7 @@ import { GitHubCalendar } from 'react-github-calendar';
 import { RiGithubFill } from 'react-icons/ri';
 import {
   SiBootstrap,
-  SiCss,
+  SiCss3,
   SiExpress,
   SiFigma,
   SiGit,
@@ -71,7 +71,7 @@ const STACKS_ROW_1 = [
   { icon: SiTypescript, label: 'TypeScript', color: '#3178C6' },
   { icon: SiJavascript, label: 'JavaScript', color: '#F7DF1E' },
   { icon: SiHtml5, label: 'HTML5', color: '#E34F26' },
-  { icon: SiCss, label: 'CSS3', color: '#1572B6' },
+  { icon: SiCss3, label: 'CSS3', color: '#1572B6' },
   { icon: SiTailwindcss, label: 'Tailwind CSS', color: '#06B6D4' },
   { icon: SiBootstrap, label: 'Bootstrap', color: '#7952B3' },
 ];
