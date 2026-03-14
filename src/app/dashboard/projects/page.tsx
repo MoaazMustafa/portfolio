@@ -10,6 +10,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { prisma } from '@/lib/prisma';
+import { Category, Project, Technology } from '@prisma/client';
 
 export default async function ProjectsPage() {
   if (!prisma || !(prisma as any).project) {
@@ -39,13 +40,13 @@ export default async function ProjectsPage() {
     );
   }
 
-  const projects = await (prisma as any).project.findMany({
+  const projects = (await (prisma as any).project.findMany({
     orderBy: { createdAt: 'desc' },
     include: {
       technologies: true,
       categories: true,
     },
-  });
+  })) as (Project & { technologies: Technology[]; categories: Category[] })[];
 
   // Format dates for client components
   const formattedProjects = projects.map((project) => ({
@@ -56,13 +57,13 @@ export default async function ProjectsPage() {
     updatedAt: project.updatedAt.toISOString(),
   }));
 
-  const technologies = await (prisma as any).technology.findMany({
+  const technologies = (await (prisma as any).technology.findMany({
     orderBy: { name: 'asc' },
-  });
+  })) as Technology[];
 
-  const categories = await (prisma as any).category.findMany({
+  const categories = (await (prisma as any).category.findMany({
     orderBy: { name: 'asc' },
-  });
+  })) as Category[];
 
   return (
     <div className="space-y-6">
