@@ -1,5 +1,6 @@
 'use server'
 
+import { UserRole } from "@prisma/client"
 import { randomBytes } from "crypto"
 
 import { revalidatePath } from "next/cache"
@@ -21,7 +22,7 @@ export async function createInvitation(email: string, role: string = 'USER') {
                 email,
                 token,
                 expires,
-                role: role as any,
+                role: role as UserRole,
             },
         })
 
@@ -29,7 +30,7 @@ export async function createInvitation(email: string, role: string = 'USER') {
         // Return full URL
         const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
         return { success: true, url: `${baseUrl}/invite/${token}` }
-    } catch (error) {
+    } catch {
         // console.error(error)
         return { error: "Failed to create invitation" }
     }
@@ -54,6 +55,7 @@ const onboardingSchema = z.object({
     linkedinUrl: z.string().url().optional().or(z.literal('')),
     githubUrl: z.string().url().optional().or(z.literal('')),
     websiteUrl: z.string().url().optional().or(z.literal('')),
+    image: z.string().optional().nullable(),
 })
 
 export type OnboardingData = z.infer<typeof onboardingSchema>
@@ -108,7 +110,7 @@ export async function submitOnboarding(token: string, data: OnboardingData) {
         })
 
         return { success: true }
-    } catch (error) {
+    } catch {
         // console.error(error)
         return { error: "Failed to complete onboarding" }
     }

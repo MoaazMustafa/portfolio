@@ -1,12 +1,14 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Trash2, Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -27,6 +29,7 @@ const formSchema = z.object({
   linkedinUrl: z.string().url().optional().or(z.literal('')),
   githubUrl: z.string().url().optional().or(z.literal('')),
   websiteUrl: z.string().url().optional().or(z.literal('')),
+  image: z.string().optional().nullable(),
 });
 
 interface OnboardingFormProps {
@@ -36,6 +39,8 @@ interface OnboardingFormProps {
 
 export function OnboardingForm({ token, email }: OnboardingFormProps) {
   const router = useRouter();
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,8 +50,31 @@ export function OnboardingForm({ token, email }: OnboardingFormProps) {
       linkedinUrl: '',
       githubUrl: '',
       websiteUrl: '',
+      image: null,
     },
   });
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('Image size must be less than 2MB');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = reader.result as string;
+        setImagePreview(base64);
+        form.setValue('image', base64);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setImagePreview(null);
+    form.setValue('image', null);
+  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -74,6 +102,46 @@ export function OnboardingForm({ token, email }: OnboardingFormProps) {
             <span className="text-foreground font-medium">{email}</span>. Please
             complete your profile to continue.
           </p>
+        </div>
+
+        <div className="flex flex-col items-center gap-4">
+          <Avatar className="h-24 w-24">
+            <AvatarImage src={imagePreview || ''} />
+            <AvatarFallback className="text-lg">
+              {form.watch('name')?.charAt(0) || email.charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="cursor-pointer"
+              asChild
+            >
+              <label>
+                <Upload className="mr-2 h-4 w-4" />
+                Upload Photo
+                <input
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </label>
+            </Button>
+            {imagePreview && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={removeImage}
+                className="text-destructive hover:text-destructive/90"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
         </div>
 
         <FormField
