@@ -34,7 +34,7 @@ export default async function DashboardPage() {
     if (!prisma) throw new Error('Prisma client not initialized');
 
     // Check if project model exists before calling count
-    if (prisma.project) {
+    if ((prisma as any).project) {
       projectCount = await prisma.project.count();
       activeProjects = await prisma.project.count({
         where: { status: 'Under_Development' },

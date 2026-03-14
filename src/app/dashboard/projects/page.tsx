@@ -12,7 +12,7 @@ import {
 import { prisma } from '@/lib/prisma';
 
 export default async function ProjectsPage() {
-  if (!prisma || !prisma.project) {
+  if (!prisma || !(prisma as any).project) {
     const availableKeys = prisma
       ? Object.keys(prisma).join(', ')
       : 'prisma is undefined';
@@ -30,7 +30,9 @@ export default async function ProjectsPage() {
             <strong>Debug Info:</strong>
           </p>
           <p>Prisma Instance: {prisma ? 'Present' : 'Missing'}</p>
-          <p>Project Model: {prisma?.project ? 'Present' : 'Missing'}</p>
+          <p>
+            Project Model: {(prisma as any)?.project ? 'Present' : 'Missing'}
+          </p>
           <p>Available Keys: {availableKeys}</p>
         </div>
       </div>
