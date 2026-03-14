@@ -14,7 +14,7 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
 // Debug: Check if models are loaded
 if (process.env.NODE_ENV !== 'production') {
-    // @ts-expect-error
+    
     const modelCount = Object.keys(prisma).length;
     console.log(`Prisma Client initialized with keys: ${Object.keys(prisma).join(', ')}`);
 }
