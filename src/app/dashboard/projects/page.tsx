@@ -1,3 +1,5 @@
+import type { Category, Project, Technology, User } from '@prisma/client';
+
 import { DeleteProjectDialog } from '@/components/dashboard/delete-project-dialog';
 import { ProjectDialog } from '@/components/dashboard/project-dialog';
 import { Badge } from '@/components/ui/badge';
@@ -10,7 +12,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { prisma } from '@/lib/prisma';
-import { Category, Project, Technology } from '@prisma/client';
 
 export default async function ProjectsPage() {
   if (!prisma || !(prisma as any).project) {
@@ -45,8 +46,13 @@ export default async function ProjectsPage() {
     include: {
       technologies: true,
       categories: true,
+      collaborators: true,
     },
-  })) as (Project & { technologies: Technology[]; categories: Category[] })[];
+  })) as (Project & {
+    technologies: Technology[];
+    categories: Category[];
+    collaborators: User[];
+  })[];
 
   // Format dates for client components
   const formattedProjects = projects.map((project) => ({
@@ -65,11 +71,19 @@ export default async function ProjectsPage() {
     orderBy: { name: 'asc' },
   })) as Category[];
 
+  const users = await (prisma as any).user.findMany({
+    orderBy: { name: 'asc' },
+  });
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Projects</h1>
-        <ProjectDialog technologies={technologies} categories={categories} />
+        <ProjectDialog
+          technologies={technologies}
+          categories={categories}
+          users={users}
+        />
       </div>
 
       <div className="rounded-md border">
@@ -153,6 +167,7 @@ export default async function ProjectsPage() {
                         project={project}
                         technologies={technologies}
                         categories={categories}
+                        users={users}
                       />
                       <DeleteProjectDialog
                         id={project.id}

@@ -1,10 +1,12 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Plus, Trash } from 'lucide-react';
+import type { Category, Project, Technology, User } from '@prisma/client';
+import { Loader2, Plus, Trash, Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -28,9 +30,10 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { createProject, updateProject } from '@/lib/actions';
-import { ProjectFormValues, projectSchema } from '@/lib/validations/project';
-import { Category, Project, Technology } from '@prisma/client';
-import { toast } from 'sonner';
+import {
+  projectSchema,
+  type ProjectFormValues,
+} from '@/lib/validations/project';
 
 // Helper type for serialized dates from Server Components
 type SerializedProject = Omit<
@@ -47,9 +50,11 @@ interface ProjectFormProps {
   project?: SerializedProject & {
     technologies: Technology[];
     categories: Category[];
+    collaborators?: User[];
   };
   technologies: Technology[];
   categories: Category[];
+  users: User[];
   onSuccess?: () => void;
 }
 
@@ -57,10 +62,14 @@ export function ProjectForm({
   project,
   technologies,
   categories,
+  users,
   onSuccess,
 }: ProjectFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    project?.coverImage || null,
+  );
 
   const defaultValues: Partial<ProjectFormValues> = {
     title: project?.title || '',
@@ -82,6 +91,47 @@ export function ProjectForm({
     status: project?.status || 'Planned',
     technologies: project?.technologies.map((t) => t.id) || [],
     categories: project?.categories.map((c) => c.id) || [],
+    collaborators: project?.collaborators?.map((c) => c.id) || [],
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image size must be less than 5MB');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result as string;
+        setImagePreview(result);
+        form.setValue('coverImage', result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      if (files.length > 5) {
+        toast.error('Maximum 5 images allowed at once');
+        return;
+      }
+      
+      Array.from(files).forEach((file) => {
+        if (file.size > 5 * 1024 * 1024) {
+          toast.error(`Image ${file.name} is too large (>5MB)`);
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          append({ value: reader.result as string });
+        };
+        reader.readAsDataURL(file);
+      });
+    }
   };
 
   const form = useForm<ProjectFormValues>({
@@ -272,55 +322,178 @@ export function ProjectForm({
 
         <div className="flex flex-col gap-4">
           <FormLabel>Images</FormLabel>
+          <div className="space-y-4 rounded-md border p-4">
+            <FormField
+              control={form.control}
+              name="coverImage"
+              render={({ field }) => (
+                <FormItem className="flex flex-col gap-2">
+                  <FormLabel>Cover Image</FormLabel>
+                  <div className="flex flex-col gap-2 md:flex-row md:items-center">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={loading}
+                      className="max-w-sm cursor-pointer"
+                    />
+                    <span className="text-muted-foreground text-xs">
+                      or enter URL
+                    </span>
+                    {!imagePreview ? (
+                      <FormControl>
+                        <Input placeholder="https://..." {...field} />
+                      </FormControl>
+                    ) : (
+                      <FormControl>
+                        <Input 
+                            type="hidden" 
+                            {...field} 
+                        />
+                      </FormControl>
+                    )}
+                  </div>
+                  {imagePreview && (
+                    <div className="relative mt-2 aspect-video w-40 overflow-hidden rounded-md border">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="h-full w-full object-cover"
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-1 right-1 h-6 w-6"
+                        onClick={() => {
+                          setImagePreview(null);
+                          form.setValue('coverImage', '');
+                        }}
+                      >
+                        <Trash className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  )}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="space-y-2">
+              <FormLabel>Gallery Images</FormLabel>
+              {fields.map((field, index) => (
+                <div key={field.id} className="flex gap-2 items-center">
+                  <FormField
+                    control={form.control}
+                    name={`images.${index}.value`}
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormControl>
+                          {field.value && field.value.startsWith('data:') ? (
+                            <div className="relative h-20 w-32 overflow-hidden rounded-md border">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={field.value} alt="Thumb" className="h-full w-full object-cover" />
+                                <input type="hidden" {...field} />
+                            </div>
+                          ) : (
+                            <Input placeholder="Image URL" {...field} />
+                          )}
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    onClick={() => remove(index)}
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              <div className="flex gap-2 mt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => append({ value: '' })}
+                >
+                  <Plus className="mr-2 h-4 w-4" /> Add URL
+                </Button>
+                <div className="relative">
+                  <Input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    className="absolute inset-0 cursor-pointer opacity-0"
+                    onChange={handleGalleryUpload}
+                  />
+                  <Button type="button" variant="secondary" size="sm">
+                    <Upload className="mr-2 h-4 w-4" /> Upload Images
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex gap-8">
           <FormField
             control={form.control}
-            name="coverImage"
+            name="collaborators"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Cover Image URL</FormLabel>
-                <FormControl>
-                  <Input placeholder="https://..." {...field} />
-                </FormControl>
+              <FormItem className="flex flex-col space-y-3">
+                <FormLabel>Collaborators</FormLabel>
+                <div className="flex flex-wrap gap-4">
+                  {users?.map((user) => (
+                    <FormField
+                      key={user.id}
+                      control={form.control}
+                      name="collaborators"
+                      render={({ field }) => {
+                        return (
+                          <FormItem
+                            key={user.id}
+                            className="flex flex-row items-start space-y-0 space-x-3"
+                          >
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value?.includes(user.id)}
+                                onCheckedChange={(checked) => {
+                                  return checked
+                                    ? field.onChange([
+                                        ...(field.value || []),
+                                        user.id,
+                                      ])
+                                    : field.onChange(
+                                        field.value?.filter(
+                                          (value) => value !== user.id,
+                                        ),
+                                      );
+                                }}
+                              />
+                            </FormControl>
+                            <FormLabel className="font-normal">
+                              {user.name || user.email}
+                            </FormLabel>
+                          </FormItem>
+                        );
+                      }}
+                    />
+                  ))}
+                  {(!users || users.length === 0) && (
+                    <p className="text-muted-foreground text-sm">
+                      No users found.
+                    </p>
+                  )}
+                </div>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <div className="space-y-2">
-            <FormLabel>Gallery Images</FormLabel>
-            {fields.map((field, index) => (
-              <div key={field.id} className="flex gap-2">
-                <FormField
-                  control={form.control}
-                  name={`images.${index}.value`}
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormControl>
-                        <Input placeholder="Image URL" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="icon"
-                  onClick={() => remove(index)}
-                >
-                  <Trash className="h-4 w-4" />
-                </Button>
-              </div>
-            ))}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => append({ value: '' })}
-              className="mt-2"
-            >
-              <Plus className="mr-2 h-4 w-4" /> Add Image
-            </Button>
-          </div>
         </div>
 
         <div className="flex gap-8">

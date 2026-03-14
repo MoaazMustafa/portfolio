@@ -49,8 +49,19 @@ model User {
     image         String?
     role          UserRole  @default(USER)
 
+    // User Profile
+    title       String?
+    bio         String?   @db.Text
+    linkedinUrl String?
+    githubUrl   String?
+    websiteUrl  String?
+
     accounts Account[]
     sessions Session[]
+    invitations Invitation[]
+
+    // Relations
+    projects Project[] // Many-to-many as collaborators
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -65,6 +76,21 @@ model VerificationToken {
 
     @@unique([identifier, token])
     @@map("verification_tokens")
+}
+
+model Invitation {
+    id        String   @id @default(cuid())
+    email     String
+    token     String   @unique
+    expires   DateTime
+    user      User?    @relation(fields: [userId], references: [id])
+    userId    String?
+    role      UserRole @default(USER)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("invitations")
 }
 
 enum UserRole {
@@ -96,8 +122,9 @@ model Project {
     status ProjectStatus @default(Planned)
 
     // Relations
-    technologies Technology[] // Many-to-many
-    categories   Category[] // Many-to-many
+    technologies  Technology[] // Many-to-many
+    categories    Category[] // Many-to-many
+    collaborators User[] // Many-to-many
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

@@ -5,8 +5,8 @@ export const projectSchema = z.object({
   slug: z.string().min(1, "Slug is required").regex(/^[a-z0-9-]+$/, "Slug must only contain lowercase letters, numbers, and hyphens"),
   description: z.string().min(1, "Description is required"),
   content: z.string().optional(),
-  coverImage: z.string().url("Must be a valid URL").optional().or(z.literal("")),
-  images: z.array(z.object({ value: z.string().url("Must be a valid URL") })),
+  coverImage: z.string().optional().or(z.literal("")),
+  images: z.array(z.object({ value: z.string() })),
   liveUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   githubUrl: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   startDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
@@ -18,6 +18,7 @@ export const projectSchema = z.object({
   status: z.enum(["Planned", "Under_Development", "Completed", "On_Hold", "Cancelled"]),
   technologies: z.array(z.string()), // Array of IDs
   categories: z.array(z.string()), // Array of IDs
+  collaborators: z.array(z.string()).optional(), // Array of IDs
 })
 
 export type ProjectFormValues = z.infer<typeof projectSchema>

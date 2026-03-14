@@ -1,5 +1,6 @@
 'use client';
 
+import type { Category, Project, Technology, User } from '@prisma/client';
 import { Pencil, Plus } from 'lucide-react';
 import { useState } from 'react';
 
@@ -13,7 +14,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Category, Project, Technology } from '@prisma/client';
 
 // Helper type for serialized dates from Server Components
 type SerializedProject = Omit<
@@ -30,9 +30,11 @@ interface ProjectDialogProps {
   project?: SerializedProject & {
     technologies: Technology[];
     categories: Category[];
+    collaborators?: User[];
   };
   technologies: Technology[];
   categories: Category[];
+  users: User[];
   trigger?: React.ReactNode;
 }
 
@@ -40,6 +42,7 @@ export function ProjectDialog({
   project,
   technologies,
   categories,
+  users,
   trigger,
 }: ProjectDialogProps) {
   const [open, setOpen] = useState(false);
@@ -79,6 +82,7 @@ export function ProjectDialog({
           project={project}
           technologies={technologies}
           categories={categories}
+          users={users}
           onSuccess={() => setOpen(false)}
         />
       </DialogContent>

@@ -1,10 +1,10 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
-import { prisma } from "@/lib/prisma"
-import { ProjectFormValues, projectSchema } from "@/lib/validations/project"
-import { z } from "zod"
+import { prisma } from "@/lib/prisma";
+import { projectSchema, type ProjectFormValues } from "@/lib/validations/project";
 
 
 export async function createProject(data: ProjectFormValues) {
@@ -38,6 +38,9 @@ export async function createProject(data: ProjectFormValues) {
         },
         categories: {
           connect: validatedData.categories?.map((id) => ({ id })) || [],
+        },
+        collaborators: {
+          connect: validatedData.collaborators?.map((id) => ({ id })) || [],
         },
       },
     })
@@ -80,6 +83,10 @@ export async function updateProject(id: string, data: ProjectFormValues) {
                 categories: {
                     set: [],
                     connect: validatedData.categories?.map((id) => ({ id })) || [],
+                },
+                collaborators: {
+                    set: [],
+                    connect: validatedData.collaborators?.map((id) => ({ id })) || [],
                 },
             },
         })
