@@ -26,12 +26,20 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { createInvitation } from '@/lib/actions/invitation';
 
 import { Label } from '../ui/label';
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address'),
+  role: z.enum(['USER', 'ADMIN']),
 });
 
 export function InviteUserDialog() {
@@ -42,12 +50,13 @@ export function InviteUserDialog() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
+      role: 'USER',
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const result = await createInvitation(values.email);
+      const result = await createInvitation(values.email, values.role);
 
       if (result.error) {
         toast.error(result.error);
@@ -58,7 +67,7 @@ export function InviteUserDialog() {
         setInviteUrl(result.url);
         toast.success('Invitation created successfully');
       }
-    } catch (error) {
+    } catch {
       toast.error('Something went wrong');
     }
   }
@@ -106,6 +115,30 @@ export function InviteUserDialog() {
                     <FormControl>
                       <Input placeholder="colleague@example.com" {...field} />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Role</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="USER">User</SelectItem>
+                        <SelectItem value="ADMIN">Admin</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

@@ -41,10 +41,10 @@ export default async function InvitePage({ params }: PageProps) {
       <Card className="w-full max-w-lg shadow-lg">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold tracking-tight">
-            Set up your account
+            Set up your profile
           </CardTitle>
           <CardDescription>
-            Complete your profile to join the team.
+            Complete your profile to be the collaborator.
           </CardDescription>
         </CardHeader>
         <CardContent>

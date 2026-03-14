@@ -37,7 +37,7 @@ export function DeleteProjectDialog({ id, title }: DeleteProjectDialogProps) {
       } else {
         toast.error('Failed to delete project');
       }
-    } catch (error) {
+    } catch {
       toast.error('Something went wrong');
     } finally {
       setLoading(false);

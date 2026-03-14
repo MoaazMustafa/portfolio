@@ -17,7 +17,7 @@ export function SeedTechnologiesButton() {
       if (result.success) {
         toast.success(`Seeded ${result.count} technologies successfully!`);
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to seed technologies');
     } finally {
       setIsLoading(false);

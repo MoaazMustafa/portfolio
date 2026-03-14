@@ -1,7 +1,7 @@
 'use client';
 
-import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { signIn, useSession } from 'next-auth/react';
 import { Suspense, useEffect, useState } from 'react';
 
 import { AuroraBackground } from '@/components/ui/aurora-background';

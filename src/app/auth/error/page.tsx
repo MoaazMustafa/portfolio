@@ -1,10 +1,11 @@
 'use client';
 
-import { AuroraBackground } from '@/components/ui/aurora-background';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
+
+import { AuroraBackground } from '@/components/ui/aurora-background';
+import { Button } from '@/components/ui/button';
 
 function ErrorContent() {
   const searchParams = useSearchParams();

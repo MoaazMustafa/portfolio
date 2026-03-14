@@ -1,5 +1,5 @@
-import { getServerSession } from 'next-auth/next';
 import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth/next';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -199,7 +199,7 @@ export default async function DashboardPage() {
                     New Blog Post
                   </p>
                   <p className="text-muted-foreground text-sm">
-                    Drafted "Next.js 15 Features" article.
+                    Drafted &quot;Next.js 15 Features&quot; article.
                   </p>
                 </div>
                 <div className="ml-auto font-medium">2 hours ago</div>

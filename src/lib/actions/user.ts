@@ -9,6 +9,12 @@ const createUserSchema = z.object({
   name: z.string().min(2, "Name is required"),
   email: z.string().email("Invalid email address"),
   role: z.enum(["USER", "ADMIN"]).default("USER"),
+  title: z.string().optional().nullable(),
+  bio: z.string().optional().nullable(),
+  githubUrl: z.string().optional().nullable(),
+  linkedinUrl: z.string().optional().nullable(),
+  websiteUrl: z.string().optional().nullable(),
+  image: z.string().optional().nullable(),
 })
 
 export type CreateUserData = z.infer<typeof createUserSchema>
@@ -20,7 +26,7 @@ export async function createUser(data: CreateUserData) {
     return { error: "Invalid data" }
   }
 
-  const { name, email, role } = result.data
+  const { name, email, role, title, bio, githubUrl, linkedinUrl, websiteUrl, image } = result.data
 
   try {
     const existingUser = await prisma.user.findUnique({
@@ -36,6 +42,12 @@ export async function createUser(data: CreateUserData) {
         name,
         email,
         role,
+        title,
+        bio,
+        githubUrl,
+        linkedinUrl,
+        websiteUrl,
+        image,
         emailVerified: new Date(), // Manually created users are considered verified
       },
     })
@@ -96,6 +108,9 @@ export async function updateUser(data: UpdateUserData) {
     return { success: true }
   } catch (error) {
     console.error("Failed to update user:", error)
+    if (error instanceof Error) {
+        return { error: error.message }
+    }
     return { error: "Failed to update user" }
   }
 }

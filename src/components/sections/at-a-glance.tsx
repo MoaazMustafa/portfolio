@@ -3,8 +3,8 @@
 import type { COBEOptions } from 'cobe';
 import { AnimatePresence, motion, useInView } from 'framer-motion';
 import { MapPin, Trophy, Zap } from 'lucide-react';
-import { useTheme } from 'next-themes';
 import Image from 'next/image';
+import { useTheme } from 'next-themes';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GitHubCalendar } from 'react-github-calendar';
 import { RiGithubFill } from 'react-icons/ri';

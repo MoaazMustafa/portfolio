@@ -105,7 +105,7 @@ export function TechnologyDialog({ technology }: TechnologyDialogProps) {
       toast.success(isEditing ? 'Technology updated' : 'Technology created');
       setOpen(false);
       if (!isEditing) form.reset();
-    } catch (error) {
+    } catch {
       toast.error('Something went wrong');
     }
   }

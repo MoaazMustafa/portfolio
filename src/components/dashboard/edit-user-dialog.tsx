@@ -89,6 +89,10 @@ export function EditUserDialog({ user }: EditUserDialogProps) {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('Image size must be less than 2MB');
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64 = reader.result as string;
@@ -115,7 +119,7 @@ export function EditUserDialog({ user }: EditUserDialogProps) {
 
       toast.success('User updated successfully');
       setOpen(false);
-    } catch (error) {
+    } catch {
       toast.error('Something went wrong');
     }
   }

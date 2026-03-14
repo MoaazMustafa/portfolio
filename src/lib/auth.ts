@@ -39,9 +39,9 @@ export const authOptions: NextAuthOptions = {
                 where: { email: session.user.email },
             })
             if (dbUser) {
-                // @ts-ignore
+                // @ts-expect-error
                 session.user.id = dbUser.id
-                // @ts-ignore
+                // @ts-expect-error
                 session.user.role = dbUser.role
             }
         }

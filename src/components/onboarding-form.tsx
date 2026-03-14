@@ -59,7 +59,7 @@ export function OnboardingForm({ token, email }: OnboardingFormProps) {
 
       toast.success('Profile created successfully! Please sign in.');
       router.push('/signin');
-    } catch (error) {
+    } catch {
       toast.error('Something went wrong');
     }
   }
