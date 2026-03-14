@@ -1,11 +1,13 @@
 'use client';
 
+import { Icon } from '@iconify/react';
 import { Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { TechnologyDialog } from '@/components/dashboard/technology-dialog';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { deleteTechnology } from '@/lib/actions/technology';
 
 interface Technology {
@@ -43,7 +45,7 @@ export function TechnologyList({ technologies }: TechnologyListProps) {
         } else {
           toast.error('Failed to delete');
         }
-      } catch (error) {
+      } catch {
         toast.error('Failed to delete');
       }
     }
@@ -62,8 +64,9 @@ export function TechnologyList({ technologies }: TechnologyListProps) {
 
   return (
     <div className="space-y-8">
-      {categories.map((category) => (
+      {categories.map((category, index) => (
         <div key={category} className="space-y-4">
+          {index > 0 && <Separator />}
           <h2 className="text-xl font-semibold tracking-tight">{category}</h2>
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {grouped[category].map((tech) => (
@@ -71,26 +74,24 @@ export function TechnologyList({ technologies }: TechnologyListProps) {
                 key={tech.id}
                 className="group border-muted relative overflow-hidden transition-all hover:shadow-md"
               >
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
-                  <CardTitle
-                    className="truncate pr-6 text-sm font-medium"
-                    title={tech.name}
-                  >
-                    {tech.name}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 pt-2">
-                  <div className="text-muted-foreground mb-2 truncate font-mono text-xs">
-                    {tech.slug}
-                  </div>
-                  {tech.icon && (
-                    <div
-                      className="text-muted-foreground truncate text-xs"
-                      title={tech.icon}
-                    >
-                      Icon: {tech.icon}
+                <CardContent className="flex flex-col items-center justify-center p-6 text-center">
+                  {tech.icon ? (
+                    <div className="bg-muted/30 mb-4 flex h-16 w-16 items-center justify-center rounded-xl p-3">
+                      <Icon
+                        icon={tech.icon}
+                        className="text-foreground h-10 w-10 transition-transform group-hover:scale-110"
+                      />
+                    </div>
+                  ) : (
+                    <div className="bg-muted/30 mb-4 flex h-16 w-16 items-center justify-center rounded-xl p-3">
+                         <span className="text-2xl font-bold text-muted-foreground">{tech.name.charAt(0)}</span>
                     </div>
                   )}
+                  
+                  <h3 className="font-semibold tracking-tight">{tech.name}</h3>
+                  <p className="text-muted-foreground mt-1 truncate font-mono text-xs opacity-70">
+                    {tech.slug}
+                  </p>
 
                   <div className="absolute top-2 right-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                     <TechnologyDialog technology={tech} />

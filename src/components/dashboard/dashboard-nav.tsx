@@ -1,12 +1,5 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-
-import { cn } from '@/lib/utils';
-// import { Button } from "@/components/ui/button"
-// import { ScrollArea } from "@/components/ui/scroll-area" // Should check if this exists
-// import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet" // Should check if this exists
 import {
   Cpu,
   FileText,
@@ -16,6 +9,13 @@ import {
   Tags,
   Users,
 } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+import { cn } from '@/lib/utils';
+// import { Button } from "@/components/ui/button"
+// import { ScrollArea } from "@/components/ui/scroll-area" // Should check if this exists
+// import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet" // Should check if this exists
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   items: {
@@ -84,7 +84,7 @@ export function DashboardNav({
           className={cn(
             'hover:text-primary justify-start text-sm font-medium transition-colors',
             pathname === item.href
-              ? 'bg-primary/50 hover:bg-muted'
+              ? 'bg-primary/30 border-primary hover:bg-muted border'
               : 'hover:bg-transparent hover:underline',
             'flex items-center rounded-md px-3 py-2',
           )}

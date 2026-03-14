@@ -27,9 +27,9 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen flex-col lg:flex-row">
+    <div className="flex h-screen overflow-hidden flex-col lg:flex-row">
       {/* Sidebar */}
-      <aside className="bg-muted/40 hidden w-full border-r lg:flex lg:w-64 lg:flex-col">
+      <aside className="bg-muted/40 hidden h-full w-full border-r lg:flex lg:w-64 flex-col">
         <div className="flex h-14 items-center border-b px-4 lg:h-15 lg:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
             <span className="">Moaaz Mustafa</span>
@@ -60,7 +60,7 @@ export default async function DashboardLayout({
             <UserNav email={session.user?.email} />
           </div>
         </header>
-        <main className="flex flex-1 flex-col gap-4 overflow-x-auto p-4 lg:gap-6 lg:p-6">
+        <main className="flex flex-1 flex-col gap-4 overflow-y-auto p-4 lg:gap-6 lg:p-6">
           {children}
         </main>
       </div>

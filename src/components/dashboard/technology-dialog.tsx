@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Pencil, Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -77,7 +77,11 @@ export function TechnologyDialog({ technology }: TechnologyDialogProps) {
       icon: technology?.icon || '',
     },
   });
-
+  useEffect(() => {
+    if (!open) {
+      form.reset();
+    }
+  }, [open, form]);
   // Auto-generate slug from name if creating
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     form.setValue('name', e.target.value);
@@ -175,7 +179,7 @@ export function TechnologyDialog({ technology }: TechnologyDialogProps) {
                     <FormLabel>Category</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      value={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
