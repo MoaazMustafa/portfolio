@@ -542,46 +542,67 @@ export function ProjectForm({
           />
         </div>
         {/* Technologies and Categories selection */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-8">
           <div className="space-y-4">
             <FormLabel>Technologies</FormLabel>
-            <div className="grid max-h-[300px] grid-cols-1 overflow-y-auto rounded-md border p-4">
-              {technologies.map((tech) => (
-                <FormField
-                  key={tech.id}
-                  control={form.control}
-                  name="technologies"
-                  render={({ field }) => {
-                    return (
-                      <FormItem
-                        key={tech.id}
-                        className="flex flex-row items-center space-y-0 space-x-3 py-2"
-                      >
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value?.includes(tech.id)}
-                            onCheckedChange={(checked) => {
-                              return checked
-                                ? field.onChange([
-                                    ...(field.value || []),
-                                    tech.id,
-                                  ])
-                                : field.onChange(
-                                    field.value?.filter(
-                                      (value) => value !== tech.id,
-                                    ),
-                                  );
-                            }}
-                          />
-                        </FormControl>
-                        <FormLabel className="cursor-pointer font-normal">
-                          {tech.name}
-                        </FormLabel>
-                      </FormItem>
-                    );
-                  }}
-                />
-              ))}
+            <div className="grid grid-cols-1 gap-6 overflow-y-auto rounded-md border p-4">
+              {Object.entries(
+                technologies.reduce(
+                  (acc, tech) => {
+                    const cat = tech.category || 'Other';
+                    if (!acc[cat]) acc[cat] = [];
+                    acc[cat].push(tech);
+                    return acc;
+                  },
+                  {} as Record<string, Technology[]>,
+                ),
+              )
+                .sort(([a], [b]) => a.localeCompare(b))
+                .map(([category, techs]) => (
+                  <div key={category} className="space-y-3">
+                    <h4 className="bg-background text-muted-foreground sticky top-0 z-10 py-1 text-sm font-medium">
+                      {category}
+                    </h4>
+                    <div className="grid grid-cols-3 gap-2 pl-2 sm:grid-cols-6">
+                      {techs.map((tech) => (
+                        <FormField
+                          key={tech.id}
+                          control={form.control}
+                          name="technologies"
+                          render={({ field }) => {
+                            return (
+                              <FormItem
+                                key={tech.id}
+                                className="flex flex-row items-center space-y-0 space-x-3"
+                              >
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value?.includes(tech.id)}
+                                    onCheckedChange={(checked) => {
+                                      return checked
+                                        ? field.onChange([
+                                            ...(field.value || []),
+                                            tech.id,
+                                          ])
+                                        : field.onChange(
+                                            field.value?.filter(
+                                              (value) => value !== tech.id,
+                                            ),
+                                          );
+                                    }}
+                                  />
+                                </FormControl>
+                                <FormLabel className="cursor-pointer font-normal">
+                                  {tech.name}
+                                </FormLabel>
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
           <div className="space-y-4">

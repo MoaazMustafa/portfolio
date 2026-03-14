@@ -77,16 +77,13 @@ export async function updateProject(id: string, data: ProjectFormValues) {
                 status: validatedData.status,
                 // Simple disconnect all/reconnect strategy for many-to-many update
                 technologies: {
-                    set: [], // Dissociate all existing
-                    connect: validatedData.technologies?.map((id) => ({ id })) || [],
+                    set: validatedData.technologies?.map((id) => ({ id })) || [],
                 },
                 categories: {
-                    set: [],
-                    connect: validatedData.categories?.map((id) => ({ id })) || [],
+                    set: validatedData.categories?.map((id) => ({ id })) || [],
                 },
                 collaborators: {
-                    set: [],
-                    connect: validatedData.collaborators?.map((id) => ({ id })) || [],
+                    set: validatedData.collaborators?.map((id) => ({ id })) || [],
                 },
             },
         })

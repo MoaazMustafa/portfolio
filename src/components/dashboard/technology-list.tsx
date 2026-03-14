@@ -84,10 +84,12 @@ export function TechnologyList({ technologies }: TechnologyListProps) {
                     </div>
                   ) : (
                     <div className="bg-muted/30 mb-4 flex h-16 w-16 items-center justify-center rounded-xl p-3">
-                         <span className="text-2xl font-bold text-muted-foreground">{tech.name.charAt(0)}</span>
+                      <span className="text-muted-foreground text-2xl font-bold">
+                        {tech.name.charAt(0)}
+                      </span>
                     </div>
                   )}
-                  
+
                   <h3 className="font-semibold tracking-tight">{tech.name}</h3>
                   <p className="text-muted-foreground mt-1 truncate font-mono text-xs opacity-70">
                     {tech.slug}
