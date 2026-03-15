@@ -1,15 +1,26 @@
-import { Button } from '@/components/ui/button';
+import { PostDialog } from '@/components/dashboard/post-dialog';
+import { PostsView } from '@/components/dashboard/posts-view';
+import { prisma } from '@/lib/prisma';
 
-export default function PostsPage() {
+export default async function PostsPage() {
+  const posts = await prisma.post.findMany({
+    orderBy: { createdAt: 'desc' },
+  });
+
+  const formattedPosts = posts.map((post) => ({
+    ...post,
+    createdAt: post.createdAt.toISOString(),
+    updatedAt: post.updatedAt.toISOString(),
+  }));
+
   return (
-    <div className="flex flex-col gap-4">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold md:text-2xl">posts</h1>
-        <Button>Add post</Button>
+        <h1 className="text-3xl font-bold tracking-tight">Posts</h1>
+        <PostDialog />
       </div>
-      <div className="text-muted-foreground flex items-center justify-center rounded-lg border border-dashed p-8 shadow-sm">
-        Manage blog posts.
-      </div>
+
+      <PostsView posts={formattedPosts} />
     </div>
   );
 }
