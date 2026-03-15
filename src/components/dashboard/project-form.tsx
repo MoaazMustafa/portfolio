@@ -67,8 +67,17 @@ export function ProjectForm({
 }: ProjectFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [uploadingImages, setUploadingImages] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(
     project?.coverImage || null,
+  );
+
+  const cloudinaryCloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const cloudinaryUploadPreset =
+    process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+  const hasCloudinaryConfig = Boolean(
+    cloudinaryCloudName && cloudinaryUploadPreset,
   );
 
   const defaultValues: Partial<ProjectFormValues> = {
@@ -94,20 +103,71 @@ export function ProjectForm({
     collaborators: project?.collaborators?.map((c) => c.id) || [],
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadToCloudinary = async (fileOrDataUri: File | string) => {
+    if (!cloudinaryCloudName || !cloudinaryUploadPreset) {
+      throw new Error('Cloudinary is not configured');
+    }
+
+    const formData = new FormData();
+    formData.append('file', fileOrDataUri);
+    formData.append('upload_preset', cloudinaryUploadPreset);
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`,
+      {
+        method: 'POST',
+        body: formData,
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error('Upload failed');
+    }
+
+    const json = (await response.json()) as { secure_url?: string };
+
+    if (!json.secure_url) {
+      throw new Error('Upload URL missing');
+    }
+
+    return json.secure_url;
+  };
+
+  const normalizeImageUrl = async (value: string) => {
+    if (!value.startsWith('data:')) {
+      return value;
+    }
+
+    return uploadToCloudinary(value);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
         toast.error('Image size must be less than 5MB');
         return;
       }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setImagePreview(result);
-        form.setValue('coverImage', result);
-      };
-      reader.readAsDataURL(file);
+
+      if (!hasCloudinaryConfig) {
+        toast.error(
+          'Set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET',
+        );
+        return;
+      }
+
+      try {
+        setUploadingImages(true);
+        const uploadedUrl = await uploadToCloudinary(file);
+        setImagePreview(uploadedUrl);
+        form.setValue('coverImage', uploadedUrl);
+        toast.success('Cover image uploaded');
+      } catch {
+        toast.error('Failed to upload cover image');
+      } finally {
+        setUploadingImages(false);
+        e.target.value = '';
+      }
     }
   };
 
@@ -121,18 +181,38 @@ export function ProjectForm({
         return;
       }
 
-      Array.from(files).forEach((file) => {
-        if (file.size > 5 * 1024 * 1024) {
-          toast.error(`Image ${file.name} is too large (>5MB)`);
-          return;
-        }
+      if (!hasCloudinaryConfig) {
+        toast.error(
+          'Set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET',
+        );
+        return;
+      }
 
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          append({ value: reader.result as string });
-        };
-        reader.readAsDataURL(file);
-      });
+      try {
+        setUploadingImages(true);
+
+        const uploadedUrls = await Promise.all(
+          Array.from(files).map(async (file) => {
+            if (file.size > 5 * 1024 * 1024) {
+              throw new Error(`Image ${file.name} is too large (>5MB)`);
+            }
+
+            return uploadToCloudinary(file);
+          }),
+        );
+
+        uploadedUrls.forEach((url) => append({ value: url }));
+        toast.success('Gallery images uploaded');
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : 'Failed to upload gallery images';
+        toast.error(message);
+      } finally {
+        setUploadingImages(false);
+        e.target.value = '';
+      }
     }
   };
 
@@ -149,11 +229,45 @@ export function ProjectForm({
   async function onSubmit(data: ProjectFormValues) {
     setLoading(true);
     try {
+      const normalizedCoverImage = data.coverImage
+        ? await normalizeImageUrl(data.coverImage)
+        : data.coverImage;
+
+      const normalizedImages = await Promise.all(
+        data.images.map(async (image) => ({
+          value: await normalizeImageUrl(image.value),
+        })),
+      );
+
+      const payload: ProjectFormValues = {
+        ...data,
+        coverImage: normalizedCoverImage,
+        images: normalizedImages,
+      };
+
       if (project) {
-        await updateProject(project.id, data);
+        const result = await updateProject(project.id, payload);
+
+        if (result?.error) {
+          throw new Error(
+            Array.isArray(result.error)
+              ? result.error[0]?.message || 'Failed to update project'
+              : result.error,
+          );
+        }
+
         toast.success('Project updated successfully');
       } else {
-        await createProject(data);
+        const result = await createProject(payload);
+
+        if (result?.error) {
+          throw new Error(
+            Array.isArray(result.error)
+              ? result.error[0]?.message || 'Failed to create project'
+              : result.error,
+          );
+        }
+
         toast.success('Project created successfully');
       }
       router.refresh();
@@ -161,7 +275,9 @@ export function ProjectForm({
         onSuccess();
       }
     } catch (error) {
-      toast.error('Something went wrong');
+      const message =
+        error instanceof Error ? error.message : 'Something went wrong';
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -336,7 +452,7 @@ export function ProjectForm({
                       type="file"
                       accept="image/*"
                       onChange={handleImageUpload}
-                      disabled={loading}
+                      disabled={loading || uploadingImages}
                       className="max-w-sm cursor-pointer"
                     />
                     <span className="text-muted-foreground text-xs">
@@ -433,8 +549,14 @@ export function ProjectForm({
                     accept="image/*"
                     className="absolute inset-0 cursor-pointer opacity-0"
                     onChange={handleGalleryUpload}
+                    disabled={loading || uploadingImages}
                   />
-                  <Button type="button" variant="secondary" size="sm">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    disabled={loading || uploadingImages}
+                  >
                     <Upload className="mr-2 h-4 w-4" /> Upload Images
                   </Button>
                 </div>
@@ -648,9 +770,15 @@ export function ProjectForm({
           </div>
         </div>
 
-        <Button type="submit" disabled={loading}>
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {project ? 'Update Project' : 'Create Project'}
+        <Button type="submit" disabled={loading || uploadingImages}>
+          {(loading || uploadingImages) && (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          )}
+          {uploadingImages
+            ? 'Uploading Images...'
+            : project
+              ? 'Update Project'
+              : 'Create Project'}
         </Button>
       </form>
     </Form>

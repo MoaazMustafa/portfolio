@@ -6,10 +6,23 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { projectSchema, type ProjectFormValues } from "@/lib/validations/project";
 
+const isDataUrl = (value?: string | null) =>
+  typeof value === "string" && value.startsWith("data:");
+
+const hasInlineImagePayload = (data: ProjectFormValues) =>
+  isDataUrl(data.coverImage) || data.images.some((img) => isDataUrl(img.value));
+
 
 export async function createProject(data: ProjectFormValues) {
   try {
     const validatedData = projectSchema.parse(data)
+
+    if (hasInlineImagePayload(validatedData)) {
+      return {
+        error:
+          "Inline base64 images are not supported. Upload images to storage and save URLs instead.",
+      }
+    }
 
     await (prisma as any).project.create({
       data: {
@@ -58,6 +71,13 @@ export async function createProject(data: ProjectFormValues) {
 export async function updateProject(id: string, data: ProjectFormValues) {
     try {
         const validatedData = projectSchema.parse(data)
+
+    if (hasInlineImagePayload(validatedData)) {
+      return {
+        error:
+          "Inline base64 images are not supported. Upload images to storage and save URLs instead.",
+      }
+    }
 
         await (prisma as any).project.update({
             where: { id },

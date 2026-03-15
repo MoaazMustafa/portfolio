@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         hostname: 'github.githubassets.com',
         pathname: '/assets/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**',
+      },
     ],
   },
   experimental: {
