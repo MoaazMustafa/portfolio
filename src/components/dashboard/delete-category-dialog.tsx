@@ -61,7 +61,8 @@ export function DeleteCategoryDialog({
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete the {'"'}
-            {category.name}{'"'} category.
+            {category.name}
+            {'"'} category.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
