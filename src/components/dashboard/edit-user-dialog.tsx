@@ -38,7 +38,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { updateUser } from '@/lib/actions/user';
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
 const ACCEPTED_IMAGE_TYPES = [
   'image/jpeg',
   'image/jpg',
@@ -68,7 +68,7 @@ const formSchema = z.object({
         return base64.length * 0.75 <= MAX_FILE_SIZE + 1024; // allow small buffer
       },
       {
-        message: 'Image size must be less than 5MB',
+        message: 'Image size must be less than 1MB',
       },
     ),
 });
@@ -120,7 +120,7 @@ export function EditUserDialog({ user }: EditUserDialogProps) {
 
       // Check file size
       if (file.size > MAX_FILE_SIZE) {
-        toast.error('Image size must be less than 5MB');
+        toast.error('Image size must be less than 1MB');
         e.target.value = ''; // Reset input
         return;
       }
@@ -209,7 +209,7 @@ export function EditUserDialog({ user }: EditUserDialogProps) {
                   )}
                 </div>
                 <p className="text-muted-foreground text-xs">
-                  Recommended size: 400x400px. Max 5MB.
+                  Recommended size: 400x400px. Max 1MB.
                 </p>
               </div>
             </div>

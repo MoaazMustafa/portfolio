@@ -4,6 +4,7 @@ import { Geist, Geist_Mono, Orbitron } from 'next/font/google';
 
 import { ClientLayoutProvider, ScrollBar, ThemeProvider } from '@/components';
 import { Preloader } from '@/components/preloader';
+import { Toaster } from '@/components/ui/sonner';
 import { defaultMetadata } from '@/lib/metadata';
 
 import '@/styles/globals.css';
@@ -59,6 +60,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <Preloader>
             <ClientLayoutProvider>{children}</ClientLayoutProvider>
           </Preloader>
+          <Toaster />
         </ThemeProvider>
         <Analytics />
       </body>
