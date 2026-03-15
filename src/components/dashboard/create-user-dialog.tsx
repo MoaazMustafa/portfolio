@@ -55,7 +55,7 @@ const formSchema = z.object({
         if (!val) return true;
         return val.length * 0.75 <= 1024 * 1024 + 1024;
       },
-      { message: 'Image size must be less than 1MB' }
+      { message: 'Image size must be less than 1MB' },
     ),
 });
 
@@ -86,7 +86,8 @@ export function CreateUserDialog() {
         e.target.value = '';
         return;
       }
-      if (file.size > 1024 * 1024) { // 1MB
+      if (file.size > 1024 * 1024) {
+        // 1MB
         toast.error('Image size must be less than 1MB');
         e.target.value = '';
         return;
