@@ -1,5 +1,5 @@
-import { getServerSession } from 'next-auth/next';
 import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth/next';
 
 import { Button } from '@/components/ui/button';
 import {
