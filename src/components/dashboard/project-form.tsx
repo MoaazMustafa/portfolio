@@ -29,17 +29,17 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { createProject, updateProject } from '@/lib/actions';
-import {
-  projectSchema,
-  type ProjectFormValues,
-} from '@/lib/validations/project';
 import { useLocalStorage } from '@/hooks';
+import { createProject, updateProject } from '@/lib/actions';
 import {
   DASHBOARD_PREFERENCES_STORAGE_KEY,
   defaultDashboardPreferences,
 } from '@/lib/dashboard-preferences';
 import { slugify } from '@/lib/utils';
+import {
+  projectSchema,
+  type ProjectFormValues,
+} from '@/lib/validations/project';
 
 // Helper type for serialized dates from Server Components
 type SerializedProject = Omit<
