@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { Category, Project, Technology, User } from '@prisma/client';
 import { Loader2, Plus, Trash, Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -34,6 +34,12 @@ import {
   projectSchema,
   type ProjectFormValues,
 } from '@/lib/validations/project';
+import { useLocalStorage } from '@/hooks';
+import {
+  DASHBOARD_PREFERENCES_STORAGE_KEY,
+  defaultDashboardPreferences,
+} from '@/lib/dashboard-preferences';
+import { slugify } from '@/lib/utils';
 
 // Helper type for serialized dates from Server Components
 type SerializedProject = Omit<
@@ -66,11 +72,19 @@ export function ProjectForm({
   onSuccess,
 }: ProjectFormProps) {
   const router = useRouter();
+  const [preferences] = useLocalStorage(
+    DASHBOARD_PREFERENCES_STORAGE_KEY,
+    defaultDashboardPreferences,
+  );
   const [loading, setLoading] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(
     project?.coverImage || null,
   );
+  const [slugEdited, setSlugEdited] = useState(
+    Boolean(project) || !preferences.autoGenerateSlugs,
+  );
+  const slugDebounceRef = useRef<number | null>(null);
 
   const cloudinaryCloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
   const cloudinaryUploadPreset =
@@ -95,8 +109,8 @@ export function ProjectForm({
     endDate: project?.endDate
       ? new Date(project.endDate).toISOString().split('T')[0]
       : '',
-    isFeatured: project?.isFeatured ?? false,
-    isVisible: project?.isVisible ?? true,
+    isFeatured: project?.isFeatured ?? preferences.defaultProjectFeatured,
+    isVisible: project?.isVisible ?? preferences.defaultProjectVisible,
     status: project?.status || 'Planned',
     technologies: project?.technologies.map((t) => t.id) || [],
     categories: project?.categories.map((c) => c.id) || [],
@@ -221,6 +235,34 @@ export function ProjectForm({
     defaultValues: defaultValues as ProjectFormValues,
   });
 
+  const titleValue = form.watch('title');
+
+  useEffect(() => {
+    if (!preferences.autoGenerateSlugs) {
+      return;
+    }
+
+    if (slugEdited) {
+      return;
+    }
+
+    if (slugDebounceRef.current) {
+      window.clearTimeout(slugDebounceRef.current);
+    }
+
+    slugDebounceRef.current = window.setTimeout(() => {
+      form.setValue('slug', slugify(titleValue), {
+        shouldValidate: true,
+      });
+    }, 200);
+
+    return () => {
+      if (slugDebounceRef.current) {
+        window.clearTimeout(slugDebounceRef.current);
+      }
+    };
+  }, [form, preferences.autoGenerateSlugs, slugEdited, titleValue]);
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'images',
@@ -307,7 +349,14 @@ export function ProjectForm({
               <FormItem>
                 <FormLabel>Slug</FormLabel>
                 <FormControl>
-                  <Input placeholder="project-slug" {...field} />
+                  <Input
+                    placeholder="project-slug"
+                    {...field}
+                    onChange={(e) => {
+                      setSlugEdited(true);
+                      field.onChange(slugify(e.target.value));
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -565,61 +614,63 @@ export function ProjectForm({
           </div>
         </div>
 
-        <div className="flex gap-8">
-          <FormField
-            control={form.control}
-            name="collaborators"
-            render={({ field }) => (
-              <FormItem className="flex flex-col space-y-3">
-                <FormLabel>Collaborators</FormLabel>
-                <div className="flex flex-wrap gap-4">
-                  {users?.map((user) => (
-                    <FormField
-                      key={user.id}
-                      control={form.control}
-                      name="collaborators"
-                      render={({ field }) => {
-                        return (
-                          <FormItem
-                            key={user.id}
-                            className="flex flex-row items-start space-y-0 space-x-3"
-                          >
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(user.id)}
-                                onCheckedChange={(checked) => {
-                                  return checked
-                                    ? field.onChange([
-                                        ...(field.value || []),
-                                        user.id,
-                                      ])
-                                    : field.onChange(
-                                        field.value?.filter(
-                                          (value) => value !== user.id,
-                                        ),
-                                      );
-                                }}
-                              />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {user.name || user.email}
-                            </FormLabel>
-                          </FormItem>
-                        );
-                      }}
-                    />
-                  ))}
-                  {(!users || users.length === 0) && (
-                    <p className="text-muted-foreground text-sm">
-                      No users found.
-                    </p>
-                  )}
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        {preferences.showCollaboratorsField ? (
+          <div className="flex gap-8">
+            <FormField
+              control={form.control}
+              name="collaborators"
+              render={({ field }) => (
+                <FormItem className="flex flex-col space-y-3">
+                  <FormLabel>Collaborators</FormLabel>
+                  <div className="flex flex-wrap gap-4">
+                    {users?.map((user) => (
+                      <FormField
+                        key={user.id}
+                        control={form.control}
+                        name="collaborators"
+                        render={({ field }) => {
+                          return (
+                            <FormItem
+                              key={user.id}
+                              className="flex flex-row items-start space-y-0 space-x-3"
+                            >
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes(user.id)}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([
+                                          ...(field.value || []),
+                                          user.id,
+                                        ])
+                                      : field.onChange(
+                                          field.value?.filter(
+                                            (value) => value !== user.id,
+                                          ),
+                                        );
+                                  }}
+                                />
+                              </FormControl>
+                              <FormLabel className="font-normal">
+                                {user.name || user.email}
+                              </FormLabel>
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    ))}
+                    {(!users || users.length === 0) && (
+                      <p className="text-muted-foreground text-sm">
+                        No users found.
+                      </p>
+                    )}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        ) : null}
 
         <div className="flex gap-8">
           <FormField

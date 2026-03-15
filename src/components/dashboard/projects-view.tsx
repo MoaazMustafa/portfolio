@@ -34,6 +34,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useLocalStorage } from '@/hooks';
+import {
+  DASHBOARD_PREFERENCES_STORAGE_KEY,
+  defaultDashboardPreferences,
+} from '@/lib/dashboard-preferences';
 
 type SerializedProject = Omit<
   Project,
@@ -71,7 +76,13 @@ export function ProjectsView({
   categories,
   users,
 }: ProjectsViewProps) {
-  const [viewMode, setViewMode] = useState<ViewMode>('table');
+  const [preferences, setPreferences] = useLocalStorage(
+    DASHBOARD_PREFERENCES_STORAGE_KEY,
+    defaultDashboardPreferences,
+  );
+  const [viewMode, setViewMode] = useState<ViewMode>(
+    preferences.projectsViewMode,
+  );
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [visibilityFilter, setVisibilityFilter] =
@@ -145,6 +156,14 @@ export function ProjectsView({
     setFeaturedFilter('all');
   };
 
+  const updateViewMode = (mode: ViewMode) => {
+    setViewMode(mode);
+    setPreferences((prev) => ({
+      ...prev,
+      projectsViewMode: mode,
+    }));
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
@@ -158,7 +177,7 @@ export function ProjectsView({
             type="button"
             variant={viewMode === 'table' ? 'default' : 'outline'}
             size="sm"
-            onClick={() => setViewMode('table')}
+            onClick={() => updateViewMode('table')}
             aria-pressed={viewMode === 'table'}
           >
             <List className="h-4 w-4" /> Table
@@ -167,7 +186,7 @@ export function ProjectsView({
             type="button"
             variant={viewMode === 'cards' ? 'default' : 'outline'}
             size="sm"
-            onClick={() => setViewMode('cards')}
+            onClick={() => updateViewMode('cards')}
             aria-pressed={viewMode === 'cards'}
           >
             <Grid3X3 className="h-4 w-4" /> Cards

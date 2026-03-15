@@ -34,7 +34,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useLocalStorage } from '@/hooks';
 import { togglePostPublished } from '@/lib/actions/post';
+import {
+  DASHBOARD_PREFERENCES_STORAGE_KEY,
+  defaultDashboardPreferences,
+} from '@/lib/dashboard-preferences';
 
 type SerializedPost = Omit<Post, 'createdAt' | 'updatedAt'> & {
   createdAt: string | Date;
@@ -53,7 +58,11 @@ function formatDate(date: string | Date) {
 }
 
 export function PostsView({ posts }: PostsViewProps) {
-  const [viewMode, setViewMode] = useState<ViewMode>('table');
+  const [preferences, setPreferences] = useLocalStorage(
+    DASHBOARD_PREFERENCES_STORAGE_KEY,
+    defaultDashboardPreferences,
+  );
+  const [viewMode, setViewMode] = useState<ViewMode>(preferences.postsViewMode);
   const [query, setQuery] = useState('');
   const [publishFilter, setPublishFilter] = useState<PublishFilter>('all');
   const [isPending, startTransition] = useTransition();
@@ -89,6 +98,14 @@ export function PostsView({ posts }: PostsViewProps) {
     setPublishFilter('all');
   };
 
+  const updateViewMode = (mode: ViewMode) => {
+    setViewMode(mode);
+    setPreferences((prev) => ({
+      ...prev,
+      postsViewMode: mode,
+    }));
+  };
+
   const updatePublishState = (postId: string, published: boolean) => {
     startTransition(async () => {
       const result = await togglePostPublished(postId, published);
@@ -114,7 +131,7 @@ export function PostsView({ posts }: PostsViewProps) {
             type="button"
             size="sm"
             variant={viewMode === 'table' ? 'default' : 'outline'}
-            onClick={() => setViewMode('table')}
+            onClick={() => updateViewMode('table')}
           >
             <List className="h-4 w-4" /> Table
           </Button>
@@ -122,7 +139,7 @@ export function PostsView({ posts }: PostsViewProps) {
             type="button"
             size="sm"
             variant={viewMode === 'cards' ? 'default' : 'outline'}
-            onClick={() => setViewMode('cards')}
+            onClick={() => updateViewMode('cards')}
           >
             <Grid3X3 className="h-4 w-4" /> Cards
           </Button>

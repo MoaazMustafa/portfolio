@@ -7,7 +7,6 @@ import {
   LayoutDashboard,
   Settings,
   Tags,
-  Users,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -35,11 +34,6 @@ const sidebarNavItems = [
     title: 'Projects',
     href: '/dashboard/projects',
     icon: FolderOpen,
-  },
-  {
-    title: 'Collaborators',
-    href: '/dashboard/users',
-    icon: Users,
   },
   {
     title: 'Technologies',

@@ -27,7 +27,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { useLocalStorage } from '@/hooks';
 import { createPost, updatePost } from '@/lib/actions/post';
+import {
+  DASHBOARD_PREFERENCES_STORAGE_KEY,
+  defaultDashboardPreferences,
+} from '@/lib/dashboard-preferences';
 import { slugify } from '@/lib/utils';
 import { postSchema, type PostFormValues } from '@/lib/validations/post';
 
@@ -49,8 +54,14 @@ export function PostDialog({
   open: controlledOpen,
   onOpenChange: controlledOnOpenChange,
 }: PostDialogProps) {
+  const [preferences] = useLocalStorage(
+    DASHBOARD_PREFERENCES_STORAGE_KEY,
+    defaultDashboardPreferences,
+  );
   const [internalOpen, setInternalOpen] = useState(false);
-  const [slugEdited, setSlugEdited] = useState(Boolean(post));
+  const [slugEdited, setSlugEdited] = useState(
+    Boolean(post) || !preferences.autoGenerateSlugs,
+  );
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : internalOpen;
   const setOpen = isControlled ? controlledOnOpenChange : setInternalOpen;
@@ -63,13 +74,17 @@ export function PostDialog({
       title: post?.title || '',
       slug: post?.slug || '',
       content: post?.content || '',
-      published: post?.published ?? false,
+      published: post?.published ?? preferences.defaultPostPublished,
     },
   });
 
   const titleValue = form.watch('title');
 
   useEffect(() => {
+    if (!preferences.autoGenerateSlugs) {
+      return;
+    }
+
     if (slugEdited) {
       return;
     }
