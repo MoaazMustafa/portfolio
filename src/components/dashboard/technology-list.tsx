@@ -68,7 +68,7 @@ export function TechnologyList({ technologies }: TechnologyListProps) {
         <div key={category} className="space-y-4">
           {index > 0 && <Separator />}
           <h2 className="text-xl font-semibold tracking-tight">{category}</h2>
-          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
             {grouped[category].map((tech) => (
               <Card
                 key={tech.id}

@@ -11,7 +11,11 @@ export function ColorThemeToggle() {
   const { colorTheme, toggleColorTheme } = useColorTheme();
 
   const nextThemeLabel =
-    colorTheme === 'lime' ? 'maroon' : colorTheme === 'maroon' ? 'lime' : 'lime';
+    colorTheme === 'lime'
+      ? 'maroon'
+      : colorTheme === 'maroon'
+        ? 'lime'
+        : 'lime';
 
   return (
     <Button

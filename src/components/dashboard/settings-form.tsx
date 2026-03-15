@@ -2,8 +2,8 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -318,7 +318,9 @@ export function SettingsForm({ initialValues, email }: SettingsFormProps) {
                         : customColor,
                 }}
               />
-              <span className="text-xs font-medium capitalize">{colorTheme}</span>
+              <span className="text-xs font-medium capitalize">
+                {colorTheme}
+              </span>
             </div>
           </div>
         </div>
