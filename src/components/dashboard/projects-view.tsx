@@ -94,11 +94,15 @@ export function ProjectsView({
 
       const visibilityMatches =
         visibilityFilter === 'all' ||
-        (visibilityFilter === 'visible' ? project.isVisible : !project.isVisible);
+        (visibilityFilter === 'visible'
+          ? project.isVisible
+          : !project.isVisible);
 
       const featuredMatches =
         featuredFilter === 'all' ||
-        (featuredFilter === 'featured' ? project.isFeatured : !project.isFeatured);
+        (featuredFilter === 'featured'
+          ? project.isFeatured
+          : !project.isFeatured);
 
       const searchMatches =
         query.length === 0 ||
@@ -117,15 +121,11 @@ export function ProjectsView({
           .toLowerCase()
           .includes(query);
 
-      return statusMatches && visibilityMatches && featuredMatches && searchMatches;
+      return (
+        statusMatches && visibilityMatches && featuredMatches && searchMatches
+      );
     });
-  }, [
-    featuredFilter,
-    projects,
-    searchQuery,
-    statusFilter,
-    visibilityFilter,
-  ]);
+  }, [featuredFilter, projects, searchQuery, statusFilter, visibilityFilter]);
 
   const sortedProjects = useMemo(
     () =>
@@ -194,7 +194,9 @@ export function ProjectsView({
             <SelectContent>
               <SelectItem value="all">All Statuses</SelectItem>
               <SelectItem value="Planned">Planned</SelectItem>
-              <SelectItem value="Under_Development">Under Development</SelectItem>
+              <SelectItem value="Under_Development">
+                Under Development
+              </SelectItem>
               <SelectItem value="Completed">Completed</SelectItem>
               <SelectItem value="On_Hold">On Hold</SelectItem>
               <SelectItem value="Cancelled">Cancelled</SelectItem>
@@ -221,7 +223,9 @@ export function ProjectsView({
         <div className="md:col-span-2">
           <Select
             value={featuredFilter}
-            onValueChange={(value) => setFeaturedFilter(value as FeaturedFilter)}
+            onValueChange={(value) =>
+              setFeaturedFilter(value as FeaturedFilter)
+            }
           >
             <SelectTrigger>
               <SelectValue placeholder="Featured" />
@@ -289,11 +293,15 @@ export function ProjectsView({
                         </div>
                       )}
                     </TableCell>
-                    <TableCell className="font-medium">{project.title}</TableCell>
+                    <TableCell className="font-medium">
+                      {project.title}
+                    </TableCell>
                     <TableCell>
                       <Badge
                         variant={
-                          project.status === 'Completed' ? 'default' : 'secondary'
+                          project.status === 'Completed'
+                            ? 'default'
+                            : 'secondary'
                         }
                       >
                         {project.status}
@@ -308,7 +316,9 @@ export function ProjectsView({
                           Featured
                         </Badge>
                       ) : (
-                        <span className="text-muted-foreground text-sm">No</span>
+                        <span className="text-muted-foreground text-sm">
+                          No
+                        </span>
                       )}
                     </TableCell>
                     <TableCell>
@@ -394,7 +404,9 @@ export function ProjectsView({
                       ) : null}
                       <Badge
                         variant={
-                          project.status === 'Completed' ? 'default' : 'secondary'
+                          project.status === 'Completed'
+                            ? 'default'
+                            : 'secondary'
                         }
                       >
                         {project.status}
@@ -414,7 +426,8 @@ export function ProjectsView({
                     <div className="text-muted-foreground flex items-center gap-2 text-sm">
                       <CalendarDays className="h-4 w-4" />
                       <span>
-                        {formatDate(project.startDate)} - {formatDate(project.endDate)}
+                        {formatDate(project.startDate)} -{' '}
+                        {formatDate(project.endDate)}
                       </span>
                     </div>
                     <div className="text-muted-foreground flex items-center gap-2 text-sm">
@@ -504,7 +517,10 @@ export function ProjectsView({
                         categories={categories}
                         users={users}
                       />
-                      <DeleteProjectDialog id={project.id} title={project.title} />
+                      <DeleteProjectDialog
+                        id={project.id}
+                        title={project.title}
+                      />
                     </div>
                   </div>
                 </CardContent>
