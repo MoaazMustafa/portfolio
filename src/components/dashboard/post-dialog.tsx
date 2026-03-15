@@ -100,7 +100,9 @@ export function PostDialog({
         return;
       }
 
-      toast.success(post ? 'Post updated successfully' : 'Post created successfully');
+      toast.success(
+        post ? 'Post updated successfully' : 'Post created successfully',
+      );
       setOpen?.(false);
 
       if (!post) {
@@ -123,7 +125,10 @@ export function PostDialog({
         {trigger ? (
           trigger
         ) : (
-          <Button variant={post ? 'ghost' : 'default'} size={post ? 'icon' : 'default'}>
+          <Button
+            variant={post ? 'ghost' : 'default'}
+            size={post ? 'icon' : 'default'}
+          >
             {post ? (
               <Pencil className="h-4 w-4" />
             ) : (
@@ -153,7 +158,10 @@ export function PostDialog({
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="Introducing my dashboard architecture" {...field} />
+                    <Input
+                      placeholder="Introducing my dashboard architecture"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

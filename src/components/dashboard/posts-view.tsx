@@ -1,7 +1,14 @@
 'use client';
 
 import type { Post } from '@prisma/client';
-import { CalendarDays, CheckCircle2, Grid3X3, List, Search, XCircle } from 'lucide-react';
+import {
+  CalendarDays,
+  CheckCircle2,
+  Grid3X3,
+  List,
+  Search,
+  XCircle,
+} from 'lucide-react';
 import { useMemo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
@@ -245,7 +252,9 @@ export function PostsView({ posts }: PostsViewProps) {
               <Card key={post.id}>
                 <CardHeader className="space-y-3">
                   <div className="flex items-start justify-between gap-2">
-                    <CardTitle className="line-clamp-2 text-xl">{post.title}</CardTitle>
+                    <CardTitle className="line-clamp-2 text-xl">
+                      {post.title}
+                    </CardTitle>
                     {post.published ? (
                       <Badge className="bg-green-600 text-white hover:bg-green-700">
                         <CheckCircle2 className="h-3.5 w-3.5" /> Published
