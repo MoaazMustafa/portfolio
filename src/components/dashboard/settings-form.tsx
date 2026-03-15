@@ -2,7 +2,8 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -28,6 +29,7 @@ import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { useLocalStorage } from '@/hooks';
+import { useColorTheme, type ColorTheme } from '@/hooks/use-color-theme';
 import { updateCurrentUserSettings } from '@/lib/actions/user';
 import {
   DASHBOARD_PREFERENCES_STORAGE_KEY,
@@ -46,10 +48,18 @@ interface SettingsFormProps {
 
 export function SettingsForm({ initialValues, email }: SettingsFormProps) {
   const [saving, setSaving] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { setTheme, resolvedTheme, theme } = useTheme();
+  const { colorTheme, customColor, setColorTheme, setCustomColor } =
+    useColorTheme();
   const [preferences, setPreferences] = useLocalStorage<DashboardPreferences>(
     DASHBOARD_PREFERENCES_STORAGE_KEY,
     defaultDashboardPreferences,
   );
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
@@ -233,6 +243,86 @@ export function SettingsForm({ initialValues, email }: SettingsFormProps) {
           </Button>
         </form>
       </Form>
+
+      <Separator />
+
+      <div className="space-y-4">
+        <div>
+          <h4 className="text-base font-medium">Appearance</h4>
+          <p className="text-muted-foreground text-sm">
+            Control dashboard theme mode and your accent color.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="rounded-lg border p-4">
+            <p className="mb-2 font-medium">Theme Mode</p>
+            <Select
+              value={mounted ? (theme ?? 'system') : 'system'}
+              onValueChange={(value) => setTheme(value)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="system">System</SelectItem>
+                <SelectItem value="light">Light</SelectItem>
+                <SelectItem value="dark">Dark</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-muted-foreground mt-2 text-xs">
+              Active mode: {mounted ? (resolvedTheme ?? 'system') : 'system'}
+            </p>
+          </div>
+
+          <div className="rounded-lg border p-4">
+            <p className="mb-2 font-medium">Accent Color Theme</p>
+            <Select
+              value={mounted ? colorTheme : 'lime'}
+              onValueChange={(value) => setColorTheme(value as ColorTheme)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="lime">Lime</SelectItem>
+                <SelectItem value="maroon">Maroon</SelectItem>
+                <SelectItem value="custom">Custom</SelectItem>
+              </SelectContent>
+            </Select>
+            {colorTheme === 'custom' ? (
+              <div className="mt-3 grid grid-cols-[48px_1fr] items-center gap-2">
+                <Input
+                  type="color"
+                  value={customColor}
+                  onChange={(e) => setCustomColor(e.target.value)}
+                  className="h-10 w-12 cursor-pointer p-1"
+                />
+                <Input
+                  value={customColor}
+                  onChange={(e) => setCustomColor(e.target.value)}
+                  placeholder="#3b82f6"
+                />
+              </div>
+            ) : null}
+            <div className="mt-3 flex items-center gap-2">
+              <span className="text-muted-foreground text-xs">Preview:</span>
+              <span
+                className="h-4 w-4 rounded-full border"
+                style={{
+                  backgroundColor:
+                    colorTheme === 'lime'
+                      ? '#acec00'
+                      : colorTheme === 'maroon'
+                        ? '#800000'
+                        : customColor,
+                }}
+              />
+              <span className="text-xs font-medium capitalize">{colorTheme}</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <Separator />
 
