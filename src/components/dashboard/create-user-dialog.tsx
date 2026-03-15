@@ -46,7 +46,17 @@ const formSchema = z.object({
   githubUrl: z.string().optional().nullable(),
   linkedinUrl: z.string().optional().nullable(),
   websiteUrl: z.string().optional().nullable(),
-  image: z.string().optional().nullable(),
+  image: z
+    .string()
+    .optional()
+    .nullable()
+    .refine(
+      (val) => {
+        if (!val) return true;
+        return val.length * 0.75 <= 1024 * 1024 + 1024;
+      },
+      { message: 'Image size must be less than 1MB' }
+    ),
 });
 
 export function CreateUserDialog() {
@@ -71,8 +81,14 @@ export function CreateUserDialog() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        toast.error('Image size must be less than 2MB');
+      if (!file.type.startsWith('image/')) {
+        toast.error('File must be an image');
+        e.target.value = '';
+        return;
+      }
+      if (file.size > 1024 * 1024) { // 1MB
+        toast.error('Image size must be less than 1MB');
+        e.target.value = '';
         return;
       }
       const reader = new FileReader();

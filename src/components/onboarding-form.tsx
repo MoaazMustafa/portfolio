@@ -29,7 +29,17 @@ const formSchema = z.object({
   linkedinUrl: z.string().url().optional().or(z.literal('')),
   githubUrl: z.string().url().optional().or(z.literal('')),
   websiteUrl: z.string().url().optional().or(z.literal('')),
-  image: z.string().optional().nullable(),
+  image: z
+    .string()
+    .optional()
+    .nullable()
+    .refine(
+      (val) => {
+        if (!val) return true;
+        return val.length * 0.75 <= 1024 * 1024 + 1024;
+      },
+      { message: 'Image size must be less than 1MB' }
+    ),
 });
 
 interface OnboardingFormProps {
@@ -57,8 +67,14 @@ export function OnboardingForm({ token, email }: OnboardingFormProps) {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        toast.error('Image size must be less than 2MB');
+      if (!file.type.startsWith('image/')) {
+        toast.error('File must be an image');
+        e.target.value = '';
+        return;
+      }
+      if (file.size > 1024 * 1024) { // 1MB
+        toast.error('Image size must be less than 1MB');
+        e.target.value = '';
         return;
       }
       const reader = new FileReader();

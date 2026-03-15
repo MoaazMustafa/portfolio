@@ -38,6 +38,14 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { updateUser } from '@/lib/actions/user';
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_IMAGE_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
+];
+
 const formSchema = z.object({
   id: z.string(),
   name: z.string().min(2, 'Name is required'),
@@ -48,7 +56,21 @@ const formSchema = z.object({
   githubUrl: z.string().optional().nullable(),
   linkedinUrl: z.string().optional().nullable(),
   websiteUrl: z.string().optional().nullable(),
-  image: z.string().optional().nullable(),
+  image: z
+    .string()
+    .optional()
+    .nullable()
+    .refine(
+      (base64) => {
+        if (!base64) return true;
+        // Check base64 size roughly: 4 * ceil(n / 3)
+        // 1MB binary ~ 1.33MB base64
+        return base64.length * 0.75 <= MAX_FILE_SIZE + 1024; // allow small buffer
+      },
+      {
+        message: 'Image size must be less than 5MB',
+      },
+    ),
 });
 
 interface EditUserDialogProps {
@@ -89,15 +111,25 @@ export function EditUserDialog({ user }: EditUserDialogProps) {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        toast.error('Image size must be less than 2MB');
+      // Check file type
+      if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+        toast.error('Only .jpg, .jpeg, .png and .webp formats are supported');
+        e.target.value = ''; // Reset input
         return;
       }
+
+      // Check file size
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error('Image size must be less than 5MB');
+        e.target.value = ''; // Reset input
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64 = reader.result as string;
         setImagePreview(base64);
-        form.setValue('image', base64);
+        form.setValue('image', base64, { shouldValidate: true });
       };
       reader.readAsDataURL(file);
     }
@@ -161,7 +193,7 @@ export function EditUserDialog({ user }: EditUserDialogProps) {
                     <input
                       type="file"
                       className="absolute inset-0 cursor-pointer opacity-0"
-                      accept="image/*"
+                      accept={ACCEPTED_IMAGE_TYPES.join(',')}
                       onChange={handleImageChange}
                     />
                   </Button>
@@ -177,7 +209,7 @@ export function EditUserDialog({ user }: EditUserDialogProps) {
                   )}
                 </div>
                 <p className="text-muted-foreground text-xs">
-                  Recommended size: 400x400px. Max 2MB.
+                  Recommended size: 400x400px. Max 5MB.
                 </p>
               </div>
             </div>
