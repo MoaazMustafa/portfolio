@@ -70,7 +70,7 @@ export function OnboardingForm({ token, email }: OnboardingFormProps) {
         e.target.value = '';
         return;
       }
-      
+
       try {
         setUploading(true);
         const url = await uploadToCloudinary(file);

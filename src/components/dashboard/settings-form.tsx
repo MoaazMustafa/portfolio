@@ -85,7 +85,7 @@ export function SettingsForm({ initialValues, email }: SettingsFormProps) {
       setSaving(false);
     }
   }
-const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
@@ -108,7 +108,6 @@ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     }
   };
 
-  
   function resetWorkflowPreferences() {
     setPreferences(defaultDashboardPreferences);
     toast.success('Workflow preferences reset to defaults');

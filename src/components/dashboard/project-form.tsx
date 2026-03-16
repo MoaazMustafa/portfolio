@@ -35,7 +35,6 @@ import { uploadToCloudinary } from '@/lib/cloudinary';
 import {
   DASHBOARD_PREFERENCES_STORAGE_KEY,
   defaultDashboardPreferences,
-  type DashboardPreferences,
 } from '@/lib/dashboard-preferences';
 import { slugify } from '@/lib/utils';
 import {
@@ -267,8 +266,8 @@ export function ProjectForm({
               <FormItem>
                 <FormLabel>Title</FormLabel>
                 <FormControl>
-                  <Input 
-                    placeholder="Project Title" 
+                  <Input
+                    placeholder="Project Title"
                     {...field}
                     onChange={(e) => {
                       field.onChange(e.target.value);
