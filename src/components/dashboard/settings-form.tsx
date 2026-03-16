@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Upload } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -31,6 +31,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useLocalStorage } from '@/hooks';
 import { useColorTheme, type ColorTheme } from '@/hooks/use-color-theme';
 import { updateCurrentUserSettings } from '@/lib/actions/user';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 import {
   DASHBOARD_PREFERENCES_STORAGE_KEY,
   defaultDashboardPreferences,
@@ -48,6 +49,7 @@ interface SettingsFormProps {
 
 export function SettingsForm({ initialValues, email }: SettingsFormProps) {
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { setTheme, resolvedTheme, theme } = useTheme();
   const { colorTheme, customColor, setColorTheme, setCustomColor } =
@@ -83,7 +85,30 @@ export function SettingsForm({ initialValues, email }: SettingsFormProps) {
       setSaving(false);
     }
   }
+const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image size must be less than 5MB');
+        return;
+      }
 
+      try {
+        setUploading(true);
+        const url = await uploadToCloudinary(file);
+        form.setValue('image', url, { shouldValidate: true });
+        toast.success('Profile image uploaded');
+      } catch (error) {
+        toast.error('Failed to upload image');
+        console.error(error);
+      } finally {
+        setUploading(false);
+        e.target.value = '';
+      }
+    }
+  };
+
+  
   function resetWorkflowPreferences() {
     setPreferences(defaultDashboardPreferences);
     toast.success('Workflow preferences reset to defaults');
@@ -116,6 +141,7 @@ export function SettingsForm({ initialValues, email }: SettingsFormProps) {
                 </FormItem>
               )}
             />
+            <br />
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
@@ -137,8 +163,8 @@ export function SettingsForm({ initialValues, email }: SettingsFormProps) {
                   <FormControl>
                     <Input
                       placeholder="Full Stack Developer"
+                      {...field}
                       value={field.value || ''}
-                      onChange={field.onChange}
                     />
                   </FormControl>
                   <FormMessage />
@@ -151,13 +177,36 @@ export function SettingsForm({ initialValues, email }: SettingsFormProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Profile Image URL</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="https://..."
-                      value={field.value || ''}
-                      onChange={field.onChange}
-                    />
-                  </FormControl>
+                  <div className="flex gap-2">
+                    <FormControl>
+                      <Input
+                        placeholder="https://..."
+                        {...field}
+                        value={field.value || ''}
+                        className="flex-1"
+                      />
+                    </FormControl>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      className="relative shrink-0"
+                      disabled={uploading}
+                    >
+                      {uploading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Upload className="h-4 w-4" />
+                      )}
+                      <input
+                        type="file"
+                        className="absolute inset-0 cursor-pointer opacity-0"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        disabled={uploading}
+                      />
+                    </Button>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}

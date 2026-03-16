@@ -28,16 +28,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { updateUser } from '@/lib/actions/user';
-
 import { uploadToCloudinary } from '@/lib/cloudinary';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -208,7 +200,7 @@ export function EditUserDialog({ user }: EditUserDialogProps) {
                       variant="destructive"
                       size="icon"
                       onClick={removeImage}
-                    >5
+                    >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   )}

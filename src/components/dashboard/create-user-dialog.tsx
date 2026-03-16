@@ -27,16 +27,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { createUser } from '@/lib/actions/user';
-
 import { uploadToCloudinary } from '@/lib/cloudinary';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -84,7 +76,7 @@ export function CreateUserDialog() {
         e.target.value = '';
         return;
       }
-      
+
       try {
         setUploading(true);
         const reader = new FileReader();

@@ -21,6 +21,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { submitOnboarding } from '@/lib/actions/invitation';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Name is required'),
@@ -29,17 +30,7 @@ const formSchema = z.object({
   linkedinUrl: z.string().url().optional().or(z.literal('')),
   githubUrl: z.string().url().optional().or(z.literal('')),
   websiteUrl: z.string().url().optional().or(z.literal('')),
-  image: z
-    .string()
-    .optional()
-    .nullable()
-    .refine(
-      (val) => {
-        if (!val) return true;
-        return val.length * 0.75 <= 1024 * 1024 + 1024;
-      },
-      { message: 'Image size must be less than 1MB' },
-    ),
+  image: z.string().optional().nullable(),
 });
 
 interface OnboardingFormProps {
@@ -50,6 +41,7 @@ interface OnboardingFormProps {
 export function OnboardingForm({ token, email }: OnboardingFormProps) {
   const router = useRouter();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,7 +56,7 @@ export function OnboardingForm({ token, email }: OnboardingFormProps) {
     },
   });
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (!file.type.startsWith('image/')) {
@@ -72,19 +64,26 @@ export function OnboardingForm({ token, email }: OnboardingFormProps) {
         e.target.value = '';
         return;
       }
-      if (file.size > 1024 * 1024) {
-        // 1MB
-        toast.error('Image size must be less than 1MB');
+      if (file.size > 5 * 1024 * 1024) {
+        // 5MB
+        toast.error('Image size must be less than 5MB');
         e.target.value = '';
         return;
       }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64 = reader.result as string;
-        setImagePreview(base64);
-        form.setValue('image', base64);
-      };
-      reader.readAsDataURL(file);
+      
+      try {
+        setUploading(true);
+        const url = await uploadToCloudinary(file);
+        setImagePreview(url);
+        form.setValue('image', url);
+        toast.success('Image uploaded successfully');
+      } catch (error) {
+        toast.error('Failed to upload image');
+        console.error(error);
+        e.target.value = '';
+      } finally {
+        setUploading(false);
+      }
     }
   };
 
@@ -129,24 +128,31 @@ export function OnboardingForm({ token, email }: OnboardingFormProps) {
             </AvatarFallback>
           </Avatar>
           <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="cursor-pointer"
-              asChild
-            >
-              <label>
-                <Upload className="mr-2 h-4 w-4" />
-                Upload Photo
-                <input
-                  type="file"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                />
-              </label>
-            </Button>
+            {uploading ? (
+              <Button type="button" variant="outline" size="sm" disabled>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Uploading...
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="cursor-pointer"
+                asChild
+              >
+                <label>
+                  <Upload className="mr-2 h-4 w-4" />
+                  Upload Photo
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                  />
+                </label>
+              </Button>
+            )}
             {imagePreview && (
               <Button
                 type="button"
@@ -154,6 +160,7 @@ export function OnboardingForm({ token, email }: OnboardingFormProps) {
                 size="icon"
                 onClick={removeImage}
                 className="text-destructive hover:text-destructive/90"
+                disabled={uploading}
               >
                 <Trash2 className="h-4 w-4" />
               </Button>

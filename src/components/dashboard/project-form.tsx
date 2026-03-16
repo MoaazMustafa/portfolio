@@ -29,10 +29,13 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { useLocalStorage } from '@/hooks';
+import { createProject, updateProject } from '@/lib/actions';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import {
   DASHBOARD_PREFERENCES_STORAGE_KEY,
   defaultDashboardPreferences,
+  type DashboardPreferences,
 } from '@/lib/dashboard-preferences';
 import { slugify } from '@/lib/utils';
 import {
@@ -108,15 +111,7 @@ export function ProjectForm({
     collaborators: project?.collaborators?.map((c) => c.id) || [],
   };
 
-  const uploadToCloudinary = async (fileOrDataUri: File | string) => {
-    if (!cloudinaryCloudName || !cloudinaryUploadPreset) {
-      throw new Error('Cloudinary is not configured');
-    }
-
-    const formData = new FormData();
-    formData.append('file', fileOrDataUri);
-    formData.append('upload_preset', cloudinaryUploadPreset);
-handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
@@ -155,16 +150,24 @@ handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
 
         for (const file of Array.from(files)) {
           if (file.size > 5 * 1024 * 1024) {
-             toast.error(`Image ${file.name} is too large (>5MB)`);
-             continue; 
+            toast.error(`Image ${file.name} is too large (>5MB)`);
+            continue;
           }
           uploadPromises.push(uploadToCloudinary(file));
         }
-        
+
         const uploadedUrls = await Promise.all(uploadPromises);
 
         uploadedUrls.forEach((url) => append({ value: url }));
-        toast.success(`${uploadedUrls.length} gallery images uploaded`
+        toast.success(`${uploadedUrls.length} gallery images uploaded`);
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : 'Failed to upload gallery images';
+        toast.error(message);
+      } finally {
+        setUploadingImages(false);
         e.target.value = '';
       }
     }
@@ -211,20 +214,8 @@ handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
   async function onSubmit(data: ProjectFormValues) {
     setLoading(true);
     try {
-      const normalizedCoverImage = data.coverImage
-        ? await normalizeImageUrl(data.coverImage)
-        : data.coverImage;
-
-      const normalizedImages = await Promise.all(
-        data.images.map(async (image) => ({
-          value: await normalizeImageUrl(image.value),
-        })),
-      );
-
       const payload: ProjectFormValues = {
         ...data,
-        coverImage: normalizedCoverImage,
-        images: normalizedImages,
       };
 
       if (project) {
@@ -262,9 +253,30 @@ handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
       toast.error(message);
     } finally {
       setLoading(false);
-    }payload: ProjectFormValues = {
-        ...data
-                  <Input placeholder="Project Title" {...field} />
+    }
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="Project Title" 
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e.target.value);
+                      if (!slugEdited) {
+                        form.setValue('slug', slugify(e.target.value));
+                      }
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
