@@ -58,7 +58,7 @@ interface ProjectFormProps {
   project?: SerializedProject & {
     technologies: Technology[];
     categories: Category[];
-  collaborators?: Pick<User, 'id' | 'name' | 'email' | 'image'>[];
+    collaborators?: Pick<User, 'id' | 'name' | 'email' | 'image'>[];
   };
   technologies: Technology[];
   categories: Category[];
@@ -87,7 +87,6 @@ export function ProjectForm({
     Boolean(project) || !preferences.autoGenerateSlugs,
   );
   const slugDebounceRef = useRef<number | null>(null);
-
 
   const defaultValues: Partial<ProjectFormValues> = {
     title: project?.title || '',
@@ -125,12 +124,16 @@ export function ProjectForm({
   useEffect(() => {
     // If we have a project ID but missing critical fields (like content or full images list)
     // we should fetch the complete project data.
-    if (project && (!project.content && !project.images)) {
+    if (project && !project.content && !project.images) {
       setLoading(true);
       getProject(project.id)
         .then((result) => {
           if (result.project) {
-            const p = result.project as unknown as Project & { technologies: Technology[], categories: Category[], collaborators: User[] }; // Explicit cast to help TS
+            const p = result.project as unknown as Project & {
+              technologies: Technology[];
+              categories: Category[];
+              collaborators: User[];
+            }; // Explicit cast to help TS
             form.reset({
               title: p.title,
               slug: p.slug,
@@ -140,8 +143,12 @@ export function ProjectForm({
               liveUrl: p.liveUrl || '',
               githubUrl: p.githubUrl || '',
               images: p.images?.map((img) => ({ value: img })) || [],
-              startDate: p.startDate ? new Date(p.startDate).toISOString().split('T')[0] : '',
-              endDate: p.endDate ? new Date(p.endDate).toISOString().split('T')[0] : '',
+              startDate: p.startDate
+                ? new Date(p.startDate).toISOString().split('T')[0]
+                : '',
+              endDate: p.endDate
+                ? new Date(p.endDate).toISOString().split('T')[0]
+                : '',
               isFeatured: p.isFeatured,
               isVisible: p.isVisible,
               status: p.status,
@@ -684,7 +691,7 @@ export function ProjectForm({
             )}
           />
         </div>
-        
+
         <div className="grid grid-cols-1 gap-8">
           <div className="space-y-4">
             <FormLabel>Technologies</FormLabel>
@@ -805,4 +812,3 @@ export function ProjectForm({
     </Form>
   );
 }
-

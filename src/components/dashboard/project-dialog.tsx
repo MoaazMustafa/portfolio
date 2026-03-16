@@ -30,7 +30,7 @@ interface ProjectDialogProps {
   project?: SerializedProject & {
     technologies: Technology[];
     categories: Category[];
-  collaborators?: Pick<User, 'id' | 'name' | 'email' | 'image'>[];
+    collaborators?: Pick<User, 'id' | 'name' | 'email' | 'image'>[];
   };
   technologies: Technology[];
   categories: Category[];

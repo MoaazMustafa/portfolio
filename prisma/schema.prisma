@@ -66,8 +66,8 @@ model User {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@map("users")
     @@index([createdAt])
+    @@map("users")
 }
 
 model VerificationToken {
@@ -130,9 +130,9 @@ model Project {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@map("projects")
     @@index([createdAt])
     @@index([updatedAt])
+    @@map("projects")
 }
 
 model Technology {
@@ -181,7 +181,7 @@ model Post {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    @@index([createdAt])
 
+    @@index([createdAt])
     @@map("posts")
 }

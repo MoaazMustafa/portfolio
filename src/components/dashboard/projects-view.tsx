@@ -416,7 +416,7 @@ export function ProjectsView({
                     />
                   ) : (
                     <div
-                      className="flex h-full w-full items-center justify-center text-4xl font-bold text-white/90 select-none shadow-inner"
+                      className="flex h-full w-full items-center justify-center text-4xl font-bold text-white/90 shadow-inner select-none"
                       style={getPlaceholderStyle(project.title)}
                     >
                       {project.title.substring(0, 2).toUpperCase()}
