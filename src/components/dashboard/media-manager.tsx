@@ -242,7 +242,7 @@ export default function MediaManager() {
                   >
                     <div className="bg-muted/50 relative h-10 w-10 shrink-0 overflow-hidden rounded">
                       <Image
-                        src={resource.url}
+                        src={resource.secure_url}
                         alt={resource.public_id}
                         fill
                         className="object-cover"
@@ -301,7 +301,7 @@ export default function MediaManager() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleCopyUrl(selectedImage.url)}
+                    onClick={() => handleCopyUrl(selectedImage.secure_url)}
                   >
                     <Copy className="mr-2 h-4 w-4" />
                     Copy URL
@@ -321,7 +321,7 @@ export default function MediaManager() {
               <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
                 <div className="bg-background relative aspect-video w-full max-w-3xl overflow-hidden rounded-lg border shadow-sm">
                   <Image
-                    src={selectedImage.url}
+                    src={selectedImage.secure_url}
                     alt={selectedImage.public_id}
                     fill
                     className="object-contain"
