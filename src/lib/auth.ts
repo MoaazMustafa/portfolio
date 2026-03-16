@@ -1,7 +1,7 @@
-import type { NextAuthOptions } from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
+import type { NextAuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 
-import { prisma } from "@/lib/prisma"
+import { prisma } from "@/lib/prisma";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -12,11 +12,13 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user }) {
-      // Allow the owner
-      if (user.email === "contactwithmoaaz@gmail.com") {
-        return true
-      }
+      const allowedEmails = process.env.ALLOWED_EMAILS?.split(',').map((email) => email.trim()) || [];
       
+      // Allow if user is in the allowed emails list
+      if (user.email && allowedEmails.includes(user.email)) {
+        return true;
+      }
+
       // Allow if user already exists in database
       if (user.email) {
         const existingUser = await prisma.user.findUnique({
@@ -39,9 +41,7 @@ export const authOptions: NextAuthOptions = {
                 where: { email: session.user.email },
             })
             if (dbUser) {
-                // @ts-expect-error
                 session.user.id = dbUser.id
-                // @ts-expect-error
                 session.user.role = dbUser.role
             }
         }
