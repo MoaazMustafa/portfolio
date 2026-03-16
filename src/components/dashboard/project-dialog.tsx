@@ -30,11 +30,11 @@ interface ProjectDialogProps {
   project?: SerializedProject & {
     technologies: Technology[];
     categories: Category[];
-    collaborators?: User[];
+  collaborators?: Pick<User, 'id' | 'name' | 'email' | 'image'>[];
   };
   technologies: Technology[];
   categories: Category[];
-  users: User[];
+  users: Pick<User, 'id' | 'name' | 'email' | 'image'>[];
   trigger?: React.ReactNode;
 }
 

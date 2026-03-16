@@ -5,10 +5,7 @@ import { ProjectsView } from '@/components/dashboard/projects-view';
 import { prisma } from '@/lib/prisma';
 
 export default async function ProjectsPage() {
-  if (!prisma || !(prisma as any).project) {
-    const availableKeys = prisma
-      ? Object.keys(prisma).join(', ')
-      : 'prisma is undefined';
+  if (!prisma) {
     return (
       <div className="rounded-lg border border-dashed p-8 text-center">
         <h2 className="text-destructive text-xl font-semibold">
@@ -18,31 +15,71 @@ export default async function ProjectsPage() {
           Unable to connect to the database. Please ensure the Prisma client is
           generated (`npx prisma generate`).
         </p>
-        <div className="bg-muted/50 mx-auto mt-4 max-w-xl overflow-auto rounded p-4 text-left font-mono text-xs">
-          <p>
-            <strong>Debug Info:</strong>
-          </p>
-          <p>Prisma Instance: {prisma ? 'Present' : 'Missing'}</p>
-          <p>
-            Project Model: {(prisma as any)?.project ? 'Present' : 'Missing'}
-          </p>
-          <p>Available Keys: {availableKeys}</p>
-        </div>
       </div>
     );
   }
 
-  const projects = (await (prisma as any).project.findMany({
-    orderBy: { createdAt: 'desc' },
-    include: {
-      technologies: true,
-      categories: true,
-      collaborators: true,
-    },
-  })) as (Project & {
+  const [projectsData, technologies, categories, users] = await Promise.all([
+    prisma.project.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        description: true,
+        coverImage: true,
+        startDate: true,
+        endDate: true,
+        status: true,
+        isFeatured: true,
+        isVisible: true,
+        createdAt: true,
+        updatedAt: true,
+        technologies: {
+          select: {
+            id: true,
+            name: true,
+            category: true,
+          },
+        },
+        categories: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        collaborators: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+      },
+    }),
+    prisma.technology.findMany({
+      orderBy: { name: 'asc' },
+    }),
+    prisma.category.findMany({
+      orderBy: { name: 'asc' },
+    }),
+    prisma.user.findMany({
+      orderBy: { name: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true,
+      },
+    }),
+  ]);
+
+  const projects = projectsData as (Project & {
     technologies: Technology[];
     categories: Category[];
-    collaborators: User[];
+    collaborators: Pick<User, 'id' | 'name' | 'email' | 'image'>[];
   })[];
 
   // Format dates for client components
@@ -53,18 +90,6 @@ export default async function ProjectsPage() {
     createdAt: project.createdAt.toISOString(),
     updatedAt: project.updatedAt.toISOString(),
   }));
-
-  const technologies = (await (prisma as any).technology.findMany({
-    orderBy: { name: 'asc' },
-  })) as Technology[];
-
-  const categories = (await (prisma as any).category.findMany({
-    orderBy: { name: 'asc' },
-  })) as Category[];
-
-  const users = await (prisma as any).user.findMany({
-    orderBy: { name: 'asc' },
-  });
 
   return (
     <div className="space-y-6">

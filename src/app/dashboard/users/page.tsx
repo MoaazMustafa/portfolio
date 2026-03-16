@@ -15,6 +15,7 @@ import { prisma } from '@/lib/prisma';
 export default async function UsersPage() {
   const users = await prisma.user.findMany({
     orderBy: { createdAt: 'desc' },
+    take: 20,
     select: {
       id: true,
       name: true,

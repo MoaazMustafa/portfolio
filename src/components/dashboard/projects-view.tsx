@@ -51,7 +51,7 @@ type SerializedProject = Omit<
   updatedAt: string | Date;
   technologies: Technology[];
   categories: Category[];
-  collaborators: User[];
+  collaborators: Pick<User, 'id' | 'name' | 'email' | 'image'>[];
 };
 
 type ViewMode = 'table' | 'cards';
@@ -59,11 +59,17 @@ type StatusFilter = 'all' | Project['status'];
 type VisibilityFilter = 'all' | 'visible' | 'hidden';
 type FeaturedFilter = 'all' | 'featured' | 'not-featured';
 
+function getPlaceholderStyle(title: string) {
+  return {
+    backgroundImage: `linear-gradient(135deg, var(--color-primary-600), var(--color-primary-900))`,
+  };
+}
+
 interface ProjectsViewProps {
   projects: SerializedProject[];
   technologies: Technology[];
   categories: Category[];
-  users: User[];
+  users: Pick<User, 'id' | 'name' | 'email' | 'image'>[];
 }
 
 function formatDate(date: string | Date | null) {
@@ -399,17 +405,24 @@ export function ProjectsView({
           ) : (
             sortedProjects.map((project) => (
               <Card key={project.id} className="overflow-hidden">
-                {project.coverImage ? (
-                  <div className="bg-muted relative aspect-16/7 w-full">
+                <div className="bg-muted relative aspect-16/7 w-full overflow-hidden">
+                  {project.coverImage ? (
                     <Image
                       src={project.coverImage}
                       alt={project.title}
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-300 hover:scale-105"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
-                  </div>
-                ) : null}
+                  ) : (
+                    <div
+                      className="flex h-full w-full items-center justify-center text-4xl font-bold text-white/90 select-none shadow-inner"
+                      style={getPlaceholderStyle(project.title)}
+                    >
+                      {project.title.substring(0, 2).toUpperCase()}
+                    </div>
+                  )}
+                </div>
 
                 <CardHeader className="space-y-3 pb-3">
                   <div className="flex items-start justify-between gap-3">

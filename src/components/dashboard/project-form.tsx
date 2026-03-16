@@ -31,7 +31,7 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { useLocalStorage } from '@/hooks';
-import { createProject, updateProject } from '@/lib/actions';
+import { createProject, getProject, updateProject } from '@/lib/actions';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import {
   DASHBOARD_PREFERENCES_STORAGE_KEY,
@@ -58,11 +58,11 @@ interface ProjectFormProps {
   project?: SerializedProject & {
     technologies: Technology[];
     categories: Category[];
-    collaborators?: User[];
+  collaborators?: Pick<User, 'id' | 'name' | 'email' | 'image'>[];
   };
   technologies: Technology[];
   categories: Category[];
-  users: User[];
+  users: Pick<User, 'id' | 'name' | 'email' | 'image'>[];
   onSuccess?: () => void;
 }
 
@@ -88,6 +88,7 @@ export function ProjectForm({
   );
   const slugDebounceRef = useRef<number | null>(null);
 
+
   const defaultValues: Partial<ProjectFormValues> = {
     title: project?.title || '',
     slug: project?.slug || '',
@@ -111,6 +112,51 @@ export function ProjectForm({
     collaborators: project?.collaborators?.map((c) => c.id) || [],
   };
 
+  const form = useForm<ProjectFormValues>({
+    resolver: zodResolver(projectSchema),
+    defaultValues: defaultValues as ProjectFormValues,
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    name: 'images',
+    control: form.control,
+  });
+
+  useEffect(() => {
+    // If we have a project ID but missing critical fields (like content or full images list)
+    // we should fetch the complete project data.
+    if (project && (!project.content && !project.images)) {
+      setLoading(true);
+      getProject(project.id)
+        .then((result) => {
+          if (result.project) {
+            const p = result.project as unknown as Project & { technologies: Technology[], categories: Category[], collaborators: User[] }; // Explicit cast to help TS
+            form.reset({
+              title: p.title,
+              slug: p.slug,
+              description: p.description,
+              content: p.content || '',
+              coverImage: p.coverImage || '',
+              liveUrl: p.liveUrl || '',
+              githubUrl: p.githubUrl || '',
+              images: p.images?.map((img) => ({ value: img })) || [],
+              startDate: p.startDate ? new Date(p.startDate).toISOString().split('T')[0] : '',
+              endDate: p.endDate ? new Date(p.endDate).toISOString().split('T')[0] : '',
+              isFeatured: p.isFeatured,
+              isVisible: p.isVisible,
+              status: p.status,
+              technologies: p.technologies?.map((t) => t.id) || [],
+              categories: p.categories?.map((c) => c.id) || [],
+              collaborators: p.collaborators?.map((c) => c.id) || [],
+            });
+            // Update preview if needed
+            if (p.coverImage) setImagePreview(p.coverImage);
+          }
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [project, form]);
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -125,7 +171,7 @@ export function ProjectForm({
         setImagePreview(uploadedUrl);
         form.setValue('coverImage', uploadedUrl);
         toast.success('Cover image uploaded');
-      } catch (error) {
+      } catch {
         toast.error('Failed to upload cover image');
       } finally {
         setUploadingImages(false);
@@ -173,11 +219,6 @@ export function ProjectForm({
     }
   };
 
-  const form = useForm<ProjectFormValues>({
-    resolver: zodResolver(projectSchema),
-    defaultValues: defaultValues as ProjectFormValues,
-  });
-
   const titleValue = form.watch('title');
 
   useEffect(() => {
@@ -205,11 +246,6 @@ export function ProjectForm({
       }
     };
   }, [form, preferences.autoGenerateSlugs, slugEdited, titleValue]);
-
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: 'images',
-  });
 
   async function onSubmit(data: ProjectFormValues) {
     setLoading(true);
@@ -338,7 +374,6 @@ export function ProjectForm({
             </FormItem>
           )}
         />
-
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <FormField
             control={form.control}
@@ -426,7 +461,6 @@ export function ProjectForm({
             )}
           />
         </div>
-
         <div className="flex flex-col gap-4">
           <FormLabel>Images</FormLabel>
           <div className="space-y-4 rounded-md border p-4">
@@ -445,18 +479,14 @@ export function ProjectForm({
                         disabled={loading || uploadingImages}
                         className="max-w-sm cursor-pointer"
                       />
-                      {!imagePreview ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-muted-foreground text-xs text-nowrap">
+                          or enter URL
+                        </span>
                         <FormControl>
-                          <span className="text-muted-foreground text-xs">
-                            or enter URL
-                          </span>
                           <Input placeholder="https://..." {...field} />
                         </FormControl>
-                      ) : (
-                        <FormControl>
-                          <Input type="hidden" {...field} />
-                        </FormControl>
-                      )}
+                      </div>
                     </div>
                   ) : null}
                   {imagePreview && (
@@ -465,7 +495,7 @@ export function ProjectForm({
                       <Image
                         src={imagePreview}
                         alt="Preview"
-                        className="!h-full !w-full object-cover"
+                        className="h-full! w-full! object-cover"
                         fill
                       />
                       <Button
@@ -561,7 +591,7 @@ export function ProjectForm({
           <FormField
             control={form.control}
             name="collaborators"
-            render={({ field }) => (
+            render={() => (
               <FormItem className="flex flex-col space-y-3">
                 <FormLabel>Collaborators</FormLabel>
                 <div className="flex flex-wrap gap-4">
@@ -612,7 +642,6 @@ export function ProjectForm({
             )}
           />
         </div>
-
         <div className="flex gap-8">
           <FormField
             control={form.control}
@@ -655,7 +684,7 @@ export function ProjectForm({
             )}
           />
         </div>
-        {/* Technologies and Categories selection */}
+        
         <div className="grid grid-cols-1 gap-8">
           <div className="space-y-4">
             <FormLabel>Technologies</FormLabel>
@@ -721,7 +750,7 @@ export function ProjectForm({
           </div>
           <div className="space-y-4">
             <FormLabel>Categories</FormLabel>
-            <div className="grid max-h-[300px] grid-cols-1 overflow-y-auto rounded-md border p-4">
+            <div className="grid max-h-75 grid-cols-1 overflow-y-auto rounded-md border p-4">
               {categories.map((cat) => (
                 <FormField
                   key={cat.id}
@@ -776,3 +805,4 @@ export function ProjectForm({
     </Form>
   );
 }
+

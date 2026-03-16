@@ -1,5 +1,7 @@
 "use server"
 
+
+
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -24,7 +26,7 @@ export async function createProject(data: ProjectFormValues) {
       }
     }
 
-    await (prisma as any).project.create({
+    await prisma.project.create({
       data: {
         title: validatedData.title,
         slug: validatedData.slug,
@@ -79,7 +81,7 @@ export async function updateProject(id: string, data: ProjectFormValues) {
       }
     }
 
-        await (prisma as any).project.update({
+        await prisma.project.update({
             where: { id },
             data: {
                 title: validatedData.title,
@@ -120,12 +122,29 @@ export async function updateProject(id: string, data: ProjectFormValues) {
 
 export async function deleteProject(id: string) {
     try {
-        await (prisma as any).project.delete({
+        await prisma.project.delete({
             where: { id },
         })
         revalidatePath("/dashboard/projects")
         return { success: true }
-    } catch (error) {
+    } catch {
         return { error: "Failed to delete project" }
     }
+}
+
+export async function getProject(id: string) {
+  try {
+    const project = await prisma.project.findUnique({
+      where: { id },
+      include: {
+        technologies: true,
+        categories: true,
+        collaborators: true,
+      },
+    })
+
+    return { project }
+  } catch {
+    return { error: 'Failed to fetch project' }
+  }
 }
