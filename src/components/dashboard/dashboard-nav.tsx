@@ -4,6 +4,7 @@ import {
   Cpu,
   FileText,
   FolderOpen,
+  Image as ImageIcon,
   LayoutDashboard,
   Settings,
   Tags,
@@ -35,6 +36,11 @@ const sidebarNavItems = [
     title: 'Projects',
     href: '/dashboard/projects',
     icon: FolderOpen,
+  },
+  {
+    title: 'Media Library',
+    href: '/dashboard/media',
+    icon: ImageIcon,
   },
   {
     title: 'Collaborators',

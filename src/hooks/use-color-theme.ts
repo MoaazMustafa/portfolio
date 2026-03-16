@@ -151,19 +151,23 @@ function getThemeConfig(theme: ColorTheme, customColor: string): ThemeConfig {
 }
 
 export function useColorTheme() {
-  const [colorTheme, setColorTheme] = useState<ColorTheme>(() => {
-    if (typeof window === 'undefined') return 'lime';
-    const stored = localStorage.getItem(COLOR_THEME_STORAGE_KEY) as ColorTheme;
-    return stored === 'lime' || stored === 'maroon' || stored === 'custom'
-      ? stored
-      : 'lime';
-  });
+  const [mounted, setMounted] = useState(false);
+  const [colorTheme, setColorTheme] = useState<ColorTheme>('lime');
+  const [customColor, setCustomColorState] = useState<string>(DEFAULT_CUSTOM_COLOR);
 
-  const [customColor, setCustomColorState] = useState<string>(() => {
-    if (typeof window === 'undefined') return DEFAULT_CUSTOM_COLOR;
-    const stored = localStorage.getItem(CUSTOM_COLOR_STORAGE_KEY) || '';
-    return isValidHex(stored) ? stored : DEFAULT_CUSTOM_COLOR;
-  });
+  useEffect(() => {
+    setMounted(true);
+    const stored = localStorage.getItem(COLOR_THEME_STORAGE_KEY) as ColorTheme;
+    const storedCustomColor = localStorage.getItem(CUSTOM_COLOR_STORAGE_KEY) || '';
+    
+    if (stored === 'lime' || stored === 'maroon' || stored === 'custom') {
+      setColorTheme(stored);
+    }
+    
+    if (isValidHex(storedCustomColor)) {
+      setCustomColorState(storedCustomColor);
+    }
+  }, []);
 
   useEffect(() => {
     const readAndApplyTheme = () => {
