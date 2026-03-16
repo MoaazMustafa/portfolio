@@ -409,24 +409,6 @@ export function SettingsForm({ initialValues, email }: SettingsFormProps) {
             />
           </div>
 
-          <div className="flex items-center justify-between rounded-lg border p-4">
-            <div>
-              <p className="font-medium">Show collaborators field</p>
-              <p className="text-muted-foreground text-sm">
-                Keep off for single-owner setup.
-              </p>
-            </div>
-            <Switch
-              checked={preferences.showCollaboratorsField}
-              onCheckedChange={(checked) =>
-                setPreferences((prev) => ({
-                  ...prev,
-                  showCollaboratorsField: checked,
-                }))
-              }
-            />
-          </div>
-
           <div className="rounded-lg border p-4">
             <p className="mb-2 font-medium">Default posts view mode</p>
             <Select

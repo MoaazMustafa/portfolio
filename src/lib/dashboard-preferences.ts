@@ -5,7 +5,6 @@ export interface DashboardPreferences {
   defaultPostPublished: boolean;
   defaultProjectFeatured: boolean;
   defaultProjectVisible: boolean;
-  showCollaboratorsField: boolean;
   postsViewMode: DashboardViewMode;
   projectsViewMode: DashboardViewMode;
 }
@@ -17,7 +16,6 @@ export const defaultDashboardPreferences: DashboardPreferences = {
   defaultPostPublished: false,
   defaultProjectFeatured: false,
   defaultProjectVisible: true,
-  showCollaboratorsField: false,
   postsViewMode: 'table',
   projectsViewMode: 'table',
 };

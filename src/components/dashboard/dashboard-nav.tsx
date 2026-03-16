@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Settings,
   Tags,
+  Users,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -34,6 +35,11 @@ const sidebarNavItems = [
     title: 'Projects',
     href: '/dashboard/projects',
     icon: FolderOpen,
+  },
+  {
+    title: 'Collaborators',
+    href: '/dashboard/users',
+    icon: Users,
   },
   {
     title: 'Technologies',
@@ -78,8 +84,8 @@ export function DashboardNav({
           className={cn(
             'hover:text-primary justify-start text-sm font-medium transition-colors',
             pathname === item.href
-              ? 'bg-primary/30 border-primary hover:bg-muted border'
-              : 'hover:bg-transparent hover:underline',
+              ? 'bg-primary hover:bg-muted border text-white'
+              : 'hover:bg-transparent',
             'flex items-center rounded-md px-3 py-2',
           )}
         >

@@ -20,7 +20,7 @@ const createUserSchema = z.object({
   image: z.string().optional().nullable(),
 })
 
-export type CreateUserData = z.infer<typeof createUserSchema>
+export type CreateUserData = z.input<typeof createUserSchema>
 
 export async function createUser(data: CreateUserData) {
   const result = createUserSchema.safeParse(data)
@@ -67,7 +67,7 @@ const updateUserSchema = z.object({
   id: z.string(),
   name: z.string().min(2, "Name is required"),
   email: z.string().email("Invalid email address"),
-  role: z.enum(["USER", "ADMIN"]),
+  role: z.enum(["USER", "ADMIN"]).optional(),
   image: z.string().optional().nullable(),
   title: z.string().optional().nullable(),
   bio: z.string().optional().nullable(),

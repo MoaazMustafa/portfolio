@@ -46,7 +46,6 @@ export default async function UsersPage() {
             <TableRow>
               <TableHead>User</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
               <TableHead className="text-right">Has Access Since</TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
@@ -78,9 +77,6 @@ export default async function UsersPage() {
                   </div>
                 </TableCell>
                 <TableCell>{user.email}</TableCell>
-                <TableCell className="capitalize">
-                  {user.role.toLowerCase()}
-                </TableCell>
                 <TableCell className="text-right">
                   {new Date(user.createdAt).toLocaleDateString()}
                 </TableCell>

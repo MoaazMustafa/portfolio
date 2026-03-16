@@ -29,8 +29,7 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { useLocalStorage } from '@/hooks';
-import { createProject, updateProject } from '@/lib/actions';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 import {
   DASHBOARD_PREFERENCES_STORAGE_KEY,
   defaultDashboardPreferences,
@@ -86,14 +85,6 @@ export function ProjectForm({
   );
   const slugDebounceRef = useRef<number | null>(null);
 
-  const cloudinaryCloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-  const cloudinaryUploadPreset =
-    process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-
-  const hasCloudinaryConfig = Boolean(
-    cloudinaryCloudName && cloudinaryUploadPreset,
-  );
-
   const defaultValues: Partial<ProjectFormValues> = {
     title: project?.title || '',
     slug: project?.slug || '',
@@ -125,48 +116,11 @@ export function ProjectForm({
     const formData = new FormData();
     formData.append('file', fileOrDataUri);
     formData.append('upload_preset', cloudinaryUploadPreset);
-
-    const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`,
-      {
-        method: 'POST',
-        body: formData,
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error('Upload failed');
-    }
-
-    const json = (await response.json()) as { secure_url?: string };
-
-    if (!json.secure_url) {
-      throw new Error('Upload URL missing');
-    }
-
-    return json.secure_url;
-  };
-
-  const normalizeImageUrl = async (value: string) => {
-    if (!value.startsWith('data:')) {
-      return value;
-    }
-
-    return uploadToCloudinary(value);
-  };
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
         toast.error('Image size must be less than 5MB');
-        return;
-      }
-
-      if (!hasCloudinaryConfig) {
-        toast.error(
-          'Set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET',
-        );
         return;
       }
 
@@ -176,7 +130,7 @@ export function ProjectForm({
         setImagePreview(uploadedUrl);
         form.setValue('coverImage', uploadedUrl);
         toast.success('Cover image uploaded');
-      } catch {
+      } catch (error) {
         toast.error('Failed to upload cover image');
       } finally {
         setUploadingImages(false);
@@ -195,36 +149,22 @@ export function ProjectForm({
         return;
       }
 
-      if (!hasCloudinaryConfig) {
-        toast.error(
-          'Set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET',
-        );
-        return;
-      }
-
       try {
         setUploadingImages(true);
+        const uploadPromises: Promise<string>[] = [];
 
-        const uploadedUrls = await Promise.all(
-          Array.from(files).map(async (file) => {
-            if (file.size > 5 * 1024 * 1024) {
-              throw new Error(`Image ${file.name} is too large (>5MB)`);
-            }
-
-            return uploadToCloudinary(file);
-          }),
-        );
+        for (const file of Array.from(files)) {
+          if (file.size > 5 * 1024 * 1024) {
+             toast.error(`Image ${file.name} is too large (>5MB)`);
+             continue; 
+          }
+          uploadPromises.push(uploadToCloudinary(file));
+        }
+        
+        const uploadedUrls = await Promise.all(uploadPromises);
 
         uploadedUrls.forEach((url) => append({ value: url }));
-        toast.success('Gallery images uploaded');
-      } catch (error) {
-        const message =
-          error instanceof Error
-            ? error.message
-            : 'Failed to upload gallery images';
-        toast.error(message);
-      } finally {
-        setUploadingImages(false);
+        toast.success(`${uploadedUrls.length} gallery images uploaded`
         e.target.value = '';
       }
     }
@@ -322,20 +262,8 @@ export function ProjectForm({
       toast.error(message);
     } finally {
       setLoading(false);
-    }
-  }
-
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Title</FormLabel>
-                <FormControl>
+    }payload: ProjectFormValues = {
+        ...data
                   <Input placeholder="Project Title" {...field} />
                 </FormControl>
                 <FormMessage />
@@ -614,63 +542,61 @@ export function ProjectForm({
           </div>
         </div>
 
-        {preferences.showCollaboratorsField ? (
-          <div className="flex gap-8">
-            <FormField
-              control={form.control}
-              name="collaborators"
-              render={({ field }) => (
-                <FormItem className="flex flex-col space-y-3">
-                  <FormLabel>Collaborators</FormLabel>
-                  <div className="flex flex-wrap gap-4">
-                    {users?.map((user) => (
-                      <FormField
-                        key={user.id}
-                        control={form.control}
-                        name="collaborators"
-                        render={({ field }) => {
-                          return (
-                            <FormItem
-                              key={user.id}
-                              className="flex flex-row items-start space-y-0 space-x-3"
-                            >
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value?.includes(user.id)}
-                                  onCheckedChange={(checked) => {
-                                    return checked
-                                      ? field.onChange([
-                                          ...(field.value || []),
-                                          user.id,
-                                        ])
-                                      : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== user.id,
-                                          ),
-                                        );
-                                  }}
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                {user.name || user.email}
-                              </FormLabel>
-                            </FormItem>
-                          );
-                        }}
-                      />
-                    ))}
-                    {(!users || users.length === 0) && (
-                      <p className="text-muted-foreground text-sm">
-                        No users found.
-                      </p>
-                    )}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        ) : null}
+        <div className="flex gap-8">
+          <FormField
+            control={form.control}
+            name="collaborators"
+            render={({ field }) => (
+              <FormItem className="flex flex-col space-y-3">
+                <FormLabel>Collaborators</FormLabel>
+                <div className="flex flex-wrap gap-4">
+                  {users?.map((user) => (
+                    <FormField
+                      key={user.id}
+                      control={form.control}
+                      name="collaborators"
+                      render={({ field }) => {
+                        return (
+                          <FormItem
+                            key={user.id}
+                            className="flex flex-row items-start space-y-0 space-x-3"
+                          >
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value?.includes(user.id)}
+                                onCheckedChange={(checked) => {
+                                  return checked
+                                    ? field.onChange([
+                                        ...(field.value || []),
+                                        user.id,
+                                      ])
+                                    : field.onChange(
+                                        field.value?.filter(
+                                          (value) => value !== user.id,
+                                        ),
+                                      );
+                                }}
+                              />
+                            </FormControl>
+                            <FormLabel className="font-normal">
+                              {user.name || user.email}
+                            </FormLabel>
+                          </FormItem>
+                        );
+                      }}
+                    />
+                  ))}
+                  {(!users || users.length === 0) && (
+                    <p className="text-muted-foreground text-sm">
+                      No users found.
+                    </p>
+                  )}
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <div className="flex gap-8">
           <FormField

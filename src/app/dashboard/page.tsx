@@ -1,6 +1,3 @@
-import { redirect } from 'next/navigation';
-import { getServerSession } from 'next-auth/next';
-import Link from 'next/link';
 import {
   ArrowRight,
   CheckCircle2,
@@ -10,9 +7,12 @@ import {
   Layers,
   Tag,
 } from 'lucide-react';
+import { getServerSession } from 'next-auth/next';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -236,25 +236,52 @@ export default async function DashboardPage() {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Jump directly to content management.</CardDescription>
+            <CardDescription>
+              Jump directly to content management.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <Button asChild className="w-full justify-between" variant="outline">
+            <Button
+              asChild
+              className="w-full justify-between"
+              variant="outline"
+            >
               <Link href="/dashboard/projects">
                 Manage Projects <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-            <Button asChild className="w-full justify-between" variant="outline">
+            <Button
+              asChild
+              className="w-full justify-between"
+              variant="outline"
+            >
               <Link href="/dashboard/posts">
                 Manage Posts <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-            <Button asChild className="w-full justify-between" variant="outline">
+            <Button
+              asChild
+              className="w-full justify-between"
+              variant="outline"
+            >
+              <Link href="/dashboard/users">
+                Manage Collaborators <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              className="w-full justify-between"
+              variant="outline"
+            >
               <Link href="/dashboard/technologies">
                 Update Technologies <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-            <Button asChild className="w-full justify-between" variant="outline">
+            <Button
+              asChild
+              className="w-full justify-between"
+              variant="outline"
+            >
               <Link href="/dashboard/settings">
                 Edit Settings <ArrowRight className="h-4 w-4" />
               </Link>
@@ -267,7 +294,9 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle>Recent Project Updates</CardTitle>
-            <CardDescription>Latest project changes in your workspace.</CardDescription>
+            <CardDescription>
+              Latest project changes in your workspace.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {recentProjects.length === 0 ? (
@@ -280,7 +309,9 @@ export default async function DashboardPage() {
                     className="flex items-start justify-between gap-3 rounded-md border p-3"
                   >
                     <div className="space-y-1">
-                      <p className="font-medium leading-none">{project.title}</p>
+                      <p className="leading-none font-medium">
+                        {project.title}
+                      </p>
                       <div className="flex flex-wrap items-center gap-1.5">
                         <Badge variant="secondary">{project.status}</Badge>
                         {project.isFeatured ? (
@@ -288,12 +319,14 @@ export default async function DashboardPage() {
                             Featured
                           </Badge>
                         ) : null}
-                        <Badge variant={project.isVisible ? 'outline' : 'secondary'}>
+                        <Badge
+                          variant={project.isVisible ? 'outline' : 'secondary'}
+                        >
                           {project.isVisible ? 'Visible' : 'Hidden'}
                         </Badge>
                       </div>
                     </div>
-                    <span className="text-muted-foreground whitespace-nowrap text-xs">
+                    <span className="text-muted-foreground text-xs whitespace-nowrap">
                       {getRelativeTimeLabel(project.updatedAt)}
                     </span>
                   </div>
@@ -306,7 +339,9 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle>Recent Post Updates</CardTitle>
-            <CardDescription>Publishing activity and draft progress.</CardDescription>
+            <CardDescription>
+              Publishing activity and draft progress.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {recentPosts.length === 0 ? (
@@ -319,7 +354,7 @@ export default async function DashboardPage() {
                     className="flex items-start justify-between gap-3 rounded-md border p-3"
                   >
                     <div className="space-y-1">
-                      <p className="font-medium leading-none">{post.title}</p>
+                      <p className="leading-none font-medium">{post.title}</p>
                       <div className="flex items-center gap-1.5">
                         <Badge
                           className={
@@ -341,10 +376,10 @@ export default async function DashboardPage() {
                         </span>
                       </div>
                     </div>
-                    <span className="text-muted-foreground whitespace-nowrap text-xs">
+                    <span className="text-muted-foreground text-xs whitespace-nowrap">
                       {getRelativeTimeLabel(post.updatedAt)}
                     </span>
-                </div>
+                  </div>
                 ))}
               </div>
             )}
