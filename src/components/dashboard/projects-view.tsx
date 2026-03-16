@@ -11,6 +11,7 @@ import {
   UserRound,
   Wrench,
 } from 'lucide-react';
+import Image from 'next/image';
 import { useMemo, useState } from 'react';
 
 import { DeleteProjectDialog } from '@/components/dashboard/delete-project-dialog';
@@ -399,12 +400,15 @@ export function ProjectsView({
             sortedProjects.map((project) => (
               <Card key={project.id} className="overflow-hidden">
                 {project.coverImage ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={project.coverImage}
-                    alt={project.title}
-                    className="bg-muted aspect-[16/7] w-full object-cover"
-                  />
+                  <div className="bg-muted relative aspect-16/7 w-full">
+                    <Image
+                      src={project.coverImage}
+                      alt={project.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                  </div>
                 ) : null}
 
                 <CardHeader className="space-y-3 pb-3">

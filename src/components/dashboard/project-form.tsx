@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Category, Project, Technology, User } from '@prisma/client';
 import { Loader2, Plus, Trash, Upload } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -435,34 +436,37 @@ export function ProjectForm({
               render={({ field }) => (
                 <FormItem className="flex flex-col gap-2">
                   <FormLabel>Cover Image</FormLabel>
-                  <div className="flex flex-col gap-2 md:flex-row md:items-center">
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      disabled={loading || uploadingImages}
-                      className="max-w-sm cursor-pointer"
-                    />
-                    <span className="text-muted-foreground text-xs">
-                      or enter URL
-                    </span>
-                    {!imagePreview ? (
-                      <FormControl>
-                        <Input placeholder="https://..." {...field} />
-                      </FormControl>
-                    ) : (
-                      <FormControl>
-                        <Input type="hidden" {...field} />
-                      </FormControl>
-                    )}
-                  </div>
+                  {!imagePreview ? (
+                    <div className="flex flex-col gap-2 md:flex-row md:items-center">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        disabled={loading || uploadingImages}
+                        className="max-w-sm cursor-pointer"
+                      />
+                      {!imagePreview ? (
+                        <FormControl>
+                          <span className="text-muted-foreground text-xs">
+                            or enter URL
+                          </span>
+                          <Input placeholder="https://..." {...field} />
+                        </FormControl>
+                      ) : (
+                        <FormControl>
+                          <Input type="hidden" {...field} />
+                        </FormControl>
+                      )}
+                    </div>
+                  ) : null}
                   {imagePreview && (
-                    <div className="relative mt-2 aspect-video w-40 overflow-hidden rounded-md border">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                    <div className="relative mt-2 aspect-video h-auto w-full overflow-hidden rounded-md border">
+                      {}
+                      <Image
                         src={imagePreview}
                         alt="Preview"
-                        className="h-full w-full object-cover"
+                        className="!h-full !w-full object-cover"
+                        fill
                       />
                       <Button
                         type="button"
