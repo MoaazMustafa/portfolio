@@ -1,4 +1,4 @@
-import { Footer, Navbar } from '@/components';
+import { DevToolsProvider, Footer, Navbar } from '@/components';
 
 export default function PublicLayout({
   children,
@@ -7,9 +7,11 @@ export default function PublicLayout({
 }) {
   return (
     <>
-      <Navbar />
-      <main id="main-content">{children}</main>
-      <Footer />
+      <DevToolsProvider>
+        <Navbar />
+        <main id="main-content">{children}</main>
+        <Footer />
+      </DevToolsProvider>
     </>
   );
 }
