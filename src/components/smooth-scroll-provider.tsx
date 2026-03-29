@@ -72,8 +72,7 @@ export function SmoothScrollProvider({
     });
 
     // If the preloader hasn't finished, keep Lenis stopped until it signals
-    const preloaderDone =
-      document.body.classList.contains('preloader-done');
+    const preloaderDone = document.body.classList.contains('preloader-done');
 
     if (!preloaderDone) {
       lenis.stop();
