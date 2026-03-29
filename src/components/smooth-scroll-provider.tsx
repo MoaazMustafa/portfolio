@@ -14,12 +14,10 @@ type LenisInstance = InstanceType<typeof Lenis>;
 
 interface SmoothScrollContextValue {
   lenis: LenisInstance | null;
-  scrollProgress: number;
 }
 
 const SmoothScrollContext = createContext<SmoothScrollContextValue>({
   lenis: null,
-  scrollProgress: 0,
 });
 
 export function useSmoothScroll() {
@@ -36,7 +34,9 @@ export function SmoothScrollProvider({
   enabled = true,
 }: SmoothScrollProviderProps) {
   const lenisRef = useRef<LenisInstance | null>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [lenisInstance, setLenisInstance] = useState<LenisInstance | null>(
+    null,
+  );
 
   // Check reduced-motion preference
   const prefersReducedMotion =
@@ -46,21 +46,24 @@ export function SmoothScrollProvider({
 
   const shouldEnable = enabled && !prefersReducedMotion;
 
+  // Pure DOM updates — no React state per scroll frame
   const onScroll = useCallback((instance: LenisInstance) => {
-    setScrollProgress(instance.progress);
+    const root = document.documentElement;
+    root.style.setProperty('--scroll-y', String(instance.scroll));
+    root.style.setProperty('--scroll-progress', String(instance.progress));
   }, []);
 
   useEffect(() => {
     if (!shouldEnable) return;
 
     const lenis = new Lenis({
-      lerp: 0.1,
+      lerp: 0.07,
       wheelMultiplier: 1,
       touchMultiplier: 1.5,
+      syncTouch: true,
       autoRaf: true,
       autoResize: true,
       prevent: (node: HTMLElement) => {
-        // Don't hijack scroll inside scrollable containers (dialogs, dropdowns, scroll-areas)
         return (
           node.hasAttribute('data-lenis-prevent') ||
           node.closest('[data-lenis-prevent]') !== null ||
@@ -85,10 +88,12 @@ export function SmoothScrollProvider({
 
     lenis.on('scroll', onScroll);
     lenisRef.current = lenis;
+    setLenisInstance(lenis);
 
     return () => {
       lenis.destroy();
       lenisRef.current = null;
+      setLenisInstance(null);
     };
   }, [shouldEnable, onScroll]);
 
@@ -101,8 +106,8 @@ export function SmoothScrollProvider({
       if (e.matches) {
         lenisRef.current?.destroy();
         lenisRef.current = null;
+        setLenisInstance(null);
       }
-      // Will re-initialize on next render cycle via the main effect
     };
 
     mediaQuery.addEventListener('change', handleChange);
@@ -110,9 +115,7 @@ export function SmoothScrollProvider({
   }, []);
 
   return (
-    <SmoothScrollContext.Provider
-      value={{ lenis: lenisRef.current, scrollProgress }}
-    >
+    <SmoothScrollContext.Provider value={{ lenis: lenisInstance }}>
       {children}
     </SmoothScrollContext.Provider>
   );

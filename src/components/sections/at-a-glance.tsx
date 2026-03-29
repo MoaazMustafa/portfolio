@@ -4,6 +4,7 @@ import type { COBEOptions } from 'cobe';
 import { AnimatePresence, motion, useInView } from 'framer-motion';
 import { MapPin, Trophy, Zap } from 'lucide-react';
 import { useTheme } from 'next-themes';
+// eslint-disable-next-line import/order
 import Image from 'next/image';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GitHubCalendar } from 'react-github-calendar';
@@ -335,8 +336,12 @@ export function AtAGlance() {
   };
 
   return (
-    <section ref={sectionRef} className="mx-auto my-24 max-w-7xl px-4 py-12">
+    <section
+      ref={sectionRef}
+      className="relative mx-auto my-24 max-w-7xl px-4 py-12"
+    >
       <motion.div
+        className="relative"
         variants={containerVariants}
         initial="hidden"
         animate={isInView ? 'visible' : 'hidden'}

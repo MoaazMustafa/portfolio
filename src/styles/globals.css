@@ -188,7 +188,7 @@
     pointer-events: none;
   }
   yyy html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
   }
 }
 
@@ -533,6 +533,14 @@ html.lenis body {
 }
 
 /* ============================================================
+   Parallax background — driven by --scroll-y from Lenis
+   ============================================================ */
+.parallax-bg {
+  transform: translate3d(0, calc(var(--scroll-y, 0) * -0.03px), 0);
+  will-change: transform;
+}
+
+/* ============================================================
    Reduced Motion — respect OS accessibility preference
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
@@ -547,5 +555,9 @@ html.lenis body {
 
   .lenis.lenis-smooth {
     scroll-behavior: auto !important;
+  }
+
+  .parallax-bg {
+    transform: none !important;
   }
 }

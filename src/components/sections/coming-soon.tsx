@@ -27,9 +27,9 @@ export default function ComingSoon({
   notifyEmail = 'contactwithmoaaz@gmail.com',
 }: ComingSoonProps) {
   return (
-    <div className="bg-background min-h-screen pt-20">
+    <div className="bg-background relative min-h-screen pt-20">
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-16">
+      <main className="relative container mx-auto px-4 py-16">
         <div className="mx-auto max-w-4xl text-center">
           {/* Animated Icon */}
           <div className="relative mb-8">

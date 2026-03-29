@@ -15,8 +15,8 @@ export function PageComingSoon({
   description = 'This page is currently under construction. Check back soon for updates!',
 }: PageComingSoonProps) {
   return (
-    <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-4 py-16">
-      <div className="mx-auto max-w-2xl text-center">
+    <div className="relative flex min-h-[calc(100vh-5rem)] items-center justify-center px-4 py-16">
+      <div className="relative mx-auto max-w-2xl text-center">
         {/* Animated Icon */}
         <div className="relative mb-8 inline-flex">
           <div className="from-primary/20 to-primary/10 animate-pulse rounded-full bg-linear-to-br p-6">

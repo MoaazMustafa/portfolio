@@ -8,7 +8,7 @@ export function ScrollBar() {
   const barRef = useRef<HTMLDivElement>(null);
   const { lenis } = useSmoothScroll();
 
-  // Lenis-driven progress tracking (preferred when Lenis is active)
+  // When Lenis is active, subscribe to its scroll event for direct DOM updates
   useEffect(() => {
     if (!lenis) return;
 

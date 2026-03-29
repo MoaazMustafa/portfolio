@@ -46,7 +46,7 @@ const projects = [
 export function ProjectShowcase() {
   return (
     <section className="relative py-20 lg:py-32">
-      <div className="container mx-auto max-w-7xl px-4">
+      <div className="relative container mx-auto max-w-7xl px-4">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
