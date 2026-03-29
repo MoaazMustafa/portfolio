@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Spotlight } from '@/components/ui/spotlight';
 import TextType from '@/components/ui/text-type';
 import VariableProximity from '@/components/ui/variable-proximity';
-import { useColorTheme } from '@/hooks';
+import { useColorTheme, useParallax } from '@/hooks';
 
 import GlassSurface from '../ui/glass-surface';
 import { TextGenerateEffect } from '../ui/text-generate-effect';
@@ -31,13 +31,20 @@ export function Hero() {
   //   };
   const containerRef = useRef(null);
   const { currentColors } = useColorTheme();
+  const { ref: parallaxRef, style: parallaxStyle } = useParallax({
+    intensity: 'subtle',
+    direction: 'up',
+  });
 
   return (
     <section className="relative overflow-hidden">
-      <Spotlight
-        className="-top-40 left-0 md:-top-20 md:left-60"
-        fill={currentColors.primary}
-      />
+      {/* Parallax background layer */}
+      <div ref={parallaxRef} style={parallaxStyle}>
+        <Spotlight
+          className="-top-40 left-0 md:-top-20 md:left-60"
+          fill={currentColors.primary}
+        />
+      </div>
       <div className="container mx-auto mt-12 max-w-6xl px-4 py-12 sm:py-16 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Right Side - Image with Orb Background - Shows first on mobile */}

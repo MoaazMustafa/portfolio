@@ -57,6 +57,8 @@ export function Preloader({ children }: PreloaderProps) {
         if (typeof document !== 'undefined') {
           document.body.style.overflow = 'unset';
           document.body.classList.add('preloader-done');
+          // Signal to SmoothScrollProvider that it's safe to start
+          window.dispatchEvent(new CustomEvent('preloader-done'));
         }
       }, 800); // Slightly shorter than animation for smoother feel
     }, 2500); // Vapor animation duration

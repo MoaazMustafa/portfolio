@@ -23,3 +23,6 @@ export { default as Orb } from './orb';
 // Scroll indicator
 export { ScrollBar } from './scroll-bar';
 
+// Smooth Scroll
+export { SmoothScrollProvider, useSmoothScroll } from './smooth-scroll-provider';
+

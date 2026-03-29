@@ -11,12 +11,14 @@ A comprehensive portfolio platform built with the latest web technologies. This 
 ## ✨ Key Features
 
 ### 🎨 Modern Frontend
+
 - **Glassmorphism Design**: Sleek, modern UI with depth and transparency effects.
 - **Fluid Animations**: Powered by Framer Motion and GSAP for immersive interactions.
 - **Theme System**: Full Dark/Light mode support with custom color themes.
 - **Responsive**: Mobile-first design optimized for all devices.
 
 ### 🛠️ Powerful Admin Dashboard
+
 - **Project Management**: CRUD operations for portfolio projects with rich text editing.
 - **Tech Stack Management**: Manage technologies and categorize them.
 - **Blog System**: Built-in Markdown editor for creating and publishing posts.
@@ -25,6 +27,7 @@ A comprehensive portfolio platform built with the latest web technologies. This 
 - **Settings**: Customizable dashboard preferences and profile settings.
 
 ### 🔒 Security & Performance
+
 - **Secure Authentication**: NextAuth.js (v5 beta compatible) integration with Google OAuth.
 - **Access Control**: Whitelist-based email access for the dashboard.
 - **Server Actions**: Type-safe data mutations using Next.js Server Actions.
@@ -68,24 +71,29 @@ src/
 ### Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/MoaazMustafa/portfolio.git
    cd portfolio
    ```
 
 2. **Install dependencies:**
+
    ```bash
    npm install
    ```
 
 3. **Configure Environment:**
    Copy the example environment file and fill in your credentials.
+
    ```bash
    cp .env.example .env.local
    ```
-   *See `.env.example` for required variables.*
+
+   _See `.env.example` for required variables._
 
 4. **Initialize Database:**
+
    ```bash
    npm run db:generate   # Generate Prisma client
    npm run db:push       # Push schema to database
