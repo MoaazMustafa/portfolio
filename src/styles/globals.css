@@ -513,34 +513,6 @@ input[type='button'] {
 }
 
 /* ============================================================
-   Lenis Smooth Scroll
-   ============================================================ */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-
-/* ============================================================
-   Parallax background — driven by --scroll-y from Lenis
-   ============================================================ */
-.parallax-bg {
-  transform: translate3d(0, calc(var(--scroll-y, 0) * -0.03px), 0);
-  will-change: transform;
-}
-
-/* ============================================================
    Reduced Motion — respect OS accessibility preference
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
@@ -551,13 +523,5 @@ html.lenis body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-
-  .lenis.lenis-smooth {
-    scroll-behavior: auto !important;
-  }
-
-  .parallax-bg {
-    transform: none !important;
   }
 }

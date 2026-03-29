@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 export { useColorTheme, type ColorTheme } from './use-color-theme';
-export { useParallax, type ParallaxIntensity } from './use-parallax';
 
 /**
  * Custom hook for managing local storage state

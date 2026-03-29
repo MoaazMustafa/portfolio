@@ -4,7 +4,6 @@ import { SessionProvider } from 'next-auth/react';
 import NextTopLoader from 'nextjs-toploader';
 import type { ReactNode } from 'react';
 
-import { SmoothScrollProvider } from '@/components/smooth-scroll-provider';
 import ClickSpark from '@/components/ui/Spark';
 import { useColorTheme } from '@/hooks';
 
@@ -24,17 +23,15 @@ export function ClientLayoutProvider({ children }: ClientLayoutProviderProps) {
         showSpinner
         showForHashAnchor
       />
-      <SmoothScrollProvider>
-        <ClickSpark
-          sparkColor={currentColors.primary}
-          sparkSize={10}
-          sparkRadius={15}
-          sparkCount={8}
-          duration={400}
-        >
-          {children}
-        </ClickSpark>
-      </SmoothScrollProvider>
+      <ClickSpark
+        sparkColor={currentColors.primary}
+        sparkSize={10}
+        sparkRadius={15}
+        sparkCount={8}
+        duration={400}
+      >
+        {children}
+      </ClickSpark>
     </SessionProvider>
   );
 }
