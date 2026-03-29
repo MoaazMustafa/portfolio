@@ -3,8 +3,8 @@
 import type { COBEOptions } from 'cobe';
 import { AnimatePresence, motion, useInView } from 'framer-motion';
 import { MapPin, Trophy, Zap } from 'lucide-react';
-import Image from 'next/image';
 import { useTheme } from 'next-themes';
+import Image from 'next/image';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GitHubCalendar } from 'react-github-calendar';
 import { RiGithubFill } from 'react-icons/ri';
@@ -27,7 +27,6 @@ import {
   SiTypescript,
 } from 'react-icons/si';
 
-import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
 import { Globe } from '@/components/ui/globe';
 import { useColorTheme } from '@/hooks';
 import { cn } from '@/lib/utils';
@@ -108,19 +107,11 @@ function BentoCard({
   children: React.ReactNode;
 }) {
   return (
-    <CardContainer
-      className="block h-full w-full"
-      containerClassName="h-full w-full py-0"
-    >
-      <CardBody className="border-border bg-card/80 relative h-full w-full overflow-hidden rounded-xl border">
-        <CardItem
-          translateZ="50"
-          className={cn('h-full w-full p-4 lg:p-6', className)}
-        >
-          {children}
-        </CardItem>
-      </CardBody>
-    </CardContainer>
+    <div className="border-border bg-card/80 relative h-full w-full overflow-hidden rounded-xl border">
+      <div className={cn('h-full w-full p-4 lg:p-6', className)}>
+        {children}
+      </div>
+    </div>
   );
 }
 
