@@ -72,48 +72,78 @@ export async function deleteTechnology(id: string) {
 
 // Seeding function
 export async function seedTechnologies() {
-    const categories = {
+    const categories: Record<string, { name: string; icon: string }[]> = {
         Frontend: [
             { name: "React", icon: "logos:react" },
             { name: "Next.js", icon: "logos:nextjs-icon" },
             { name: "TypeScript", icon: "logos:typescript-icon" },
-            { name: "Tailwind CSS", icon: "logos:tailwindcss-icon" },
+            { name: "JavaScript", icon: "logos:javascript" },
             { name: "HTML5", icon: "logos:html-5" },
             { name: "CSS3", icon: "logos:css-3" },
-            { name: "JavaScript", icon: "logos:javascript" },
-            { name: "Framer Motion", icon: "simple-icons:framermotion" },
+            { name: "Tailwind CSS", icon: "logos:tailwindcss-icon" },
+            { name: "Bootstrap", icon: "logos:bootstrap" },
+            { name: "Framer Motion", icon: "logos:framer" },
+            { name: "Shadcn/ui", icon: "simple-icons:shadcnui" },
+            { name: "Material UI", icon: "logos:material-ui" },
+            { name: "Ant Design", icon: "logos:ant-design" },
+            { name: "GSAP", icon: "logos:greensock" },
+            { name: "Node Package Manager", icon: "logos:npm-icon" },
+            { name: "ThreeJS", icon: "logos:threejs" },
             { name: "Redux", icon: "logos:redux" },
         ],
         Backend: [
             { name: "Node.js", icon: "logos:nodejs-icon" },
-            { name: "Express", icon: "logos:express" },
+            { name: "Express.js", icon: "logos:express" },
+            { name: "Prisma", icon: "logos:prisma" },
+            { name: "GraphQL", icon: "logos:graphql" },
+            { name: "REST API", icon: "mdi:api" },
+            { name: "WebSockets", icon: "logos:websocket" },
+            { name: "OpenAI", icon: "logos:openai" },
+            { name: "Socket.io", icon: "logos:socket-io" },
             { name: "NestJS", icon: "logos:nestjs" },
             { name: "Python", icon: "logos:python" },
             { name: "Django", icon: "logos:django-icon" },
             { name: "FastAPI", icon: "logos:fastapi-icon" },
-            { name: "Prisma", icon: "simple-icons:prisma" },
-            { name: "GraphQL", icon: "logos:graphql" },
         ],
         Database: [
             { name: "PostgreSQL", icon: "logos:postgresql" },
             { name: "MongoDB", icon: "logos:mongodb-icon" },
             { name: "MySQL", icon: "logos:mysql" },
-            { name: "Redis", icon: "logos:redis" },
             { name: "Supabase", icon: "logos:supabase-icon" },
+            { name: "Redis", icon: "logos:redis" },
+            { name: "Firebase", icon: "logos:firebase" },
         ],
-        DevOps: [
+        Mobile: [
+            { name: "React Native", icon: "logos:react" },
+            { name: "Flutter", icon: "logos:flutter" },
+            { name: "Expo", icon: "logos:expo" },
+        ],
+        "DevOps & Tools": [
+            { name: "Git", icon: "logos:git-icon" },
+            { name: "GitHub", icon: "logos:github-icon" },
             { name: "Docker", icon: "logos:docker-icon" },
-            { name: "Kubernetes", icon: "logos:kubernetes" },
-            { name: "AWS", icon: "logos:aws" },
             { name: "Vercel", icon: "logos:vercel-icon" },
-            { name: "GitHub Actions", icon: "logos:github-actions" },
+            { name: "AWS", icon: "logos:aws" },
+            { name: "Cloudinary", icon: "logos:cloudinary-icon" },
+            { name: "Figma", icon: "logos:figma" },
+            { name: "VS Code", icon: "logos:visual-studio-code" },
+            { name: "Visual Studio", icon: "logos:visual-studio" },
+            { name: "Postman", icon: "logos:postman-icon" },
+            { name: "Adobe XD", icon: "logos:adobe-xd" },
+            { name: "Adobe Photoshop", icon: "logos:adobe-photoshop" },
+            { name: "MacOS", icon: "catppuccin:macos" },
+            { name: "Windows", icon: "devicon:windows11" },
             { name: "Linux", icon: "logos:linux-tux" },
-        ],
-        Tools: [
-             { name: "Git", icon: "logos:git-icon" },
-             { name: "VS Code", icon: "logos:visual-studio-code" },
-             { name: "Figma", icon: "logos:figma" },
-             { name: "Postman", icon: "logos:postman-icon" },
+            { name: "Jira", icon: "logos:jira" },
+            { name: "Clickup", icon: "simple-icons:clickup" },
+            { name: "Discord", icon: "logos:discord-icon" },
+            { name: "Slack", icon: "logos:slack-icon" },
+            { name: "Google Chrome", icon: "devicon:chrome" },
+            { name: "Safari Browser", icon: "devicon:safari" },
+            { name: "Canva", icon: "devicon:canva" },
+            { name: "GitHub Actions", icon: "logos:github-actions" },
+            { name: "Kubernetes", icon: "logos:kubernetes" },
+            { name: "Antigravity", icon: "material-symbols:antigravity-outline" },
         ],
         "AI/ML": [
             { name: "TensorFlow", icon: "logos:tensorflow" },
@@ -146,4 +176,11 @@ export async function seedTechnologies() {
     
     revalidatePath("/dashboard/technologies")
     return { success: true, count }
+}
+
+export async function getPublicTechnologies() {
+  return prisma.technology.findMany({
+    select: { id: true, name: true, slug: true, category: true, icon: true },
+    orderBy: [{ category: 'asc' }, { name: 'asc' }],
+  });
 }

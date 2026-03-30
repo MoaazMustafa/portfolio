@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 import { pageMetadata } from '@/lib/metadata';
 
-import { AtAGlance, Hero } from '../../components';
+import { AtAGlance, Hero, ProjectShowcase } from '../../components';
 import { TechStack } from '../../components/sections/techStack';
 
 export const metadata: Metadata = pageMetadata.home;
@@ -16,6 +16,7 @@ export default function Home() {
       <Hero />
       <AtAGlance />
       <TechStack />
+      <ProjectShowcase />
     </>
   );
 }

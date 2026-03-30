@@ -61,6 +61,8 @@ export async function createProject(data: ProjectFormValues) {
     })
 
     revalidatePath("/dashboard/projects")
+    revalidatePath("/projects")
+    revalidatePath("/")
     return { success: true }
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -111,6 +113,8 @@ export async function updateProject(id: string, data: ProjectFormValues) {
         })
 
         revalidatePath("/dashboard/projects")
+        revalidatePath("/projects")
+        revalidatePath("/")
         return { success: true }
     } catch (error) {
         if (error instanceof z.ZodError) {
@@ -126,6 +130,8 @@ export async function deleteProject(id: string) {
             where: { id },
         })
         revalidatePath("/dashboard/projects")
+        revalidatePath("/projects")
+        revalidatePath("/")
         return { success: true }
     } catch {
         return { error: "Failed to delete project" }
