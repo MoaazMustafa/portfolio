@@ -124,3 +124,19 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📄 License
 
 This project is licensed under the MIT License.
+
+
+<!-- ACTIVITY:START -->
+## 📋 Recent Activity
+
+| Date | Commit | Message | Author |
+|------|--------|---------|--------|
+| 2026-03-29 | [`6e41487`](https://github.com/MoaazMustafa/portfolio/commit/6e414872625c8846d4afd438e57582f7fbf8beb2) | feat: add TechStack component to showcase technology expertise | @MoaazMustafa |
+| 2026-03-29 | [`3ffb063`](https://github.com/MoaazMustafa/portfolio/commit/3ffb063ff921636f901d458eaacd781c009604e4) | feat: enhance layout with parallax background and update scroll behavior | @MoaazMustafa |
+| 2026-03-29 | [`28434b7`](https://github.com/MoaazMustafa/portfolio/commit/28434b7241d35ed30e632eb88f4824399b771f75) | refactor: replace CardContainer with div for BentoCard component | @MoaazMustafa |
+| 2026-03-29 | [`d4712ab`](https://github.com/MoaazMustafa/portfolio/commit/d4712abf2815cd24222bdcf6a0295d015e811819) | Merge branch 'main' of https://github.com/MoaazMustafa/portfolio | @MoaazMustafa |
+| 2026-03-29 | [`2e46e6a`](https://github.com/MoaazMustafa/portfolio/commit/2e46e6a753013574fc1956c42b3f96b675199ff4) | fix: correct preloader check logic in SmoothScrollProvider | @MoaazMustafa |
+| 2026-03-29 | [`1c50dea`](https://github.com/MoaazMustafa/portfolio/commit/1c50deadbc51aa0f0cccc96e39c9f0ee3df8e6b5) | feat: implement smooth scrolling with Lenis and add parallax effect support | @MoaazMustafa |
+
+*Last updated: 2026-03-30 02:54 UTC*
+<!-- ACTIVITY:END -->
