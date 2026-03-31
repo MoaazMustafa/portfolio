@@ -14,14 +14,21 @@ export async function TechStack() {
 
   for (const tech of technologies) {
     const existing = categoryMap.get(tech.category) ?? [];
-    existing.push({ id: tech.id, name: tech.name, icon: tech.icon, category: tech.category });
+    existing.push({
+      id: tech.id,
+      name: tech.name,
+      icon: tech.icon,
+      category: tech.category,
+    });
     categoryMap.set(tech.category, existing);
   }
 
-  const categories = Array.from(categoryMap.entries()).map(([label, techs]) => ({
-    label,
-    techs,
-  }));
+  const categories = Array.from(categoryMap.entries()).map(
+    ([label, techs]) => ({
+      label,
+      techs,
+    }),
+  );
 
   const allTechs = technologies.map((t) => ({
     id: t.id,

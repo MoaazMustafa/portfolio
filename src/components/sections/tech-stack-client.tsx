@@ -35,7 +35,10 @@ interface TechStackClientProps {
   allTechs: Tech[];
 }
 
-export function TechStackClient({ categories, allTechs }: TechStackClientProps) {
+export function TechStackClient({
+  categories,
+  allTechs,
+}: TechStackClientProps) {
   const { currentColors } = useColorTheme();
   const [hovered, setHovered] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('All');

@@ -51,8 +51,7 @@ function formatDate(date: Date) {
 
 const STATUS_STYLES: Record<string, string> = {
   Completed: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
-  Under_Development:
-    'bg-amber-500/15 text-amber-400 border-amber-500/30',
+  Under_Development: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
   Planned: 'bg-blue-500/15 text-blue-400 border-blue-500/30',
   On_Hold: 'bg-orange-500/15 text-orange-400 border-orange-500/30',
   Cancelled: 'bg-red-500/15 text-red-400 border-red-500/30',
@@ -84,7 +83,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
           />
         ) : (
           <div className="from-primary/20 via-primary/5 to-background flex h-full items-center justify-center bg-linear-to-br">
-            <span className="text-primary/15 select-none text-7xl font-black">
+            <span className="text-primary/15 text-7xl font-black select-none">
               {project.title.charAt(0)}
             </span>
           </div>
@@ -138,7 +137,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
 
         {/* Tech icon row — pinned at bottom of image */}
         {project.technologies.length > 0 && (
-          <div className="absolute bottom-3 left-3 right-3 flex gap-1.5 overflow-hidden">
+          <div className="absolute right-3 bottom-3 left-3 flex gap-1.5 overflow-hidden">
             {project.technologies.slice(0, 6).map((tech) => (
               <div
                 key={tech.id}
@@ -150,7 +149,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                     icon={tech.icon}
                     className={cn(
                       'h-4 w-4',
-                      DARK_ICONS.has(tech.icon) && 'invert brightness-[1.8]',
+                      DARK_ICONS.has(tech.icon) && 'brightness-[1.8] invert',
                     )}
                   />
                 ) : (
@@ -188,7 +187,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
         )}
 
         {/* Title */}
-        <h3 className="text-foreground group-hover:text-primary mb-2 text-lg font-bold leading-snug transition-colors duration-300">
+        <h3 className="text-foreground group-hover:text-primary mb-2 text-lg leading-snug font-bold transition-colors duration-300">
           {project.title}
         </h3>
 

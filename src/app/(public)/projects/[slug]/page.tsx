@@ -6,7 +6,10 @@ import { notFound } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { getPublicProjectBySlug, getPublicProjects } from '@/lib/actions/project';
+import {
+  getPublicProjectBySlug,
+  getPublicProjects,
+} from '@/lib/actions/project';
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
@@ -133,9 +136,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   key={tech.id}
                   className="border-border bg-card/60 flex items-center gap-2 rounded-lg border px-3 py-2"
                 >
-                  {tech.icon && (
-                    <Icon icon={tech.icon} className="h-5 w-5" />
-                  )}
+                  {tech.icon && <Icon icon={tech.icon} className="h-5 w-5" />}
                   <span className="text-sm font-medium">{tech.name}</span>
                 </div>
               ))}
