@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { PageComingSoon } from '@/components/sections/page-coming-soon';
+import { AboutPage as AboutPageContent } from '@/components/sections/about-page';
 
 export const metadata: Metadata = {
   title: 'About | Moaaz Mustafa',
@@ -9,10 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
-  return (
-    <PageComingSoon
-      title="About Me"
-      description="I'm crafting an engaging story about my journey, skills, and passion for technology. Stay tuned!"
-    />
-  );
+  return <AboutPageContent />;
 }

@@ -7,9 +7,9 @@ import {
   Layers,
   Tag,
 } from 'lucide-react';
-import { getServerSession } from 'next-auth/next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth/next';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
