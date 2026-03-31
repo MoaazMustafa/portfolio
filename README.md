@@ -72,3 +72,15 @@ Contributions are welcome! Please feel free to submit a pull request or open an 
 ## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+
+<!-- ACTIVITY:START -->
+## 📋 Recent Activity
+
+| Date | Commit | Message | Author |
+|------|--------|---------|--------|
+| 2026-03-30 | [`77ccc5a`](https://github.com/MoaazMustafa/portfolio/commit/77ccc5ac78c30a06ea16239258141e20105e9046) | refactor: restructure tech stack component to fetch technologies from the database and separate client rendering logic | @MoaazMustafa |
+| 2026-03-30 | [`ff30c8c`](https://github.com/MoaazMustafa/portfolio/commit/ff30c8cb10a116fdba8af16aa61b42c2caae3250) | Merge branch 'main' of https://github.com/MoaazMustafa/portfolio | @MoaazMustafa |
+
+*Last updated: 2026-03-31 02:47 UTC*
+<!-- ACTIVITY:END -->
