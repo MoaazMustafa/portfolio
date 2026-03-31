@@ -62,6 +62,7 @@ export async function createProject(data: ProjectFormValues) {
 
     revalidatePath("/dashboard/projects")
     revalidatePath("/projects")
+    revalidatePath("/projects/[slug]", "page")
     revalidatePath("/")
     return { success: true }
   } catch (error) {
@@ -114,6 +115,7 @@ export async function updateProject(id: string, data: ProjectFormValues) {
 
         revalidatePath("/dashboard/projects")
         revalidatePath("/projects")
+        revalidatePath("/projects/[slug]", "page")
         revalidatePath("/")
         return { success: true }
     } catch (error) {
@@ -131,6 +133,7 @@ export async function deleteProject(id: string) {
         })
         revalidatePath("/dashboard/projects")
         revalidatePath("/projects")
+        revalidatePath("/projects/[slug]", "page")
         revalidatePath("/")
         return { success: true }
     } catch {

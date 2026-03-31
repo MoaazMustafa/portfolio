@@ -28,6 +28,7 @@ export async function createTechnology(data: TechnologyData) {
       },
     })
     revalidatePath("/dashboard/technologies")
+    revalidatePath("/")
     return { success: true }
   } catch (error) {
     console.error("Create technology error:", error)
@@ -50,6 +51,7 @@ export async function updateTechnology(data: TechnologyData) {
       },
     })
     revalidatePath("/dashboard/technologies")
+    revalidatePath("/")
     return { success: true }
   } catch (error) {
     console.error("Update technology error:", error)
@@ -63,6 +65,7 @@ export async function deleteTechnology(id: string) {
       where: { id },
     })
     revalidatePath("/dashboard/technologies")
+    revalidatePath("/")
     return { success: true }
   } catch (error) {
     console.error("Delete technology error:", error)
@@ -175,6 +178,7 @@ export async function seedTechnologies() {
     }
     
     revalidatePath("/dashboard/technologies")
+    revalidatePath("/")
     return { success: true, count }
 }
 
