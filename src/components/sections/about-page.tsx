@@ -168,7 +168,7 @@ function HeroImageSection() {
           className="h-full w-full"
           style={{
             backgroundImage:
-              'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")',
+              "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")",
             backgroundRepeat: 'repeat',
           }}
         />
@@ -231,7 +231,7 @@ function HeroImageSection() {
           {/* Accent card filling remaining space */}
           <div className="col-span-5 flex items-center">
             <div className="border-border bg-card/90 flex w-full flex-col gap-2 rounded-2xl border p-5 backdrop-blur-sm">
-              <span className="text-primary text-sm font-semibold uppercase tracking-wider">
+              <span className="text-primary text-sm font-semibold tracking-wider uppercase">
                 Based in
               </span>
               <span className="text-foreground flex items-center gap-2 text-lg font-bold">
@@ -281,9 +281,9 @@ function BioSection() {
           <p className="text-muted-foreground text-lg leading-relaxed">
             I am a full-stack developer and designer, specializing in the MERN
             stack and Next.js. My educational background includes a software
-            engineering degree, fostering a strong technical aptitude. Throughout
-            my career, I have contributed to diverse projects while honing my
-            coding skills and collaborative abilities.
+            engineering degree, fostering a strong technical aptitude.
+            Throughout my career, I have contributed to diverse projects while
+            honing my coding skills and collaborative abilities.
           </p>
           <p className="text-muted-foreground text-lg leading-relaxed">
             My dedication to clean code and smooth user experiences drives my
@@ -351,11 +351,10 @@ function BioSection() {
                 <span className="bg-primary mt-2 h-1.5 w-1.5 shrink-0 rounded-full" />
                 <span
                   dangerouslySetInnerHTML={{
-                    __html: activity
-                      .replace(
-                        /\*\*(.*?)\*\*/g,
-                        '<strong class="text-foreground font-semibold">$1</strong>',
-                      ),
+                    __html: activity.replace(
+                      /\*\*(.*?)\*\*/g,
+                      '<strong class="text-foreground font-semibold">$1</strong>',
+                    ),
                   }}
                 />
               </motion.li>
@@ -402,7 +401,7 @@ function ExperienceSection() {
                 {/* Timeline dot */}
                 <div
                   className={cn(
-                    'absolute left-0 top-2 h-3.75 w-3.75 rounded-full border-3',
+                    'absolute top-2 left-0 h-3.75 w-3.75 rounded-full border-3',
                     index === 0
                       ? 'bg-primary border-primary shadow-primary/30 shadow-md'
                       : 'bg-background border-primary/40',
@@ -410,7 +409,7 @@ function ExperienceSection() {
                 />
 
                 {/* Experience Card */}
-                <div className="border-border bg-card/60 group relative overflow-hidden rounded-xl border p-6 backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+                <div className="border-border bg-card/60 group hover:shadow-primary/5 relative overflow-hidden rounded-xl border p-6 backdrop-blur-sm transition-all duration-300 hover:shadow-lg">
                   {/* Subtle gradient on hover */}
                   <div className="from-primary/3 absolute inset-0 bg-linear-to-br to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
@@ -499,7 +498,7 @@ function GrowthSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: index * 0.08 }}
-              className="border-border bg-card/60 group relative overflow-hidden rounded-xl border p-5 backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary/5"
+              className="border-border bg-card/60 group hover:shadow-primary/5 relative overflow-hidden rounded-xl border p-5 backdrop-blur-sm transition-all duration-300 hover:shadow-lg"
             >
               {/* Hover gradient */}
               <div className="from-primary/4 absolute inset-0 bg-linear-to-br to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
