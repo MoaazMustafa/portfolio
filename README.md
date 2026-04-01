@@ -81,3 +81,16 @@ Contributions are welcome! If you have suggestions for improvements or want to r
 ## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+
+<!-- ACTIVITY:START -->
+## 📋 Recent Activity
+
+| Date | Commit | Message | Author |
+|------|--------|---------|--------|
+| 2026-03-31 | [`14427b2`](https://github.com/MoaazMustafa/portfolio/commit/14427b24c68df7c31e1d137e279c21b6c2d5ebc8) | refactor: add revalidation for project and technology paths after CRUD operations | @MoaazMustafa |
+| 2026-03-31 | [`8ece0f1`](https://github.com/MoaazMustafa/portfolio/commit/8ece0f1a931d80da85e41767c19f7f0e2fa15f8d) | Merge branch 'main' of https://github.com/MoaazMustafa/portfolio | @MoaazMustafa |
+| 2026-03-31 | [`0f34875`](https://github.com/MoaazMustafa/portfolio/commit/0f34875e48eea359c3170081efbc7ab18dc3ec74) | refactor: improve code readability by formatting and restructuring function parameters and object literals | @MoaazMustafa |
+
+*Last updated: 2026-04-01 03:17 UTC*
+<!-- ACTIVITY:END -->
