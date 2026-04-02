@@ -75,3 +75,14 @@ Contributions are welcome! Please feel free to submit a pull request or open an 
 ## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+
+<!-- ACTIVITY:START -->
+## 📋 Recent Activity
+
+| Date | Commit | Message | Author |
+|------|--------|---------|--------|
+| 2026-04-01 | [`9996498`](https://github.com/MoaazMustafa/portfolio/commit/999649893fb1d0b9af4f6078790bb86a2b15c262) | Merge branch 'main' of https://github.com/MoaazMustafa/portfolio | @MoaazMustafa |
+
+*Last updated: 2026-04-02 02:43 UTC*
+<!-- ACTIVITY:END -->
