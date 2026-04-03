@@ -1,7 +1,7 @@
-<!-- README-AI-SIGNATURE:20260402024410 -->
+<!-- README-AI-SIGNATURE:20260403024914 -->
 # portfolio
 
-Welcome to the portfolio repository of Moaaz Mustafa. This project showcases a personal portfolio built with TypeScript and Next.js, designed to highlight skills, projects, and experiences in a visually appealing manner. The application is structured to be easily extendable and maintainable, making it a great starting point for anyone looking to create their own portfolio.
+Welcome to the portfolio repository of Moaaz Mustafa. This project showcases a personal portfolio built with TypeScript and Next.js, designed to highlight skills, projects, and experiences in a visually appealing manner. The application is structured to provide a seamless user experience while leveraging modern web technologies.
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white) ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=next.js&logoColor=white) ![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)
 
@@ -9,23 +9,23 @@ Welcome to the portfolio repository of Moaaz Mustafa. This project showcases a p
 
 ### 🎨 Modern Design
 - Utilizes Tailwind CSS for responsive and customizable styling.
-- Incorporates animations using GSAP and Framer Motion for a dynamic user experience.
+- Incorporates animations and transitions for an engaging user experience.
 
 ### 🔒 Secure Authentication
 - Implements NextAuth.js for secure user authentication.
 - Supports Google OAuth for easy sign-in options.
 
-### 📊 Analytics Integration
-- Integrates Vercel Analytics for performance tracking and insights.
+### 📊 Dynamic Content
+- Integrates Prisma for database management, allowing for dynamic content updates.
+- Utilizes Cloudinary for efficient media storage and management.
 
 ## 🏗️ Project Structure
 
 ```
 portfolio/
 ├── .github/
-│   └── copilot-instructions.md
 ├── prisma/
-│   └── migrations/
+│   ├── migrations/
 │   └── schema.prisma
 ├── public/
 │   ├── images/
@@ -35,8 +35,7 @@ portfolio/
 │   ├── components/
 │   ├── hooks/
 │   ├── lib/
-│   ├── styles/
-│   └── types/
+│   └── styles/
 ├── .env.example
 ├── package.json
 └── README.md
@@ -76,7 +75,7 @@ The following scripts are available for managing the project:
 
 ## 🤝 Contributing
 
-Contributions are welcome! If you have suggestions for improvements or want to report issues, please open an issue or submit a pull request. Ensure that your code adheres to the project's coding standards and passes all tests.
+Contributions are welcome! If you have suggestions for improvements or new features, please fork the repository and submit a pull request. Ensure that your code adheres to the project's coding standards and includes appropriate tests.
 
 ## 📄 License
 
