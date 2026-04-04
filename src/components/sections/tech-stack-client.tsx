@@ -58,7 +58,7 @@ export function TechStackClient({
 
   return (
     <section className="relative py-16 lg:py-24">
-      <div className="relative container mx-auto max-w-5xl px-4">
+      <div className="relative container mx-auto max-w-7xl px-4">
         {/* Section Header */}
         <motion.div
           className="mb-10 text-center"

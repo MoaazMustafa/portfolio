@@ -38,7 +38,7 @@ export function Hero() {
         className="-top-40 left-0 md:-top-20 md:left-60"
         fill={currentColors.primary}
       />
-      <div className="container mx-auto mt-12 max-w-6xl px-4 py-12 sm:py-16 lg:py-20">
+      <div className="container mx-auto mt-12 max-w-7xl px-4 py-12 sm:py-16 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Right Side - Image with Orb Background - Shows first on mobile */}
           <div className="relative flex items-center justify-center overflow-visible lg:order-2 lg:justify-end">
