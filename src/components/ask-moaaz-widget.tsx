@@ -9,7 +9,10 @@ import type { UIMessage } from 'ai';
 import { BotIcon, GripIcon, XIcon } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Thread, type ThreadDragHandleProps } from '@/components/assistant-ui/thread';
+import {
+  Thread,
+  type ThreadDragHandleProps,
+} from '@/components/assistant-ui/thread';
 import { getDeviceId } from '@/lib/device-id';
 import { cn } from '@/lib/utils';
 
@@ -147,7 +150,10 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
 
   const runtime = useChatRuntime({
     messages: initialMessages,
-    transport: new AssistantChatTransport({ api: '/api/chat', fetch: customFetch }),
+    transport: new AssistantChatTransport({
+      api: '/api/chat',
+      fetch: customFetch,
+    }),
   });
 
   // Persist messages to localStorage on change
@@ -162,7 +168,9 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
           id: m.id,
           role: m.role as 'user' | 'assistant',
           parts: m.content
-            .filter((p): p is { type: 'text'; text: string } => p.type === 'text')
+            .filter(
+              (p): p is { type: 'text'; text: string } => p.type === 'text',
+            )
             .map((p) => ({ type: 'text' as const, text: p.text })),
         }));
       if (uiMessages.length) {
@@ -176,7 +184,9 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
 
   // Navbar "Ask Moaaz" button
   useEffect(() => {
-    const handler = () => { if (!open) openWidget(); };
+    const handler = () => {
+      if (!open) openWidget();
+    };
     window.addEventListener('ask-moaaz-open', handler);
     return () => window.removeEventListener('ask-moaaz-open', handler);
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -184,7 +194,9 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
   // Escape key to close
   useEffect(() => {
     if (!open) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
   }, [open]);
@@ -206,7 +218,12 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
     e.currentTarget.setPointerCapture(e.pointerId);
     isDraggingBtn.current = true;
     didDragBtn.current = false;
-    btnDragStart.current = { px: e.clientX, py: e.clientY, bx: btnPos.x, by: btnPos.y };
+    btnDragStart.current = {
+      px: e.clientX,
+      py: e.clientY,
+      bx: btnPos.x,
+      by: btnPos.y,
+    };
   }
 
   function handleBtnPointerMove(e: React.PointerEvent<HTMLButtonElement>) {
@@ -219,7 +236,11 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
       y: clamp(0, btnDragStart.current.by + dy, window.innerHeight - BTN_SIZE),
     };
     setBtnPos(newPos);
-    try { localStorage.setItem('ask-moaaz-btn-pos', JSON.stringify(newPos)); } catch { /* ignore */ }
+    try {
+      localStorage.setItem('ask-moaaz-btn-pos', JSON.stringify(newPos));
+    } catch {
+      /* ignore */
+    }
   }
 
   function handleBtnPointerUp() {
@@ -236,14 +257,28 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
       if ((e.target as HTMLElement).closest('button')) return;
       e.currentTarget.setPointerCapture(e.pointerId);
       isDraggingWin.current = true;
-      winDragStart.current = { px: e.clientX, py: e.clientY, wx: winPos.left, wy: winPos.top };
+      winDragStart.current = {
+        px: e.clientX,
+        py: e.clientY,
+        wx: winPos.left,
+        wy: winPos.top,
+      };
     },
     onPointerMove(e) {
       if (!isDraggingWin.current) return;
-      const iw = window.innerWidth, ih = window.innerHeight;
+      const iw = window.innerWidth,
+        ih = window.innerHeight;
       setWinPos({
-        left: clamp(0, winDragStart.current.wx + (e.clientX - winDragStart.current.px), iw - size.w),
-        top: clamp(0, winDragStart.current.wy + (e.clientY - winDragStart.current.py), ih - size.h),
+        left: clamp(
+          0,
+          winDragStart.current.wx + (e.clientX - winDragStart.current.px),
+          iw - size.w,
+        ),
+        top: clamp(
+          0,
+          winDragStart.current.wy + (e.clientY - winDragStart.current.py),
+          ih - size.h,
+        ),
       });
     },
     onPointerUp() {
@@ -256,14 +291,27 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
     e.stopPropagation();
     e.currentTarget.setPointerCapture(e.pointerId);
     isResizing.current = true;
-    resizeStart.current = { px: e.clientX, py: e.clientY, w: size.w, h: size.h };
+    resizeStart.current = {
+      px: e.clientX,
+      py: e.clientY,
+      w: size.w,
+      h: size.h,
+    };
   }
 
   function handleResizePointerMove(e: React.PointerEvent<HTMLDivElement>) {
     if (!isResizing.current) return;
     setSize({
-      w: clamp(MIN_SIZE.w, resizeStart.current.w + (e.clientX - resizeStart.current.px), MAX_SIZE.w),
-      h: clamp(MIN_SIZE.h, resizeStart.current.h + (e.clientY - resizeStart.current.py), MAX_SIZE.h),
+      w: clamp(
+        MIN_SIZE.w,
+        resizeStart.current.w + (e.clientX - resizeStart.current.px),
+        MAX_SIZE.w,
+      ),
+      h: clamp(
+        MIN_SIZE.h,
+        resizeStart.current.h + (e.clientY - resizeStart.current.py),
+        MAX_SIZE.h,
+      ),
     });
   }
 
@@ -274,7 +322,11 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
   // ── Clear chat ───────────────────────────────────────────────────────────────
   function handleClear() {
     if (deviceIdRef.current) {
-      try { localStorage.removeItem(chatKey(deviceIdRef.current)); } catch { /* ignore */ }
+      try {
+        localStorage.removeItem(chatKey(deviceIdRef.current));
+      } catch {
+        /* ignore */
+      }
     }
     sessionIdRef.current = undefined;
   }
@@ -295,7 +347,7 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
         className={cn(
           'relative flex items-center justify-center rounded-full',
           'bg-primary text-primary-foreground shadow-lg',
-          'cursor-grab active:cursor-grabbing select-none',
+          'cursor-grab select-none active:cursor-grabbing',
           'transition-shadow hover:shadow-xl',
         )}
         onPointerDown={handleBtnPointerDown}
@@ -305,14 +357,28 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
       >
         {/* Pulse ring when closed */}
         {!open && (
-          <span className="absolute inset-0 animate-ping rounded-full bg-primary opacity-35" />
+          <span className="bg-primary absolute inset-0 animate-ping rounded-full opacity-35" />
         )}
         {/* Hover ring when open */}
         {open && (
-          <span className="absolute -inset-0.75 rounded-full border-2 border-primary/60" />
+          <span className="border-primary/60 absolute -inset-0.75 rounded-full border-2" />
         )}
-        <BotIcon className={cn('absolute size-5 transition-all duration-200', open ? 'scale-0 opacity-0 rotate-90' : 'scale-100 opacity-100 rotate-0')} />
-        <XIcon className={cn('absolute size-5 transition-all duration-200', open ? 'scale-100 opacity-100 rotate-0' : 'scale-0 opacity-0 -rotate-90')} />
+        <BotIcon
+          className={cn(
+            'absolute size-5 transition-all duration-200',
+            open
+              ? 'scale-0 rotate-90 opacity-0'
+              : 'scale-100 rotate-0 opacity-100',
+          )}
+        />
+        <XIcon
+          className={cn(
+            'absolute size-5 transition-all duration-200',
+            open
+              ? 'scale-100 rotate-0 opacity-100'
+              : 'scale-0 -rotate-90 opacity-0',
+          )}
+        />
       </button>
 
       {/* ── Chat window ──────────────────────────────────────────────────── */}
@@ -354,7 +420,7 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
             cursor: 'se-resize',
             touchAction: 'none',
           }}
-          className="flex items-center justify-center opacity-25 hover:opacity-60 transition-opacity"
+          className="flex items-center justify-center opacity-25 transition-opacity hover:opacity-60"
           onPointerDown={handleResizePointerDown}
           onPointerMove={handleResizePointerMove}
           onPointerUp={handleResizePointerUp}

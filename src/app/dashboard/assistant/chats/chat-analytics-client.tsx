@@ -48,7 +48,8 @@ export function ChatAnalyticsClient({
   initialSessions,
   initialPagination,
 }: ChatAnalyticsClientProps) {
-  const [sessions, setSessions] = useState<SessionWithMessages[]>(initialSessions);
+  const [sessions, setSessions] =
+    useState<SessionWithMessages[]>(initialSessions);
   const [pagination, setPagination] = useState(initialPagination);
   const [selected, setSelected] = useState<string | null>(
     initialSessions[0]?.id ?? null,
@@ -96,21 +97,37 @@ export function ChatAnalyticsClient({
     );
   });
 
-  const activeSession = filtered.find((s) => s.id === selected) ?? filtered[0] ?? null;
+  const activeSession =
+    filtered.find((s) => s.id === selected) ?? filtered[0] ?? null;
 
   return (
     <div className="space-y-4">
       {/* Summary row */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatCard label="Sessions" value={summary.totalSessions} icon={<MessageCircle className="size-4" />} />
-        <StatCard label="Messages" value={summary.totalMessages} icon={<TrendingUp className="size-4" />} />
-        <StatCard label="Refusals" value={summary.totalRefusals} icon={<ShieldAlert className="size-4" />} />
-        <StatCard label="Last 7 Days" value={summary.recentSessions} icon={<AlertTriangle className="size-4" />} />
+        <StatCard
+          label="Sessions"
+          value={summary.totalSessions}
+          icon={<MessageCircle className="size-4" />}
+        />
+        <StatCard
+          label="Messages"
+          value={summary.totalMessages}
+          icon={<TrendingUp className="size-4" />}
+        />
+        <StatCard
+          label="Refusals"
+          value={summary.totalRefusals}
+          icon={<ShieldAlert className="size-4" />}
+        />
+        <StatCard
+          label="Last 7 Days"
+          value={summary.recentSessions}
+          icon={<AlertTriangle className="size-4" />}
+        />
       </div>
 
       {/* WhatsApp-style split layout */}
       <div className="border-border flex h-[calc(100vh-18rem)] overflow-hidden rounded-xl border">
-
         {/* ── Left panel — session list ─────────────────────────────── */}
         <div className="border-border flex w-72 shrink-0 flex-col border-r">
           {/* Search */}
@@ -134,7 +151,9 @@ export function ChatAnalyticsClient({
               </p>
             ) : (
               filtered.map((session) => {
-                const preview = session.messages.find((m) => m.role === 'user')?.content ?? '(empty)';
+                const preview =
+                  session.messages.find((m) => m.role === 'user')?.content ??
+                  '(empty)';
                 const hasRefusal = session.messages.some((m) => m.isRefusal);
                 const isActive = session.id === activeSession?.id;
                 return (
@@ -148,10 +167,14 @@ export function ChatAnalyticsClient({
                     )}
                   >
                     {/* Avatar */}
-                    <div className={cn(
-                      'flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-bold',
-                      isActive ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground',
-                    )}>
+                    <div
+                      className={cn(
+                        'flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-bold',
+                        isActive
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-muted text-muted-foreground',
+                      )}
+                    >
                       <User className="size-4" />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -162,16 +185,28 @@ export function ChatAnalyticsClient({
                             : 'Unknown'}
                         </span>
                         {hasRefusal && (
-                          <Badge variant="destructive" className="h-4 px-1 text-[9px]">!</Badge>
+                          <Badge
+                            variant="destructive"
+                            className="h-4 px-1 text-[9px]"
+                          >
+                            !
+                          </Badge>
                         )}
                       </div>
-                      <p className="text-muted-foreground truncate text-[11px]">{preview}</p>
+                      <p className="text-muted-foreground truncate text-[11px]">
+                        {preview}
+                      </p>
                       <p className="text-muted-foreground/60 mt-0.5 text-[10px]">
-                        {new Date(session.createdAt).toLocaleDateString(undefined, {
-                          month: 'short', day: 'numeric',
-                        })}
+                        {new Date(session.createdAt).toLocaleDateString(
+                          undefined,
+                          {
+                            month: 'short',
+                            day: 'numeric',
+                          },
+                        )}
                         {' · '}
-                        {session.messages.length} msg{session.messages.length !== 1 ? 's' : ''}
+                        {session.messages.length} msg
+                        {session.messages.length !== 1 ? 's' : ''}
                       </p>
                     </div>
                   </button>
@@ -187,12 +222,24 @@ export function ChatAnalyticsClient({
                 {pagination.page}/{pagination.totalPages}
               </span>
               <div className="flex gap-1">
-                <Button size="sm" variant="ghost" className="h-6 px-2 text-xs"
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-6 px-2 text-xs"
                   disabled={pagination.page <= 1 || loading}
-                  onClick={() => loadPage(pagination.page - 1)}>←</Button>
-                <Button size="sm" variant="ghost" className="h-6 px-2 text-xs"
+                  onClick={() => loadPage(pagination.page - 1)}
+                >
+                  ←
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-6 px-2 text-xs"
                   disabled={pagination.page >= pagination.totalPages || loading}
-                  onClick={() => loadPage(pagination.page + 1)}>→</Button>
+                  onClick={() => loadPage(pagination.page + 1)}
+                >
+                  →
+                </Button>
               </div>
             </div>
           )}
@@ -229,7 +276,9 @@ export function ChatAnalyticsClient({
               {/* Messages */}
               <div className="flex-1 space-y-3 overflow-y-auto p-4">
                 {activeSession.messages.length === 0 ? (
-                  <p className="text-muted-foreground py-12 text-center text-sm">No messages.</p>
+                  <p className="text-muted-foreground py-12 text-center text-sm">
+                    No messages.
+                  </p>
                 ) : (
                   activeSession.messages.map((msg) => (
                     <div
@@ -245,25 +294,33 @@ export function ChatAnalyticsClient({
                           msg.role === 'user'
                             ? 'bg-primary text-primary-foreground rounded-br-sm'
                             : 'bg-muted text-foreground rounded-bl-sm',
-                          msg.isRefusal && 'border border-destructive/60',
+                          msg.isRefusal && 'border-destructive/60 border',
                         )}
                       >
-                        <p className="whitespace-pre-wrap text-sm leading-relaxed">
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap">
                           {msg.content}
                         </p>
-                        <div className={cn(
-                          'mt-1 flex items-center gap-1.5',
-                          msg.role === 'user' ? 'justify-end' : 'justify-start',
-                        )}>
+                        <div
+                          className={cn(
+                            'mt-1 flex items-center gap-1.5',
+                            msg.role === 'user'
+                              ? 'justify-end'
+                              : 'justify-start',
+                          )}
+                        >
                           {msg.isRefusal && (
-                            <Badge variant="destructive" className="h-4 px-1 text-[9px]">
+                            <Badge
+                              variant="destructive"
+                              className="h-4 px-1 text-[9px]"
+                            >
                               Off-topic
                             </Badge>
                           )}
-                          <span className={cn(
-                            'text-[10px] opacity-60',
-                          )}>
-                            {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          <span className={cn('text-[10px] opacity-60')}>
+                            {new Date(msg.createdAt).toLocaleTimeString([], {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
                           </span>
                         </div>
                       </div>
@@ -288,7 +345,15 @@ export function ChatAnalyticsClient({
 
 // ── Stat Card ──────────────────────────────────────────────────────────────────
 
-function StatCard({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
+function StatCard({
+  label,
+  value,
+  icon,
+}: {
+  label: string;
+  value: number;
+  icon: React.ReactNode;
+}) {
   return (
     <Card>
       <CardContent className="flex items-center gap-3 pt-5 pb-4">

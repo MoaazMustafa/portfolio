@@ -60,7 +60,11 @@ export const Thread: FC<{
         ['--composer-padding' as string]: '8px',
       }}
     >
-      <ThreadHeader name={welcome?.name} onClear={onClear} dragHandle={dragHandle} />
+      <ThreadHeader
+        name={welcome?.name}
+        onClear={onClear}
+        dragHandle={dragHandle}
+      />
       <ThreadPrimitive.Viewport
         turnAnchor="top"
         className="aui-thread-viewport relative flex flex-1 flex-col overflow-x-auto overflow-y-scroll scroll-smooth px-2 pt-2"
@@ -106,7 +110,7 @@ const ThreadHeader: FC<{
       {dragHandle && (
         <GripVerticalIcon className="text-muted-foreground/40 size-3.5 shrink-0" />
       )}
-      <span className="text-sm font-semibold flex-1">
+      <span className="flex-1 text-sm font-semibold">
         {name ? `Ask ${name}` : 'Assistant'}
       </span>
       {!isEmpty && (
@@ -170,7 +174,7 @@ const ThreadSuggestions: FC<{ prompts?: string[] }> = ({ prompts }) => {
   const runtime = useThreadRuntime();
   if (!prompts?.length) return null;
   return (
-    <div className="flex flex-wrap gap-1.5 pb-2 px-1">
+    <div className="flex flex-wrap gap-1.5 px-1 pb-2">
       {prompts.map((prompt, i) => (
         <Button
           key={prompt}
@@ -336,7 +340,7 @@ const UserMessage: FC = () => {
       <UserMessageAttachments />
 
       <div className="aui-user-message-content-wrapper relative col-start-2 min-w-0">
-          <div className="aui-user-message-content peer bg-muted text-foreground rounded-2xl px-3 py-2 text-sm wrap-break-word empty:hidden">
+        <div className="aui-user-message-content peer bg-muted text-foreground rounded-2xl px-3 py-2 text-sm wrap-break-word empty:hidden">
           <MessagePrimitive.Parts />
         </div>
         <div className="aui-user-action-bar-wrapper absolute top-1/2 left-0 -translate-x-full -translate-y-1/2 pr-2 peer-empty:hidden">
