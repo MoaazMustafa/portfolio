@@ -53,6 +53,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const messages: UIMessage[] = body.messages ?? [];
     const sessionId: string | undefined = body.sessionId;
+    const deviceId: string | undefined = body.deviceId;
     const pagePath: string | undefined = body.pagePath;
 
     if (!messages.length) {
@@ -62,33 +63,54 @@ export async function POST(req: Request) {
     const provider = getProvider(config.providerMode);
     const modelId = getModelId(config.providerMode);
 
-    // Persist the chat session + new user message
-    let chatSessionId = sessionId;
+    // The last user message is the new one we received this turn.
     const lastUserMessage = [...messages].reverse().find((m) => m.role === 'user');
+    const userText = lastUserMessage ? extractText(lastUserMessage) : '';
 
-    if (lastUserMessage) {
-      const userText = extractText(lastUserMessage);
-      if (!chatSessionId) {
-        const session = await prisma.chatSession.create({
-          data: {
-            pagePath,
-            provider: config.providerMode,
-            model: modelId,
-            userAgent: req.headers.get('user-agent') ?? undefined,
-          },
-        });
-        chatSessionId = session.id;
-      }
+    // ── Session management ────────────────────────────────────────────────────
+    // If the client already knows a sessionId, reuse that session.
+    // Otherwise create a fresh one.  visitorId comes from the browser-generated
+    // device ID stored in localStorage so all messages from the same browser
+    // are grouped together in the dashboard.
+    let chatSessionId = sessionId;
 
-      if (userText) {
-        await prisma.chatMessage.create({
-          data: {
-            sessionId: chatSessionId,
-            role: 'user',
-            content: userText,
-          },
-        });
-      }
+    if (chatSessionId) {
+      // Confirm the session exists (guard against spoofed/expired IDs)
+      const existing = await prisma.chatSession.findUnique({
+        where: { id: chatSessionId },
+        select: { id: true },
+      });
+      if (!existing) chatSessionId = undefined;
+    }
+
+    if (!chatSessionId) {
+      const session = await prisma.chatSession.create({
+        data: {
+          visitorId: deviceId ?? null,
+          pagePath,
+          provider: config.providerMode,
+          model: modelId,
+          userAgent: req.headers.get('user-agent') ?? undefined,
+        },
+      });
+      chatSessionId = session.id;
+    } else if (deviceId) {
+      // Back-fill visitorId if it wasn't set on a pre-existing session
+      await prisma.chatSession.updateMany({
+        where: { id: chatSessionId, visitorId: null },
+        data: { visitorId: deviceId },
+      });
+    }
+
+    // Save the new user message (only this turn's message — not the whole history)
+    if (userText && chatSessionId) {
+      await prisma.chatMessage.create({
+        data: {
+          sessionId: chatSessionId,
+          role: 'user',
+          content: userText,
+        },
+      });
     }
 
     const result = streamText({
@@ -105,6 +127,7 @@ export async function POST(req: Request) {
             "can't help with that",
             'try asking something about him',
             'ask me about moaaz',
+            "i'm only here to talk about moaaz",
           ];
           const isRefusal = refusalPatterns.some((p) =>
             text.toLowerCase().includes(p),
@@ -124,7 +147,7 @@ export async function POST(req: Request) {
 
     const response = result.toUIMessageStreamResponse();
 
-    // Attach the session ID in a custom header so the client can persist it
+    // Always echo the session ID back so the client can persist it
     if (chatSessionId) {
       response.headers.set('x-chat-session-id', chatSessionId);
     }
@@ -138,3 +161,4 @@ export async function POST(req: Request) {
     );
   }
 }
+

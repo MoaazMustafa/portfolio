@@ -22,7 +22,7 @@ export async function getAssistantConfig(): Promise<AssistantSettings> {
 
   const knowledge = await getKnowledgeBlock();
 
-  const systemPrompt = (config?.systemPrompt ?? defaultSystemPrompt).replace(
+  const systemPrompt = (config?.systemPrompt || defaultSystemPrompt).replace(
     '{KNOWLEDGE_BLOCK}',
     knowledge,
   );

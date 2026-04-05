@@ -8,11 +8,44 @@ import {
   AssistantChatTransport,
   useChatRuntime,
 } from '@assistant-ui/react-ai-sdk';
+import type { UIMessage } from 'ai';
 import { BotIcon, ChevronDownIcon } from 'lucide-react';
-import { forwardRef, useCallback, useEffect, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
 
 import { Thread } from '@/components/assistant-ui/thread';
 import { TooltipIconButton } from '@/components/assistant-ui/tooltip-icon-button';
+import { getDeviceId } from '@/lib/device-id';
+
+// ── Storage keys ──────────────────────────────────────────────────────────────
+// Keyed by device ID so each browser keeps its own conversation.
+function storageKey(deviceId: string) {
+  return `ask-moaaz:${deviceId}`;
+}
+
+interface PersistedChat {
+  sessionId: string;
+  messages: UIMessage[];
+}
+
+function loadPersistedChat(deviceId: string): PersistedChat | null {
+  try {
+    const raw = localStorage.getItem(storageKey(deviceId));
+    if (!raw) return null;
+    return JSON.parse(raw) as PersistedChat;
+  } catch {
+    return null;
+  }
+}
+
+function savePersistedChat(deviceId: string, data: PersistedChat) {
+  try {
+    localStorage.setItem(storageKey(deviceId), JSON.stringify(data));
+  } catch {
+    // Quota exceeded or private mode — silently ignore
+  }
+}
+
+// ── Public state interface ────────────────────────────────────────────────────
 
 interface AssistantPublicState {
   enabled: boolean;
@@ -20,6 +53,8 @@ interface AssistantPublicState {
   greeting: string;
   suggestedPrompts: string[];
 }
+
+// ── Root widget (checks enabled state) ───────────────────────────────────────
 
 export function AskMoaazWidget() {
   const [state, setState] = useState<AssistantPublicState | null>(null);
@@ -40,20 +75,103 @@ export function AskMoaazWidget() {
     fetchConfig();
   }, [fetchConfig]);
 
-  // Don't render anything until we know the state
   if (error || !state || !state.enabled) return null;
 
   return <AskMoaazInner state={state} />;
 }
 
+// ── Inner widget (runtime + persistence) ─────────────────────────────────────
+
 function AskMoaazInner({ state }: { state: AssistantPublicState }) {
   const [open, setOpen] = useState(false);
 
+  // Resolved on first client render from localStorage
+  const deviceIdRef = useRef<string>('');
+  const sessionIdRef = useRef<string | undefined>(undefined);
+
+  // Load persisted chat from localStorage before the runtime is created.
+  // This runs only on the client (useRef/useState are SSR-safe here because
+  // this component is only rendered inside a useEffect-gated path).
+  const [initialMessages] = useState<UIMessage[]>(() => {
+    if (typeof window === 'undefined') return [];
+    const deviceId = getDeviceId();
+    deviceIdRef.current = deviceId;
+    const persisted = loadPersistedChat(deviceId);
+    if (persisted) {
+      sessionIdRef.current = persisted.sessionId;
+      return persisted.messages;
+    }
+    return [];
+  });
+
+  // Custom fetch that:
+  // 1. Attaches deviceId + sessionId to every request body
+  // 2. Reads x-chat-session-id from the response and persists it
+  // 3. After the stream completes, saves all messages to localStorage
+  const customFetch: typeof fetch = useCallback(
+    async (input, init) => {
+      // Patch the request body with our session metadata
+      const originalBody = init?.body ? JSON.parse(init.body as string) : {};
+      const patchedBody = {
+        ...originalBody,
+        deviceId: deviceIdRef.current,
+        sessionId: sessionIdRef.current,
+        pagePath: window.location.pathname,
+      };
+      const patchedInit: RequestInit = {
+        ...(init ?? {}),
+        body: JSON.stringify(patchedBody),
+      };
+
+      const response = await fetch(input, patchedInit);
+
+      // Read the session ID the server assigned (or confirmed)
+      const newSessionId = response.headers.get('x-chat-session-id');
+      if (newSessionId) {
+        sessionIdRef.current = newSessionId;
+      }
+
+      return response;
+    },
+    [],
+  );
+
   const runtime = useChatRuntime({
+    messages: initialMessages,
     transport: new AssistantChatTransport({
       api: '/api/chat',
+      fetch: customFetch,
     }),
   });
+
+  // Subscribe to thread changes and persist messages to localStorage
+  useEffect(() => {
+    const thread = runtime.thread;
+    return thread.subscribe(() => {
+      const state = thread.getState();
+      const msgs = state.messages;
+      // Only persist once the thread has messages and we have a session
+      if (!msgs.length || !sessionIdRef.current || !deviceIdRef.current) return;
+
+      // Convert ThreadMessage[] → UIMessage[] (only text content, role, id)
+      const uiMessages: UIMessage[] = msgs
+        .filter((m) => m.role === 'user' || m.role === 'assistant')
+        .map((m) => ({
+          id: m.id,
+          role: m.role as 'user' | 'assistant',
+          parts: m.content
+            .filter((p): p is { type: 'text'; text: string } => p.type === 'text')
+            .map((p) => ({ type: 'text' as const, text: p.text })),
+        }));
+
+      if (uiMessages.length) {
+        savePersistedChat(deviceIdRef.current, {
+          sessionId: sessionIdRef.current,
+          messages: uiMessages,
+        });
+      }
+    });
+  }, [runtime]);
 
   // Listen for navbar "Ask Moaaz" button click
   useEffect(() => {
@@ -61,6 +179,17 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
     window.addEventListener('ask-moaaz-open', handler);
     return () => window.removeEventListener('ask-moaaz-open', handler);
   }, []);
+
+  function handleClear() {
+    if (deviceIdRef.current) {
+      try {
+        localStorage.removeItem(storageKey(deviceIdRef.current));
+      } catch {
+        // ignore
+      }
+    }
+    sessionIdRef.current = undefined;
+  }
 
   return (
     <AssistantRuntimeProvider runtime={runtime}>
@@ -80,12 +209,15 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
               greeting: state.greeting,
               prompts: state.suggestedPrompts,
             }}
+            onClear={handleClear}
           />
         </AssistantModalPrimitive.Content>
       </AssistantModalPrimitive.Root>
     </AssistantRuntimeProvider>
   );
 }
+
+// ── Modal toggle button ───────────────────────────────────────────────────────
 
 type ModalButtonProps = { 'data-state'?: 'open' | 'closed' };
 
@@ -117,3 +249,4 @@ const ModalButton = forwardRef<HTMLButtonElement, ModalButtonProps>(
 );
 
 ModalButton.displayName = 'ModalButton';
+

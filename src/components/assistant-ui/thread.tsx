@@ -1,14 +1,4 @@
 import {
-  ComposerAddAttachment,
-  ComposerAttachments,
-  UserMessageAttachments,
-} from '@/components/assistant-ui/attachment';
-import { MarkdownText } from '@/components/assistant-ui/markdown-text';
-import { ToolFallback } from '@/components/assistant-ui/tool-fallback';
-import { TooltipIconButton } from '@/components/assistant-ui/tooltip-icon-button';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import {
   ActionBarMorePrimitive,
   ActionBarPrimitive,
   AuiIf,
@@ -32,8 +22,16 @@ import {
   PencilIcon,
   RefreshCwIcon,
   SquareIcon,
+  Trash2Icon,
 } from 'lucide-react';
 import type { FC } from 'react';
+
+import { UserMessageAttachments } from '@/components/assistant-ui/attachment';
+import { MarkdownText } from '@/components/assistant-ui/markdown-text';
+import { ToolFallback } from '@/components/assistant-ui/tool-fallback';
+import { TooltipIconButton } from '@/components/assistant-ui/tooltip-icon-button';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface WelcomeConfig {
   name?: string;
@@ -41,7 +39,7 @@ interface WelcomeConfig {
   prompts?: string[];
 }
 
-export const Thread: FC<{ welcome?: WelcomeConfig }> = ({ welcome }) => {
+export const Thread: FC<{ welcome?: WelcomeConfig; onClear?: () => void }> = ({ welcome, onClear }) => {
   return (
     <ThreadPrimitive.Root
       className="aui-root aui-thread-root bg-background @container flex h-full flex-col"
@@ -51,6 +49,7 @@ export const Thread: FC<{ welcome?: WelcomeConfig }> = ({ welcome }) => {
         ['--composer-padding' as string]: '10px',
       }}
     >
+      <ThreadHeader name={welcome?.name} onClear={onClear} />
       <ThreadPrimitive.Viewport
         turnAnchor="top"
         className="aui-thread-viewport relative flex flex-1 flex-col overflow-x-auto overflow-y-scroll scroll-smooth px-4 pt-4"
@@ -69,6 +68,37 @@ export const Thread: FC<{ welcome?: WelcomeConfig }> = ({ welcome }) => {
         </ThreadPrimitive.ViewportFooter>
       </ThreadPrimitive.Viewport>
     </ThreadPrimitive.Root>
+  );
+};
+
+const ThreadHeader: FC<{ name?: string; onClear?: () => void }> = ({ name, onClear }) => {
+  const runtime = useThreadRuntime();
+  const isEmpty = useAuiState((s) => s.thread.isEmpty);
+
+  function handleClear() {
+    runtime.reset();
+    onClear?.();
+  }
+
+  return (
+    <div className="flex items-center justify-between border-b px-4 py-2.5">
+      <span className="text-sm font-semibold">
+        {name ? `Ask ${name}` : 'Assistant'}
+      </span>
+      {!isEmpty && (
+        <TooltipIconButton
+          tooltip="Clear chat"
+          side="left"
+          variant="ghost"
+          size="icon"
+          className="text-muted-foreground hover:text-destructive size-7"
+          onClick={handleClear}
+          aria-label="Clear chat"
+        >
+          <Trash2Icon className="size-4" />
+        </TooltipIconButton>
+      )}
+    </div>
   );
 };
 
@@ -97,12 +127,12 @@ const ThreadScrollToBottom: FC = () => {
 const ThreadWelcome: FC<{ welcome?: WelcomeConfig }> = ({ welcome }) => {
   return (
     <div className="aui-thread-welcome-root mx-auto my-auto flex w-full max-w-(--thread-max-width) grow flex-col">
-      <div className="aui-thread-welcome-center flex w-full grow flex-col items-center justify-center">
+      <div className="aui-thread-welcome-center flex w-full grow flex-col items-center justify-start">
         <div className="aui-thread-welcome-message flex size-full flex-col justify-center px-4">
           <h1 className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in fill-mode-both text-2xl font-semibold duration-200">
             {welcome?.name ? `Ask ${welcome.name}` : 'Hello there!'}
           </h1>
-          <p className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in fill-mode-both text-muted-foreground text-xl delay-75 duration-200">
+          <p className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in fill-mode-both text-muted-foreground text-base delay-75 duration-200">
             {welcome?.greeting ?? 'How can I help you today?'}
           </p>
         </div>
@@ -116,7 +146,7 @@ const ThreadSuggestions: FC<{ prompts?: string[] }> = ({ prompts }) => {
   const runtime = useThreadRuntime();
   if (!prompts?.length) return null;
   return (
-    <div className="aui-thread-welcome-suggestions grid w-full gap-2 pb-4 @md:grid-cols-2">
+    <div className="aui-thread-welcome-suggestions grid w-auto gap-2 pb-4 @md:grid-cols-2">
       {prompts.map((prompt) => (
         <div
           key={prompt}
@@ -127,7 +157,7 @@ const ThreadSuggestions: FC<{ prompts?: string[] }> = ({ prompts }) => {
             onClick={() => runtime.append(prompt)}
             className="aui-thread-welcome-suggestion bg-background hover:bg-muted h-auto w-full flex-wrap items-start justify-start gap-1 rounded-3xl border px-4 py-3 text-left text-sm transition-colors @md:flex-col"
           >
-            <span className="aui-thread-welcome-suggestion-text-1 font-medium">
+            <span className="aui-thread-welcome-suggestion-text-1 text-primary-600 font-medium">
               {prompt}
             </span>
           </Button>
@@ -140,30 +170,26 @@ const ThreadSuggestions: FC<{ prompts?: string[] }> = ({ prompts }) => {
 const Composer: FC = () => {
   return (
     <ComposerPrimitive.Root className="aui-composer-root relative flex w-full flex-col">
-      <ComposerPrimitive.AttachmentDropzone asChild>
-        <div
-          data-slot="composer-shell"
-          className="bg-background focus-within:border-ring/75 focus-within:ring-ring/20 data-[dragging=true]:border-ring data-[dragging=true]:bg-accent/50 flex w-full flex-col gap-2 rounded-(--composer-radius) border p-(--composer-padding) transition-shadow focus-within:ring-2 data-[dragging=true]:border-dashed"
-        >
-          <ComposerAttachments />
-          <ComposerPrimitive.Input
-            placeholder="Send a message..."
-            className="aui-composer-input placeholder:text-muted-foreground/80 max-h-32 min-h-10 w-full resize-none bg-transparent px-1.75 py-1 text-sm outline-none"
-            rows={1}
-            autoFocus
-            aria-label="Message input"
-          />
-          <ComposerAction />
-        </div>
-      </ComposerPrimitive.AttachmentDropzone>
+      <div
+        data-slot="composer-shell"
+        className="bg-background focus-within:border-ring/75 focus-within:ring-ring/20 flex w-full flex-col gap-2 rounded-(--composer-radius) border p-(--composer-padding) transition-shadow focus-within:ring-2"
+      >
+        <ComposerPrimitive.Input
+          placeholder="Send a message..."
+          className="aui-composer-input placeholder:text-muted-foreground/80 max-h-32 min-h-10 w-full resize-none bg-transparent px-1.75 py-1 text-sm outline-none"
+          rows={1}
+          autoFocus
+          aria-label="Message input"
+        />
+        <ComposerAction />
+      </div>
     </ComposerPrimitive.Root>
   );
 };
 
 const ComposerAction: FC = () => {
   return (
-    <div className="aui-composer-action-wrapper relative flex items-center justify-between">
-      <ComposerAddAttachment />
+    <div className="aui-composer-action-wrapper relative flex items-center justify-end">
       <AuiIf condition={(s) => !s.thread.isRunning}>
         <ComposerPrimitive.Send asChild>
           <TooltipIconButton

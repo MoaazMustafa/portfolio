@@ -116,6 +116,9 @@ export function ChatAnalyticsClient({
               {sessions.map((session) => {
                 const isExpanded = expanded.has(session.id);
                 const hasRefusal = session.messages.some((m) => m.isRefusal);
+                const visitorLabel = session.visitorId
+                  ? `Device ${session.visitorId.slice(0, 8)}`
+                  : 'Unknown device';
                 return (
                   <div key={session.id} className="rounded-lg border">
                     <button
@@ -123,30 +126,36 @@ export function ChatAnalyticsClient({
                       className="flex w-full items-center justify-between p-4 text-left"
                       onClick={() => toggleExpand(session.id)}
                     >
-                      <div className="flex items-center gap-3">
-                        <div>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex flex-wrap items-center gap-2">
                           <span className="text-sm font-medium">
-                            {session.messages.length} messages
+                            {session.messages.length} message{session.messages.length !== 1 ? 's' : ''}
+                          </span>
+                          <span className="text-muted-foreground text-xs font-mono">
+                            {visitorLabel}
                           </span>
                           {session.pagePath && (
-                            <span className="text-muted-foreground ml-2 text-xs">
+                            <span className="text-muted-foreground text-xs">
                               from {session.pagePath}
                             </span>
                           )}
-                          <span className="text-muted-foreground ml-2 text-xs">
-                            {new Date(session.createdAt).toLocaleString()}
-                          </span>
+                          {hasRefusal && (
+                            <Badge variant="destructive" className="text-xs">
+                              Off-topic
+                            </Badge>
+                          )}
+                          {session.provider && (
+                            <Badge variant="outline" className="text-xs">
+                              {session.provider}
+                            </Badge>
+                          )}
                         </div>
-                        {hasRefusal && (
-                          <Badge variant="destructive" className="text-xs">
-                            Off-topic
-                          </Badge>
-                        )}
-                        {session.provider && (
-                          <Badge variant="outline" className="text-xs">
-                            {session.provider}
-                          </Badge>
-                        )}
+                        <span className="text-muted-foreground text-xs">
+                          Started {new Date(session.createdAt).toLocaleString()}
+                          {session.updatedAt && session.updatedAt > session.createdAt && (
+                            <> · Last message {new Date(session.updatedAt).toLocaleString()}</>
+                          )}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Button
