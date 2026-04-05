@@ -140,6 +140,7 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
         deviceId: deviceIdRef.current,
         sessionId: sessionIdRef.current,
         pagePath: window.location.pathname,
+        referrer: document.referrer || undefined,
       }),
     };
     const response = await fetch(input, patchedInit);

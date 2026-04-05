@@ -228,6 +228,18 @@ model ChatSession {
     provider  String? // "openrouter", "groq", "ollama"
     model     String? // Model identifier used
 
+    // Visitor identity metadata
+    ipAddress      String?
+    country        String?
+    region         String?
+    city           String?
+    browserName    String?
+    browserVersion String?
+    osName         String?
+    osVersion      String?
+    deviceType     String? // "desktop" | "mobile" | "tablet"
+    referrer       String? @db.Text
+
     messages ChatMessage[]
 
     createdAt DateTime @default(now())
