@@ -6,6 +6,7 @@ import { ClientLayoutProvider, ScrollBar, ThemeProvider } from '@/components';
 import { JsonLd } from '@/components/json-ld';
 import { Preloader } from '@/components/preloader';
 import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { defaultMetadata } from '@/lib/metadata';
 
 import '@/styles/globals.css';
@@ -63,11 +64,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
-          <ScrollBar />
-          <Preloader>
-            <ClientLayoutProvider>{children}</ClientLayoutProvider>
-          </Preloader>
-          <Toaster />
+          <TooltipProvider>
+            <ScrollBar />
+            <Preloader>
+              <ClientLayoutProvider>{children}</ClientLayoutProvider>
+            </Preloader>
+            <Toaster />
+          </TooltipProvider>
         </ThemeProvider>
         <Analytics />
       </body>

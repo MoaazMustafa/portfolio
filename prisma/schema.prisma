@@ -185,3 +185,73 @@ model Post {
     @@index([createdAt])
     @@map("posts")
 }
+
+// ── Ask Moaaz AI Assistant ──
+
+model AssistantConfig {
+    id        String  @id @default("default")
+    enabled   Boolean @default(true)
+    name      String  @default("Moaaz")
+    greeting  String  @default("Hey! I'm Moaaz's AI twin. Ask me anything about him — skills, projects, experience, or what he's working on.") @db.Text
+    systemPrompt String? @db.Text // Override the file-based default system prompt
+    refusalMessage String @default("I can only answer questions about Moaaz — his work, skills, projects, and experience. Try asking something about him!") @db.Text
+    suggestedPrompts String[] // e.g. ["Who is Moaaz?", "What tech stack does he use?"]
+    providerMode String @default("hosted") // "hosted" | "local"
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("assistant_config")
+}
+
+model AssistantKnowledge {
+    id       String @id @default(cuid())
+    category String // "bio", "skills", "projects", "experience", "faq", "custom"
+    title    String
+    content  String @db.Text
+    priority Int    @default(0) // Higher = included first in context
+    enabled  Boolean @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([category])
+    @@index([enabled, priority])
+    @@map("assistant_knowledge")
+}
+
+model ChatSession {
+    id         String   @id @default(cuid())
+    visitorId  String?  // Anonymous fingerprint or null
+    pagePath   String?  // Page the visitor was on when they started
+    userAgent  String?  @db.Text
+    provider   String?  // "openrouter", "groq", "ollama"
+    model      String?  // Model identifier used
+
+    messages   ChatMessage[]
+
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    @@index([createdAt])
+    @@index([visitorId])
+    @@map("chat_sessions")
+}
+
+model ChatMessage {
+    id        String  @id @default(cuid())
+    sessionId String
+    role      String  // "user" | "assistant"
+    content   String  @db.Text
+    isRefusal Boolean @default(false) // Was this an off-topic refusal?
+    topic     String? // Derived tag: "bio", "skills", "projects", etc.
+
+    session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+
+    @@index([sessionId])
+    @@index([createdAt])
+    @@index([isRefusal])
+    @@map("chat_messages")
+}

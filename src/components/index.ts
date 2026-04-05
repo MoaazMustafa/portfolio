@@ -21,6 +21,9 @@ export { ProjectShowcase } from './sections/project-showcase';
 // Effects
 export { default as Orb } from './orb';
 
+// AI Assistant
+export { AskMoaazWidget } from './ask-moaaz-widget';
+
 // Scroll indicator
 export { ScrollBar } from './scroll-bar';
 

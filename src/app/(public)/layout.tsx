@@ -1,18 +1,23 @@
 import { DevToolsProvider, Footer, Navbar } from '@/components';
+import { AskMoaazWidget } from '@/components/ask-moaaz-widget';
+import { getAssistantPublicState } from '@/lib/assistant';
 
-export default function PublicLayout({
+export default async function PublicLayout({
   children,
 }: {
   readonly children: React.ReactNode;
 }) {
+  const assistantState = await getAssistantPublicState();
+
   return (
     <>
       <DevToolsProvider>
-        <Navbar />
+        <Navbar showAssistantButton={assistantState.enabled} />
         <main id="main-content" className="relative">
           {children}
         </main>
         <Footer />
+        <AskMoaazWidget />
       </DevToolsProvider>
     </>
   );

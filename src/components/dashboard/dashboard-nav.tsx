@@ -1,11 +1,13 @@
 'use client';
 
 import {
+  Bot,
   Cpu,
   FileText,
   FolderOpen,
   Image as ImageIcon,
   LayoutDashboard,
+  MessageCircle,
   Settings,
   Tags,
   Users,
@@ -61,6 +63,16 @@ const sidebarNavItems = [
     title: 'Blog Posts',
     href: '/dashboard/posts',
     icon: FileText,
+  },
+  {
+    title: 'Ask Moaaz',
+    href: '/dashboard/assistant',
+    icon: Bot,
+  },
+  {
+    title: 'Chat History',
+    href: '/dashboard/assistant/chats',
+    icon: MessageCircle,
   },
   {
     title: 'Settings',

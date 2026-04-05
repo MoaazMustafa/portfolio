@@ -1,6 +1,6 @@
 'use client';
 
-import { Menu, X } from 'lucide-react';
+import { Bot, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -21,7 +21,11 @@ const navItems = [
   { href: '/gallery', label: 'Gallery' },
 ];
 
-export function Navbar() {
+interface NavbarProps {
+  showAssistantButton?: boolean;
+}
+
+export function Navbar({ showAssistantButton = false }: NavbarProps) {
   const [isVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -135,6 +139,22 @@ export function Navbar() {
             <div className="flex items-center gap-3">
               <ColorThemeToggle />
               <ThemeToggle />
+
+              {/* Ask Moaaz Button — only visible when assistant is enabled */}
+              {showAssistantButton && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative hidden sm:flex"
+                  onClick={() =>
+                    window.dispatchEvent(new CustomEvent('ask-moaaz-open'))
+                  }
+                  aria-label="Ask Moaaz AI"
+                >
+                  <Bot className="h-5 w-5" />
+                  <span className="bg-primary absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full" />
+                </Button>
+              )}
 
               {/* Single CTA Button */}
               <Link href="/contact" className="hidden sm:block">
