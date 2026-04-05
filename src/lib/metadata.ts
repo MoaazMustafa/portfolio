@@ -10,7 +10,7 @@ interface PageMetadata {
 }
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://moaazmustafa.dev';
-const defaultOgImage = `${baseUrl}/img/og-default.png`;
+const defaultOgImage = `${baseUrl}/opengraph-image`;
 
 export function generatePageMetadata({
   title,
@@ -63,18 +63,25 @@ export function generatePageMetadata({
 
 export const defaultMetadata: Metadata = generatePageMetadata({
   title: 'Moaaz Mustafa - Software Engineer & Tech Enthusiast',
-  description: 'Innovative Digital Solutions by Moaaz Mustafa',
+  description:
+    'Portfolio of Moaaz Mustafa (Moaz Mustafa) — a software engineer and full stack developer from Pakistan crafting innovative digital solutions with Next.js, React, and TypeScript.',
   keywords: [
     'Moaaz Mustafa',
     'Moaaz Mustafa Portfolio',
     'Moaz Mustafa',
+    'Moaz Mustafa Portfolio',
+    'MOaaz Mustafa',
     'Muaz Mustafa',
+    'Maaz Mustafa',
     'Moaaz',
     'MOAAZ',
     'moaazmustafa.dev',
     'moaazmustafa',
-    'maaz',
-    'Muaz',
+    'Moaaz Mustafa developer',
+    'Moaz Mustafa developer',
+    'Moaaz Mustafa software engineer',
+    'Full Stack Developer Pakistan',
+    'Software Engineer Pakistan',
   ],
   canonical: '/',
 });
@@ -84,7 +91,7 @@ export const pageMetadata = {
   home: generatePageMetadata({
     title: 'Moaaz Mustafa - Software Engineer & Tech Enthusiast',
     description:
-      'Explore the portfolio of Moaaz Mustafa — a software engineer crafting innovative digital solutions with modern web technologies. Discover projects, skills, and experiences.',
+      'Explore the portfolio of Moaaz Mustafa (also known as Moaz Mustafa) — a software engineer crafting innovative digital solutions with modern web technologies. Discover projects, skills, and experiences.',
     keywords: [
       'Moaaz Mustafa',
       'Moaaz Mustafa Portfolio',
@@ -92,16 +99,22 @@ export const pageMetadata = {
       'Full Stack Developer',
       'Web Developer',
       'Moaz Mustafa',
+      'Moaz Mustafa Portfolio',
+      'MOaaz Mustafa',
       'Muaz Mustafa',
+      'Maaz Mustafa',
       'Moaaz',
       'MOAAZ',
       'moaazmustafa.dev',
       'moaazmustafa',
-      'maaz',
-      'Muaz',
+      'Moaaz Mustafa developer',
+      'Moaz Mustafa developer',
+      'Moaaz Mustafa software engineer',
+      'Full Stack Developer Pakistan',
       'Next.js',
       'React',
       'TypeScript',
+      'MERN Stack Developer',
     ],
     ogImage: `${baseUrl}/opengraph-image`,
     canonical: '/',

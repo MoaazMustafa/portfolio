@@ -3,9 +3,9 @@ import type { Metadata } from 'next';
 import { PageComingSoon } from '@/components/sections/page-coming-soon';
 
 export const metadata: Metadata = {
-  title: 'Experience | Moaaz Mustafa',
+  title: 'Gallery | Moaaz Mustafa',
   description:
-    'Professional experience, skills, and career journey of Moaaz Mustafa in software engineering and technology.',
+    'From code to innovation - explore the gallery of Moaaz Mustafa showcasing professional journey, creative work, and tech community involvement.',
 };
 
 export default function ExperiencePage() {

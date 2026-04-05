@@ -128,7 +128,7 @@ export function Footer() {
                     <Code2 className="text-foreground h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
                   </div>
                   <span className="text-foreground text-xl font-bold tracking-tight">
-                    Maaz Mustafa
+                    Moaaz Mustafa
                   </span>
                 </div>
 

@@ -57,7 +57,7 @@ export function Hero() {
                 <div className="shadow-primary/20 xs:h-56 xs:w-56 relative h-46 w-46 overflow-hidden rounded-full shadow-2xl sm:h-72 sm:w-72 lg:h-87 lg:w-87">
                   <Image
                     src="/img/Moaaz Mustafa.jpeg"
-                    alt="Moaaz Mustafa"
+                    alt="Moaaz Mustafa - Software Engineer and Full Stack Developer"
                     fill
                     className="object-cover"
                     priority
@@ -81,15 +81,17 @@ export function Hero() {
               <p className="text-primary text-lg font-medium sm:text-xl">
                 Assalamualaikum, I&apos;m
               </p>
-              <VariableProximity
-                label="MOAAZ MUSTAFA"
-                className="variable-proximity-demo font-orbitron text-foreground text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl"
-                fromFontVariationSettings="'wght' 100"
-                toFontVariationSettings="'wght' 1000"
-                containerRef={containerRef}
-                radius={150}
-                falloff="exponential"
-              />
+              <h1>
+                <VariableProximity
+                  label="MOAAZ MUSTAFA"
+                  className="variable-proximity-demo font-orbitron text-foreground text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl"
+                  fromFontVariationSettings="'wght' 100"
+                  toFontVariationSettings="'wght' 1000"
+                  containerRef={containerRef}
+                  radius={150}
+                  falloff="exponential"
+                />
+              </h1>
             </div>
 
             {/* Animated Roles - TextType */}
@@ -112,7 +114,7 @@ export function Hero() {
 
             {/* Short Bio */}
             <TextGenerateEffect
-              words="Passionate about crafting elegant digital experiences and turning
+              words="I'm Moaaz Mustafa — passionate about crafting elegant digital experiences and turning
               ideas into reality through code. I specialize in building modern,
               scalable web applications with a focus on user experience and
               clean architecture."

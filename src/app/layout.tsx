@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Orbitron } from 'next/font/google';
 
 import { ClientLayoutProvider, ScrollBar, ThemeProvider } from '@/components';
+import { JsonLd } from '@/components/json-ld';
 import { Preloader } from '@/components/preloader';
 import { Toaster } from '@/components/ui/sonner';
 import { defaultMetadata } from '@/lib/metadata';
@@ -38,6 +39,9 @@ export const metadata: Metadata = {
     shortcut: '/favicon/favicon-16x16.png',
     apple: '/favicon/favicon-apple.png',
   },
+  verification: {
+    google: 'google0773613038e8f5a3',
+  },
 };
 
 interface RootLayoutProps {
@@ -47,6 +51,9 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <JsonLd />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} font-sans antialiased`}
       >
