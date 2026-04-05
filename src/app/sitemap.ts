@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://moaazmustafa.dev';
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.moaazmustafa.dev';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [

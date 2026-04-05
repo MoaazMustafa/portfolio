@@ -9,7 +9,7 @@ interface PageMetadata {
   noIndex?: boolean;
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://moaazmustafa.dev';
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.moaazmustafa.dev';
 const defaultOgImage = `${baseUrl}/opengraph-image`;
 
 export function generatePageMetadata({
