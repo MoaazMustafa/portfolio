@@ -124,7 +124,7 @@ export function TechnologyDialog({ technology }: TechnologyDialogProps) {
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Edit Technology' : 'Add Technology'}

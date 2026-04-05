@@ -1,10 +1,12 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
+import { toast } from "sonner"
 import { z } from "zod"
 
 import { prisma } from "@/lib/prisma"
 
+// eslint-disable-next-line unused-imports/no-unused-vars
 const technologySchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1, "Name is required"),
@@ -31,7 +33,7 @@ export async function createTechnology(data: TechnologyData) {
     revalidatePath("/")
     return { success: true }
   } catch (error) {
-    console.error("Create technology error:", error)
+    toast.error(`Failed to create technology: ${error}`)
     return { error: "Failed to create technology" }
   }
 }
@@ -54,7 +56,7 @@ export async function updateTechnology(data: TechnologyData) {
     revalidatePath("/")
     return { success: true }
   } catch (error) {
-    console.error("Update technology error:", error)
+    toast.error(`Failed to update technology: ${error}`)
     return { error: "Failed to update technology" }
   }
 }
@@ -68,7 +70,7 @@ export async function deleteTechnology(id: string) {
     revalidatePath("/")
     return { success: true }
   } catch (error) {
-    console.error("Delete technology error:", error)
+    toast.error(`Failed to delete technology: ${error}`)
     return { error: "Failed to delete technology" }
   }
 }
@@ -172,7 +174,7 @@ export async function seedTechnologies() {
                 })
                 count++;
             } catch (e) {
-                console.error(`Failed to seed ${tech.name}`, e)
+                toast.error(`Failed to seed ${tech.name}: ${e}`)
             }
         }
     }

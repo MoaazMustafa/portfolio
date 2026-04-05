@@ -59,7 +59,7 @@ type StatusFilter = 'all' | Project['status'];
 type VisibilityFilter = 'all' | 'visible' | 'hidden';
 type FeaturedFilter = 'all' | 'featured' | 'not-featured';
 
-function getPlaceholderStyle(title: string) {
+function getPlaceholderStyle(_title: string) {
   return {
     backgroundImage: `linear-gradient(135deg, var(--color-primary-600), var(--color-primary-900))`,
   };

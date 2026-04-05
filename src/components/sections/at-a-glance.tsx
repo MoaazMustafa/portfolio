@@ -358,7 +358,7 @@ export function AtAGlance() {
         <div className="mt-12 grid min-w-0 grid-cols-1 gap-4 md:grid-cols-12">
           {/* ── Row 1, Left: Location / Globe ── */}
           <motion.div variants={itemVariants} className="md:col-span-5">
-            <BentoCard className="h-[340px]">
+            <BentoCard className="h-85">
               <div className="text-muted-foreground relative z-10 flex items-center gap-2 text-sm">
                 <MapPin className="size-4" />
                 <span>
@@ -369,7 +369,7 @@ export function AtAGlance() {
                 </span>
               </div>
               <div
-                className="absolute inset-x-0 bottom-[-170px] h-[388px]"
+                className="absolute inset-x-0 -bottom-42.5 h-97"
                 style={{
                   maskImage:
                     'radial-gradient(circle at 50% 50%, rgb(0,0,0) 60%, rgb(0,0,0,0) 70%)',
@@ -389,7 +389,7 @@ export function AtAGlance() {
 
           {/* ── Row 1, Right: GitHub Contributions ── */}
           <motion.div variants={itemVariants} className="min-w-0 md:col-span-7">
-            <BentoCard className="flex h-[340px] flex-col">
+            <BentoCard className="flex h-85 flex-col">
               <div className="text-muted-foreground mb-3 flex items-center gap-2 text-sm">
                 <RiGithubFill className="size-4" />
                 <span>

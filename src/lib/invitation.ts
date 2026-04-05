@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use server'
 
 import { randomBytes } from "crypto"
 
 import { revalidatePath } from "next/cache"
+import { toast } from "sonner"
 
 import { prisma } from "@/lib/prisma"
 
@@ -24,6 +26,7 @@ export async function createInvitation(email: string) {
         revalidatePath("/dashboard/users")
         return { success: true, token: invitation.token }
     } catch (error) {
+        toast.error(`Failed to create invitation: ${error}`)
         return { error: "Failed to create invitation" }
     }
 }
@@ -95,6 +98,7 @@ export async function completeInvitation(token: string, userData: any) {
 
         return { success: true, user }
     } catch (error) {
+        toast.error(`Failed to create user: ${error}`)
         return { error: "Failed to create user" }
     }
 }

@@ -69,7 +69,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:border-white/[0.15] hover:shadow-[0_8px_40px_rgba(0,0,0,0.25)]"
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/8 bg-white/3 backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:border-white/15 hover:shadow-[0_8px_40px_rgba(0,0,0,0.25)]"
     >
       {/* Cover image area */}
       <div className="relative h-52 w-full overflow-hidden">
@@ -90,7 +90,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
         )}
 
         {/* Gradient overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
 
         {/* Top-right chips: status + featured */}
         <div className="absolute top-3 right-3 flex items-center gap-2">

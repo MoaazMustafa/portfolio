@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -35,7 +36,7 @@ export const authOptions: NextAuthOptions = {
 
       return false // Return false to display a default error message
     },
-    async session({ session, user }) {
+    async session({ session }) {
         if (session.user?.email) {
             const dbUser = await prisma.user.findUnique({
                 where: { email: session.user.email },

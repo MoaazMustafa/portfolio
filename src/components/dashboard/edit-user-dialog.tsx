@@ -117,8 +117,7 @@ export function EditUserDialog({ user }: EditUserDialogProps) {
         form.setValue('image', url, { shouldValidate: true });
         toast.success('Image uploaded successfully');
       } catch (error) {
-        toast.error('Failed to upload image');
-        console.error(error);
+        toast.error(`Failed to upload image: ${error}`);
         setImagePreview(user.image); // Revert to original
       } finally {
         setUploading(false);
@@ -154,7 +153,7 @@ export function EditUserDialog({ user }: EditUserDialogProps) {
           <UserCog className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-[600px]">
+      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-150">
         <DialogHeader>
           <DialogTitle>Edit User Profile</DialogTitle>
           <DialogDescription>

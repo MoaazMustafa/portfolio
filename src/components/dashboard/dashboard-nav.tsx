@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 // import { ScrollArea } from "@/components/ui/scroll-area" // Should check if this exists
 // import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet" // Should check if this exists
 
-interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
+interface DashboardNavProps extends React.HTMLAttributes<HTMLElement> {
   items: {
     href: string;
     title: string;
@@ -69,10 +69,7 @@ const sidebarNavItems = [
   },
 ];
 
-export function DashboardNav({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLElement>) {
+export function DashboardNav({ className, ...props }: DashboardNavProps) {
   const pathname = usePathname();
 
   return (

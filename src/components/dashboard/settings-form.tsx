@@ -99,8 +99,9 @@ export function SettingsForm({ initialValues, email }: SettingsFormProps) {
         form.setValue('image', url, { shouldValidate: true });
         toast.success('Profile image uploaded');
       } catch (error) {
-        toast.error('Failed to upload image');
-        console.error(error);
+        toast.error(
+          `Failed to upload image: ${error instanceof Error ? error.message : String(error)}`,
+        );
       } finally {
         setUploading(false);
         e.target.value = '';

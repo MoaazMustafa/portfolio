@@ -89,8 +89,7 @@ export function CreateUserDialog() {
         form.setValue('image', url);
         toast.success('Image uploaded successfully');
       } catch (error) {
-        toast.error('Failed to upload image to Cloudinary');
-        console.error(error);
+        toast.error(`Failed to upload image to Cloudinary: ${error}`);
         setImagePreview(null);
       } finally {
         setUploading(false);
@@ -137,7 +136,7 @@ export function CreateUserDialog() {
           Add User
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-[600px]">
+      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-150">
         <DialogHeader>
           <DialogTitle>Add New User</DialogTitle>
           <DialogDescription>Manually create a user account.</DialogDescription>

@@ -42,7 +42,7 @@ export function Hero() {
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Right Side - Image with Orb Background - Shows first on mobile */}
           <div className="relative flex items-center justify-center overflow-visible lg:order-2 lg:justify-end">
-            <div className="xs:h-[300px] xs:w-[300px] relative h-[280px] w-[280px] sm:h-[440px] sm:w-[440px] lg:h-[560px] lg:w-[560px]">
+            <div className="xs:h-[300px] xs:w-[300px] relative h-70 w-70 sm:h-110 sm:w-110 lg:h-140 lg:w-140">
               {/* Orb Background - Sibling */}
               <div className="absolute inset-0 z-0">
                 <Orb

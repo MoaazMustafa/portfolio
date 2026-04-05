@@ -52,7 +52,6 @@ export default function MediaManager() {
     try {
       setLoading(true);
       setError(null);
-      // @ts-ignore - The types on server actions can be tricky with simple imports
       const result = await getCloudinaryResources(cursor);
 
       if ('error' in result && result.error) {
@@ -72,8 +71,9 @@ export default function MediaManager() {
       }
       setNextCursor(data.next_cursor || null);
     } catch (err) {
-      setError('Failed to load images');
-      console.error(err);
+      setError(
+        `Failed to fetch images: ${err instanceof Error ? err.message : String(err)}`,
+      );
     } finally {
       setLoading(false);
     }
@@ -104,7 +104,9 @@ export default function MediaManager() {
         setSelectedImage(null);
       }
     } catch (err) {
-      toast.error('Something went wrong');
+      toast.error(
+        `Failed to delete image: ${err instanceof Error ? err.message : String(err)}`,
+      );
     }
   };
 
@@ -122,8 +124,9 @@ export default function MediaManager() {
       // Refresh list
       fetchImages();
     } catch (err) {
-      console.error(err);
-      toast.error('Upload failed');
+      toast.error(
+        `Failed to upload image: ${err instanceof Error ? err.message : String(err)}`,
+      );
     } finally {
       setUploading(false);
     }
@@ -286,7 +289,7 @@ export default function MediaManager() {
       </Card>
 
       {/* Main Content / Preview */}
-      <Card className="flex flex-[2] flex-col overflow-hidden">
+      <Card className="flex flex-2 flex-col overflow-hidden">
         {selectedImage ? (
           <div className="flex h-full flex-col">
             <div className="border-b p-4">

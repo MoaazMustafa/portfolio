@@ -104,7 +104,7 @@ export function PostDialog({
         window.clearTimeout(titleDebounceRef.current);
       }
     };
-  }, [form, slugEdited, titleValue]);
+  }, [form, preferences.autoGenerateSlugs, slugEdited, titleValue]);
 
   async function onSubmit(values: PostFormValues) {
     try {

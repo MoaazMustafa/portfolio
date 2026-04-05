@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache"
 import { getServerSession } from "next-auth/next"
+import { toast } from "sonner"
 import { z } from "zod"
 
 import { authOptions } from "@/lib/auth"
@@ -58,7 +59,7 @@ export async function createUser(data: CreateUserData) {
     revalidatePath("/dashboard/users")
     return { success: true }
   } catch (error) {
-    console.error("Failed to create user:", error)
+    toast.error(`Failed to create user: ${error}`)
     return { error: "Failed to create user" }
   }
 }
@@ -110,7 +111,7 @@ export async function updateUser(data: UpdateUserData) {
     revalidatePath("/dashboard/users")
     return { success: true }
   } catch (error) {
-    console.error("Failed to update user:", error)
+    toast.error(`Failed to update user: ${error}`)
     if (error instanceof Error) {
         return { error: error.message }
     }
@@ -160,7 +161,7 @@ export async function updateCurrentUserSettings(data: SettingsFormValues) {
     revalidatePath("/")
     return { success: true }
   } catch (error) {
-    console.error("Failed to update current user settings:", error)
+    toast.error(`Failed to update current user settings: ${error}`)
     return { error: "Failed to update settings" }
   }
 }
