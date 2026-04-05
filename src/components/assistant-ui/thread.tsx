@@ -18,6 +18,7 @@ import {
   ChevronRightIcon,
   CopyIcon,
   DownloadIcon,
+  GripVerticalIcon,
   MoreHorizontalIcon,
   PencilIcon,
   RefreshCwIcon,
@@ -39,23 +40,30 @@ interface WelcomeConfig {
   prompts?: string[];
 }
 
-export const Thread: FC<{ welcome?: WelcomeConfig; onClear?: () => void }> = ({
-  welcome,
-  onClear,
-}) => {
+export interface ThreadDragHandleProps {
+  onPointerDown: React.PointerEventHandler<HTMLDivElement>;
+  onPointerMove: React.PointerEventHandler<HTMLDivElement>;
+  onPointerUp: React.PointerEventHandler<HTMLDivElement>;
+}
+
+export const Thread: FC<{
+  welcome?: WelcomeConfig;
+  onClear?: () => void;
+  dragHandle?: ThreadDragHandleProps;
+}> = ({ welcome, onClear, dragHandle }) => {
   return (
     <ThreadPrimitive.Root
       className="aui-root aui-thread-root bg-background @container flex h-full flex-col"
       style={{
         ['--thread-max-width' as string]: '44rem',
-        ['--composer-radius' as string]: '24px',
-        ['--composer-padding' as string]: '10px',
+        ['--composer-radius' as string]: '20px',
+        ['--composer-padding' as string]: '8px',
       }}
     >
-      <ThreadHeader name={welcome?.name} onClear={onClear} />
+      <ThreadHeader name={welcome?.name} onClear={onClear} dragHandle={dragHandle} />
       <ThreadPrimitive.Viewport
         turnAnchor="top"
-        className="aui-thread-viewport relative flex flex-1 flex-col overflow-x-auto overflow-y-scroll scroll-smooth px-4 pt-4"
+        className="aui-thread-viewport relative flex flex-1 flex-col overflow-x-auto overflow-y-scroll scroll-smooth px-2 pt-2"
       >
         <AuiIf condition={(s) => s.thread.isEmpty}>
           <ThreadWelcome welcome={welcome} />
@@ -65,7 +73,7 @@ export const Thread: FC<{ welcome?: WelcomeConfig; onClear?: () => void }> = ({
           {() => <ThreadMessage />}
         </ThreadPrimitive.Messages>
 
-        <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer bg-background sticky bottom-0 mx-auto mt-auto flex w-full max-w-(--thread-max-width) flex-col gap-4 overflow-visible rounded-t-(--composer-radius) pb-4 md:pb-6">
+        <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer bg-background sticky bottom-0 mx-auto mt-auto flex w-full max-w-(--thread-max-width) flex-col gap-2 overflow-visible rounded-t-(--composer-radius) pb-2 md:pb-3">
           <ThreadScrollToBottom />
           <Composer />
         </ThreadPrimitive.ViewportFooter>
@@ -74,10 +82,11 @@ export const Thread: FC<{ welcome?: WelcomeConfig; onClear?: () => void }> = ({
   );
 };
 
-const ThreadHeader: FC<{ name?: string; onClear?: () => void }> = ({
-  name,
-  onClear,
-}) => {
+const ThreadHeader: FC<{
+  name?: string;
+  onClear?: () => void;
+  dragHandle?: ThreadDragHandleProps;
+}> = ({ name, onClear, dragHandle }) => {
   const runtime = useThreadRuntime();
   const isEmpty = useAuiState((s) => s.thread.isEmpty);
 
@@ -87,8 +96,17 @@ const ThreadHeader: FC<{ name?: string; onClear?: () => void }> = ({
   }
 
   return (
-    <div className="flex items-center justify-between border-b px-4 py-2.5">
-      <span className="text-sm font-semibold">
+    <div
+      className={cn(
+        'flex items-center gap-2 border-b px-3 py-2 select-none',
+        dragHandle && 'cursor-grab active:cursor-grabbing',
+      )}
+      {...(dragHandle ?? {})}
+    >
+      {dragHandle && (
+        <GripVerticalIcon className="text-muted-foreground/40 size-3.5 shrink-0" />
+      )}
+      <span className="text-sm font-semibold flex-1">
         {name ? `Ask ${name}` : 'Assistant'}
       </span>
       {!isEmpty && (
@@ -97,11 +115,11 @@ const ThreadHeader: FC<{ name?: string; onClear?: () => void }> = ({
           side="left"
           variant="ghost"
           size="icon"
-          className="text-muted-foreground hover:text-destructive size-7"
+          className="text-muted-foreground hover:text-destructive size-6"
           onClick={handleClear}
           aria-label="Clear chat"
         >
-          <Trash2Icon className="size-4" />
+          <Trash2Icon className="size-3.5" />
         </TooltipIconButton>
       )}
     </div>
@@ -134,11 +152,11 @@ const ThreadWelcome: FC<{ welcome?: WelcomeConfig }> = ({ welcome }) => {
   return (
     <div className="aui-thread-welcome-root mx-auto my-auto flex w-full max-w-(--thread-max-width) grow flex-col">
       <div className="aui-thread-welcome-center flex w-full grow flex-col items-center justify-start">
-        <div className="aui-thread-welcome-message flex size-full flex-col justify-center px-4">
-          <h1 className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in fill-mode-both text-2xl font-semibold duration-200">
+        <div className="aui-thread-welcome-message flex size-full flex-col justify-center px-3">
+          <h1 className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in fill-mode-both text-base font-semibold duration-200">
             {welcome?.name ? `Ask ${welcome.name}` : 'Hello there!'}
           </h1>
-          <p className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in fill-mode-both text-muted-foreground text-base delay-75 duration-200">
+          <p className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in fill-mode-both text-muted-foreground text-xs delay-75 duration-200">
             {welcome?.greeting ?? 'How can I help you today?'}
           </p>
         </div>
@@ -152,22 +170,19 @@ const ThreadSuggestions: FC<{ prompts?: string[] }> = ({ prompts }) => {
   const runtime = useThreadRuntime();
   if (!prompts?.length) return null;
   return (
-    <div className="aui-thread-welcome-suggestions grid w-auto gap-2 pb-4 @md:grid-cols-2">
-      {prompts.map((prompt) => (
-        <div
+    <div className="flex flex-wrap gap-1.5 pb-2 px-1">
+      {prompts.map((prompt, i) => (
+        <Button
           key={prompt}
-          className="aui-thread-welcome-suggestion-display fade-in slide-in-from-bottom-2 animate-in fill-mode-both duration-200 nth-[n+3]:hidden @md:nth-[n+3]:block"
+          variant="outline"
+          onClick={() => runtime.append(prompt)}
+          className={cn(
+            'fade-in slide-in-from-bottom-1 animate-in fill-mode-both h-auto rounded-full px-2.5 py-1 text-xs font-normal',
+          )}
+          style={{ animationDelay: `${i * 25}ms` }}
         >
-          <Button
-            variant="ghost"
-            onClick={() => runtime.append(prompt)}
-            className="aui-thread-welcome-suggestion bg-background hover:bg-muted h-auto w-full flex-wrap items-start justify-start gap-1 rounded-3xl border px-4 py-3 text-left text-sm transition-colors @md:flex-col"
-          >
-            <span className="aui-thread-welcome-suggestion-text-1 text-primary-600 font-medium">
-              {prompt}
-            </span>
-          </Button>
-        </div>
+          {prompt}
+        </Button>
       ))}
     </div>
   );
@@ -241,10 +256,10 @@ const MessageError: FC = () => {
 const AssistantMessage: FC = () => {
   return (
     <MessagePrimitive.Root
-      className="aui-assistant-message-root fade-in slide-in-from-bottom-1 animate-in relative mx-auto w-full max-w-(--thread-max-width) py-3 duration-150"
+      className="aui-assistant-message-root fade-in slide-in-from-bottom-1 animate-in relative mx-auto w-full max-w-(--thread-max-width) py-1.5 duration-150"
       data-role="assistant"
     >
-      <div className="aui-assistant-message-content text-foreground px-2 leading-relaxed wrap-break-word">
+      <div className="aui-assistant-message-content text-foreground px-2 text-sm leading-relaxed wrap-break-word">
         <MessagePrimitive.Parts>
           {({ part }) => {
             if (part.type === 'text') return <MarkdownText />;
@@ -315,13 +330,13 @@ const AssistantActionBar: FC = () => {
 const UserMessage: FC = () => {
   return (
     <MessagePrimitive.Root
-      className="aui-user-message-root fade-in slide-in-from-bottom-1 animate-in mx-auto grid w-full max-w-(--thread-max-width) auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] content-start gap-y-2 px-2 py-3 duration-150 [&:where(>*)]:col-start-2"
+      className="aui-user-message-root fade-in slide-in-from-bottom-1 animate-in mx-auto grid w-full max-w-(--thread-max-width) auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] content-start gap-y-1 px-2 py-1.5 duration-150 [&:where(>*)]:col-start-2"
       data-role="user"
     >
       <UserMessageAttachments />
 
       <div className="aui-user-message-content-wrapper relative col-start-2 min-w-0">
-        <div className="aui-user-message-content peer bg-muted text-foreground rounded-2xl px-4 py-2.5 wrap-break-word empty:hidden">
+          <div className="aui-user-message-content peer bg-muted text-foreground rounded-2xl px-3 py-2 text-sm wrap-break-word empty:hidden">
           <MessagePrimitive.Parts />
         </div>
         <div className="aui-user-action-bar-wrapper absolute top-1/2 left-0 -translate-x-full -translate-y-1/2 pr-2 peer-empty:hidden">
