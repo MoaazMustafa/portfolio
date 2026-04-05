@@ -19,7 +19,7 @@ import { cn } from '@/lib/utils';
 // import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet" // Should check if this exists
 
 interface DashboardNavProps extends React.HTMLAttributes<HTMLElement> {
-  items: {
+  items?: {
     href: string;
     title: string;
     icon: React.ComponentType<{ className?: string }>;
@@ -69,8 +69,13 @@ const sidebarNavItems = [
   },
 ];
 
-export function DashboardNav({ className, ...props }: DashboardNavProps) {
+export function DashboardNav({
+  className,
+  items,
+  ...props
+}: DashboardNavProps) {
   const pathname = usePathname();
+  const navItems = items ?? sidebarNavItems;
 
   return (
     <nav
@@ -80,7 +85,7 @@ export function DashboardNav({ className, ...props }: DashboardNavProps) {
       )}
       {...props}
     >
-      {sidebarNavItems.map((item) => (
+      {navItems.map((item) => (
         <Link
           key={item.href}
           href={item.href}

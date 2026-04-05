@@ -37,7 +37,6 @@ export function MobileNav() {
           <DashboardNav
             className="flex flex-col space-y-2 space-x-0"
             onClick={() => setOpen(false)}
-            items={[]}
           />
         </div>
       </SheetContent>
