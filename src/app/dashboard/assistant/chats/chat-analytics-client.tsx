@@ -209,7 +209,9 @@ export function ChatAnalyticsClient({
                                   {new Date(msg.createdAt).toLocaleTimeString()}
                                 </span>
                               </div>
-                              <p className="whitespace-pre-wrap">{msg.content}</p>
+                              <p className="whitespace-pre-wrap">
+                                {msg.content}
+                              </p>
                             </div>
                           ))}
                         </div>

@@ -82,6 +82,7 @@ npx prisma db push
 ```
 
 Tables created:
+
 - `assistant_config` — global assistant settings (enabled toggle, name, prompts)
 - `assistant_knowledge` — curated knowledge entries (bio, skills, FAQ, etc.)
 - `chat_sessions` — visitor conversation metadata
@@ -163,10 +164,10 @@ Dashboard (/dashboard/assistant)
 
 ## Troubleshooting
 
-| Problem | Fix |
-|---------|-----|
-| Widget doesn't appear | Check `/api/assistant/config` returns `enabled: true`. Check console for errors. |
-| "Failed to generate response" | Verify `AI_API_KEY` and `AI_BASE_URL` are set. Check the provider is reachable. |
-| Ollama not connecting | Ensure `ollama serve` is running. Check `OLLAMA_BASE_URL` env var. |
-| No messages in chat history | The API route persists messages — check database connection and Prisma logs. |
-| Dashboard shows "Admin access required" | Sign in with an account that has `ADMIN` role in the `users` table. |
+| Problem                                 | Fix                                                                              |
+| --------------------------------------- | -------------------------------------------------------------------------------- |
+| Widget doesn't appear                   | Check `/api/assistant/config` returns `enabled: true`. Check console for errors. |
+| "Failed to generate response"           | Verify `AI_API_KEY` and `AI_BASE_URL` are set. Check the provider is reachable.  |
+| Ollama not connecting                   | Ensure `ollama serve` is running. Check `OLLAMA_BASE_URL` env var.               |
+| No messages in chat history             | The API route persists messages — check database connection and Prisma logs.     |
+| Dashboard shows "Admin access required" | Sign in with an account that has `ADMIN` role in the `users` table.              |

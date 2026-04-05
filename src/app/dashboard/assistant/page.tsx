@@ -32,8 +32,8 @@ export default async function AssistantPage() {
       <div>
         <h2 className="text-2xl font-bold tracking-tight">Ask Moaaz</h2>
         <p className="text-muted-foreground">
-          Manage your AI twin — configure behavior, knowledge base, and
-          review analytics.
+          Manage your AI twin — configure behavior, knowledge base, and review
+          analytics.
         </p>
       </div>
       <AssistantSettingsClient

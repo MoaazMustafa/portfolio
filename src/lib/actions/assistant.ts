@@ -6,10 +6,10 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import {
-  assistantConfigSchema,
-  assistantKnowledgeSchema,
-  type AssistantConfigFormValues,
-  type AssistantKnowledgeFormValues,
+    assistantConfigSchema,
+    assistantKnowledgeSchema,
+    type AssistantConfigFormValues,
+    type AssistantKnowledgeFormValues,
 } from '@/lib/validations/assistant';
 
 // ── Helpers ──

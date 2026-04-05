@@ -2,14 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { AssistantKnowledge } from '@prisma/client';
-import {
-  Bot,
-  Loader2,
-  Plus,
-  Power,
-  PowerOff,
-  Trash2,
-} from 'lucide-react';
+import { Bot, Loader2, Plus, Power, PowerOff, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -66,7 +59,7 @@ const defaultConfig: AssistantConfigFormValues = {
     "Hey! I'm Moaaz's AI twin. Ask me anything about him — skills, projects, experience, or what he's working on.",
   systemPrompt: '',
   refusalMessage:
-    "I can only answer questions about Moaaz — his work, skills, projects, and experience. Try asking something about him!",
+    'I can only answer questions about Moaaz — his work, skills, projects, and experience. Try asking something about him!',
   suggestedPrompts: [
     'Who is Moaaz?',
     'What tech stack does he use?',
@@ -199,9 +192,7 @@ export function AssistantSettingsClient({
                           <SelectItem value="hosted">
                             Hosted (OpenRouter / Groq)
                           </SelectItem>
-                          <SelectItem value="local">
-                            Local (Ollama)
-                          </SelectItem>
+                          <SelectItem value="local">Local (Ollama)</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -258,8 +249,8 @@ export function AssistantSettingsClient({
                       />
                     </FormControl>
                     <FormDescription>
-                      If set, completely replaces the default system prompt.
-                      Use {'{KNOWLEDGE_BLOCK}'} to inject knowledge entries.
+                      If set, completely replaces the default system prompt. Use{' '}
+                      {'{KNOWLEDGE_BLOCK}'} to inject knowledge entries.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -279,9 +270,7 @@ export function AssistantSettingsClient({
                         value={field.value.join('\n')}
                         onChange={(e) =>
                           field.onChange(
-                            e.target.value
-                              .split('\n')
-                              .filter((s) => s.trim()),
+                            e.target.value.split('\n').filter((s) => s.trim()),
                           )
                         }
                       />
@@ -326,7 +315,8 @@ export function AssistantSettingsClient({
                 initialValues={
                   editingEntry
                     ? {
-                        category: editingEntry.category as AssistantKnowledgeFormValues['category'],
+                        category:
+                          editingEntry.category as AssistantKnowledgeFormValues['category'],
                         title: editingEntry.title,
                         content: editingEntry.content,
                         priority: editingEntry.priority,
@@ -355,8 +345,8 @@ export function AssistantSettingsClient({
 
           {knowledge.length === 0 ? (
             <p className="text-muted-foreground py-8 text-center text-sm">
-              No knowledge entries yet. The assistant will use built-in
-              defaults until you add entries here.
+              No knowledge entries yet. The assistant will use built-in defaults
+              until you add entries here.
             </p>
           ) : (
             <div className="space-y-3">
@@ -438,7 +428,11 @@ function KnowledgeEntryForm({
 }) {
   const [saving, setSaving] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const form = useForm<AssistantKnowledgeFormValues, any, AssistantKnowledgeFormValues>({
+  const form = useForm<
+    AssistantKnowledgeFormValues,
+    any,
+    AssistantKnowledgeFormValues
+  >({
     resolver: zodResolver(assistantKnowledgeSchema),
     defaultValues: initialValues ?? {
       category: 'custom',
@@ -489,13 +483,18 @@ function KnowledgeEntryForm({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {['bio', 'skills', 'projects', 'experience', 'faq', 'custom'].map(
-                      (c) => (
-                        <SelectItem key={c} value={c}>
-                          {c.charAt(0).toUpperCase() + c.slice(1)}
-                        </SelectItem>
-                      ),
-                    )}
+                    {[
+                      'bio',
+                      'skills',
+                      'projects',
+                      'experience',
+                      'faq',
+                      'custom',
+                    ].map((c) => (
+                      <SelectItem key={c} value={c}>
+                        {c.charAt(0).toUpperCase() + c.slice(1)}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />

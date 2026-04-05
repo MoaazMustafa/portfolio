@@ -25,17 +25,17 @@ The Ask Moaaz assistant has three layers:
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| [Knowledge defaults](./references/knowledge-files.md) | `src/lib/assistant/knowledge.ts` — fallback biography, skills, experience |
-| `src/lib/assistant/config.ts` | Loads config from DB, builds system prompt with knowledge block |
-| `src/app/api/chat/route.ts` | Streaming chat endpoint, persists sessions and messages |
-| `src/app/api/assistant/config/route.ts` | Public config endpoint for the widget enabled state |
-| `src/lib/actions/assistant.ts` | Server actions for CRUD on config, knowledge, and chat analytics |
-| `src/lib/validations/assistant.ts` | Zod schemas for config and knowledge forms |
-| `src/app/dashboard/assistant/page.tsx` | Dashboard settings and knowledge management |
-| `src/app/dashboard/assistant/chats/page.tsx` | Chat analytics and transcript review |
-| `prisma/schema.prisma` | Models: `AssistantConfig`, `AssistantKnowledge`, `ChatSession`, `ChatMessage` |
+| File                                                  | Purpose                                                                       |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [Knowledge defaults](./references/knowledge-files.md) | `src/lib/assistant/knowledge.ts` — fallback biography, skills, experience     |
+| `src/lib/assistant/config.ts`                         | Loads config from DB, builds system prompt with knowledge block               |
+| `src/app/api/chat/route.ts`                           | Streaming chat endpoint, persists sessions and messages                       |
+| `src/app/api/assistant/config/route.ts`               | Public config endpoint for the widget enabled state                           |
+| `src/lib/actions/assistant.ts`                        | Server actions for CRUD on config, knowledge, and chat analytics              |
+| `src/lib/validations/assistant.ts`                    | Zod schemas for config and knowledge forms                                    |
+| `src/app/dashboard/assistant/page.tsx`                | Dashboard settings and knowledge management                                   |
+| `src/app/dashboard/assistant/chats/page.tsx`          | Chat analytics and transcript review                                          |
+| `prisma/schema.prisma`                                | Models: `AssistantConfig`, `AssistantKnowledge`, `ChatSession`, `ChatMessage` |
 
 ## Procedures
 
