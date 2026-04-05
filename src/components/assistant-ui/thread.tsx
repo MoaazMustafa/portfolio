@@ -39,7 +39,10 @@ interface WelcomeConfig {
   prompts?: string[];
 }
 
-export const Thread: FC<{ welcome?: WelcomeConfig; onClear?: () => void }> = ({ welcome, onClear }) => {
+export const Thread: FC<{ welcome?: WelcomeConfig; onClear?: () => void }> = ({
+  welcome,
+  onClear,
+}) => {
   return (
     <ThreadPrimitive.Root
       className="aui-root aui-thread-root bg-background @container flex h-full flex-col"
@@ -71,7 +74,10 @@ export const Thread: FC<{ welcome?: WelcomeConfig; onClear?: () => void }> = ({ 
   );
 };
 
-const ThreadHeader: FC<{ name?: string; onClear?: () => void }> = ({ name, onClear }) => {
+const ThreadHeader: FC<{ name?: string; onClear?: () => void }> = ({
+  name,
+  onClear,
+}) => {
   const runtime = useThreadRuntime();
   const isEmpty = useAuiState((s) => s.thread.isEmpty);
 

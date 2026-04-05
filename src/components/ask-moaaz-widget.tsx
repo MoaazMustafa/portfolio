@@ -108,33 +108,30 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
   // 1. Attaches deviceId + sessionId to every request body
   // 2. Reads x-chat-session-id from the response and persists it
   // 3. After the stream completes, saves all messages to localStorage
-  const customFetch: typeof fetch = useCallback(
-    async (input, init) => {
-      // Patch the request body with our session metadata
-      const originalBody = init?.body ? JSON.parse(init.body as string) : {};
-      const patchedBody = {
-        ...originalBody,
-        deviceId: deviceIdRef.current,
-        sessionId: sessionIdRef.current,
-        pagePath: window.location.pathname,
-      };
-      const patchedInit: RequestInit = {
-        ...(init ?? {}),
-        body: JSON.stringify(patchedBody),
-      };
+  const customFetch: typeof fetch = useCallback(async (input, init) => {
+    // Patch the request body with our session metadata
+    const originalBody = init?.body ? JSON.parse(init.body as string) : {};
+    const patchedBody = {
+      ...originalBody,
+      deviceId: deviceIdRef.current,
+      sessionId: sessionIdRef.current,
+      pagePath: window.location.pathname,
+    };
+    const patchedInit: RequestInit = {
+      ...(init ?? {}),
+      body: JSON.stringify(patchedBody),
+    };
 
-      const response = await fetch(input, patchedInit);
+    const response = await fetch(input, patchedInit);
 
-      // Read the session ID the server assigned (or confirmed)
-      const newSessionId = response.headers.get('x-chat-session-id');
-      if (newSessionId) {
-        sessionIdRef.current = newSessionId;
-      }
+    // Read the session ID the server assigned (or confirmed)
+    const newSessionId = response.headers.get('x-chat-session-id');
+    if (newSessionId) {
+      sessionIdRef.current = newSessionId;
+    }
 
-      return response;
-    },
-    [],
-  );
+    return response;
+  }, []);
 
   const runtime = useChatRuntime({
     messages: initialMessages,
@@ -160,7 +157,9 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
           id: m.id,
           role: m.role as 'user' | 'assistant',
           parts: m.content
-            .filter((p): p is { type: 'text'; text: string } => p.type === 'text')
+            .filter(
+              (p): p is { type: 'text'; text: string } => p.type === 'text',
+            )
             .map((p) => ({ type: 'text' as const, text: p.text })),
         }));
 
@@ -249,4 +248,3 @@ const ModalButton = forwardRef<HTMLButtonElement, ModalButtonProps>(
 );
 
 ModalButton.displayName = 'ModalButton';
-

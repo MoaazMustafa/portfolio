@@ -129,9 +129,10 @@ export function ChatAnalyticsClient({
                       <div className="flex flex-col gap-1">
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="text-sm font-medium">
-                            {session.messages.length} message{session.messages.length !== 1 ? 's' : ''}
+                            {session.messages.length} message
+                            {session.messages.length !== 1 ? 's' : ''}
                           </span>
-                          <span className="text-muted-foreground text-xs font-mono">
+                          <span className="text-muted-foreground font-mono text-xs">
                             {visitorLabel}
                           </span>
                           {session.pagePath && (
@@ -152,9 +153,14 @@ export function ChatAnalyticsClient({
                         </div>
                         <span className="text-muted-foreground text-xs">
                           Started {new Date(session.createdAt).toLocaleString()}
-                          {session.updatedAt && session.updatedAt > session.createdAt && (
-                            <> · Last message {new Date(session.updatedAt).toLocaleString()}</>
-                          )}
+                          {session.updatedAt &&
+                            session.updatedAt > session.createdAt && (
+                              <>
+                                {' '}
+                                · Last message{' '}
+                                {new Date(session.updatedAt).toLocaleString()}
+                              </>
+                            )}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
