@@ -27,9 +27,9 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex h-screen overflow-hidden flex-col lg:flex-row">
+    <div className="flex h-screen flex-col overflow-hidden lg:flex-row">
       {/* Sidebar */}
-      <aside className="bg-muted/40 hidden h-full w-full border-r lg:flex lg:w-64 flex-col">
+      <aside className="bg-muted/40 hidden h-full w-full flex-col border-r lg:flex lg:w-64">
         <div className="flex h-14 items-center border-b px-4 lg:h-15 lg:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
             <span className="">Moaaz Mustafa</span>
@@ -38,7 +38,7 @@ export default async function DashboardLayout({
         <div className="flex-1">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
             <div className="mt-4">
-              <DashboardNav />
+              <DashboardNav items={[]} />
             </div>
           </nav>
         </div>
