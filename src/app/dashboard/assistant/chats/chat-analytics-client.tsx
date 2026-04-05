@@ -58,9 +58,12 @@ export function ChatAnalyticsClient({
   initialSessions,
   initialPagination,
 }: ChatAnalyticsClientProps) {
-  const [sessions, setSessions] = useState<SessionWithMessages[]>(initialSessions);
+  const [sessions, setSessions] =
+    useState<SessionWithMessages[]>(initialSessions);
   const [pagination, setPagination] = useState(initialPagination);
-  const [selected, setSelected] = useState<string | null>(initialSessions[0]?.id ?? null);
+  const [selected, setSelected] = useState<string | null>(
+    initialSessions[0]?.id ?? null,
+  );
   const [rightView, setRightView] = useState<RightView>('chat');
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState('');
@@ -92,14 +95,20 @@ export function ChatAnalyticsClient({
       return next;
     });
     setChecked(new Set());
-    toast.success(`Deleted ${checked.size} session${checked.size > 1 ? 's' : ''}`);
+    toast.success(
+      `Deleted ${checked.size} session${checked.size > 1 ? 's' : ''}`,
+    );
   }
 
   function toggleCheck(id: string, e: React.MouseEvent) {
     e.stopPropagation();
     setChecked((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) { next.delete(id); } else { next.add(id); }
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
       return next;
     });
   }
@@ -118,24 +127,39 @@ export function ChatAnalyticsClient({
     );
   });
 
-  const activeSession = filtered.find((s) => s.id === selected) ?? filtered[0] ?? null;
+  const activeSession =
+    filtered.find((s) => s.id === selected) ?? filtered[0] ?? null;
 
   return (
     <div className="space-y-4">
       {/* Summary row */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatCard label="Sessions" value={initialSummary.totalSessions} icon={<MessageCircle className="size-4" />} />
-        <StatCard label="Messages" value={initialSummary.totalMessages} icon={<TrendingUp className="size-4" />} />
-        <StatCard label="Refusals" value={initialSummary.totalRefusals} icon={<ShieldAlert className="size-4" />} />
-        <StatCard label="Last 7 Days" value={initialSummary.recentSessions} icon={<AlertTriangle className="size-4" />} />
+        <StatCard
+          label="Sessions"
+          value={initialSummary.totalSessions}
+          icon={<MessageCircle className="size-4" />}
+        />
+        <StatCard
+          label="Messages"
+          value={initialSummary.totalMessages}
+          icon={<TrendingUp className="size-4" />}
+        />
+        <StatCard
+          label="Refusals"
+          value={initialSummary.totalRefusals}
+          icon={<ShieldAlert className="size-4" />}
+        />
+        <StatCard
+          label="Last 7 Days"
+          value={initialSummary.recentSessions}
+          icon={<AlertTriangle className="size-4" />}
+        />
       </div>
 
       {/* WhatsApp-style split layout */}
       <div className="border-border flex h-[calc(100vh-18rem)] overflow-hidden rounded-xl border">
-
         {/* ── Left panel ── */}
         <div className="border-border flex w-72 shrink-0 flex-col border-r">
-
           {/* Search + bulk-delete toolbar */}
           <div className="border-border space-y-1.5 border-b p-2">
             <div className="relative">
@@ -148,7 +172,7 @@ export function ChatAnalyticsClient({
               />
             </div>
             {checked.size > 0 && (
-              <div className="flex items-center justify-between rounded-md bg-destructive/10 px-2 py-1">
+              <div className="bg-destructive/10 flex items-center justify-between rounded-md px-2 py-1">
                 <span className="text-destructive text-[11px] font-medium">
                   {checked.size} selected
                 </span>
@@ -168,11 +192,14 @@ export function ChatAnalyticsClient({
           {/* Session rows */}
           <div className="flex-1 overflow-y-auto">
             {filtered.length === 0 ? (
-              <p className="text-muted-foreground p-4 text-center text-xs">No conversations found.</p>
+              <p className="text-muted-foreground p-4 text-center text-xs">
+                No conversations found.
+              </p>
             ) : (
               filtered.map((session) => {
                 const preview =
-                  session.messages.find((m) => m.role === 'user')?.content ?? '(empty)';
+                  session.messages.find((m) => m.role === 'user')?.content ??
+                  '(empty)';
                 const hasRefusal = session.messages.some((m) => m.isRefusal);
                 const isActive = session.id === activeSession?.id;
                 const isChecked = checked.has(session.id);
@@ -214,18 +241,26 @@ export function ChatAnalyticsClient({
                             : 'Unknown'}
                         </span>
                         {hasRefusal && (
-                          <Badge variant="destructive" className="h-4 px-1 text-[9px]">
+                          <Badge
+                            variant="destructive"
+                            className="h-4 px-1 text-[9px]"
+                          >
                             !
                           </Badge>
                         )}
                       </div>
-                      <p className="text-muted-foreground truncate text-[11px]">{preview}</p>
+                      <p className="text-muted-foreground truncate text-[11px]">
+                        {preview}
+                      </p>
                       <p className="text-muted-foreground/60 mt-0.5 text-[10px]">
                         {session.browserName ? `${session.browserName} · ` : ''}
-                        {new Date(session.createdAt).toLocaleDateString(undefined, {
-                          month: 'short',
-                          day: 'numeric',
-                        })}
+                        {new Date(session.createdAt).toLocaleDateString(
+                          undefined,
+                          {
+                            month: 'short',
+                            day: 'numeric',
+                          },
+                        )}
                         {' · '}
                         {session.messages.length} msg
                         {session.messages.length !== 1 ? 's' : ''}
@@ -280,7 +315,9 @@ export function ChatAnalyticsClient({
                       : 'Unknown device'}
                   </p>
                   <p className="text-muted-foreground truncate text-xs">
-                    {[activeSession.city, activeSession.country].filter(Boolean).join(', ') ||
+                    {[activeSession.city, activeSession.country]
+                      .filter(Boolean)
+                      .join(', ') ||
                       activeSession.pagePath ||
                       new Date(activeSession.createdAt).toLocaleString()}
                   </p>
@@ -291,7 +328,9 @@ export function ChatAnalyticsClient({
                     variant={rightView === 'info' ? 'secondary' : 'ghost'}
                     className="h-7 w-7 p-0"
                     title="Visitor info"
-                    onClick={() => setRightView(rightView === 'info' ? 'chat' : 'info')}
+                    onClick={() =>
+                      setRightView(rightView === 'info' ? 'chat' : 'info')
+                    }
                   >
                     <Info className="size-4" />
                   </Button>
@@ -333,12 +372,17 @@ function ChatPanel({ session }: { session: SessionWithMessages }) {
   return (
     <div className="flex-1 space-y-3 overflow-y-auto p-4">
       {session.messages.length === 0 ? (
-        <p className="text-muted-foreground py-12 text-center text-sm">No messages.</p>
+        <p className="text-muted-foreground py-12 text-center text-sm">
+          No messages.
+        </p>
       ) : (
         session.messages.map((msg) => (
           <div
             key={msg.id}
-            className={cn('flex', msg.role === 'user' ? 'justify-end' : 'justify-start')}
+            className={cn(
+              'flex',
+              msg.role === 'user' ? 'justify-end' : 'justify-start',
+            )}
           >
             <div
               className={cn(
@@ -349,7 +393,9 @@ function ChatPanel({ session }: { session: SessionWithMessages }) {
                 msg.isRefusal && 'border-destructive/60 border',
               )}
             >
-              <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+              <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                {msg.content}
+              </p>
               <div
                 className={cn(
                   'mt-1 flex items-center gap-1.5',
@@ -379,30 +425,53 @@ function ChatPanel({ session }: { session: SessionWithMessages }) {
 // ── Info panel ─────────────────────────────────────────────────────────────────
 
 function InfoPanel({ session }: { session: SessionWithMessages }) {
-  const rows: { label: string; value: string | null | undefined; icon?: React.ReactNode }[] = [
-    { label: 'Device ID',        value: session.visitorId,    icon: <User className="size-3.5" /> },
-    { label: 'IP Address',       value: session.ipAddress,    icon: <Globe className="size-3.5" /> },
-    { label: 'Country',          value: session.country },
-    { label: 'Region',           value: session.region },
-    { label: 'City',             value: session.city },
+  const rows: {
+    label: string;
+    value: string | null | undefined;
+    icon?: React.ReactNode;
+  }[] = [
+    {
+      label: 'Device ID',
+      value: session.visitorId,
+      icon: <User className="size-3.5" />,
+    },
+    {
+      label: 'IP Address',
+      value: session.ipAddress,
+      icon: <Globe className="size-3.5" />,
+    },
+    { label: 'Country', value: session.country },
+    { label: 'Region', value: session.region },
+    { label: 'City', value: session.city },
     {
       label: 'Browser',
-      value: [session.browserName, session.browserVersion].filter(Boolean).join(' ') || null,
+      value:
+        [session.browserName, session.browserVersion]
+          .filter(Boolean)
+          .join(' ') || null,
     },
     {
       label: 'OS',
-      value: [session.osName, session.osVersion].filter(Boolean).join(' ') || null,
+      value:
+        [session.osName, session.osVersion].filter(Boolean).join(' ') || null,
     },
-    { label: 'Device Type',      value: session.deviceType },
-    { label: 'Page',             value: session.pagePath },
-    { label: 'Referrer',         value: session.referrer },
+    { label: 'Device Type', value: session.deviceType },
+    { label: 'Page', value: session.pagePath },
+    { label: 'Referrer', value: session.referrer },
     {
       label: 'Provider / Model',
-      value: [session.provider, session.model].filter(Boolean).join(' · ') || null,
+      value:
+        [session.provider, session.model].filter(Boolean).join(' · ') || null,
     },
-    { label: 'Session Start',    value: new Date(session.createdAt).toLocaleString() },
-    { label: 'Last Activity',    value: new Date(session.updatedAt).toLocaleString() },
-    { label: 'Messages',         value: String(session.messages.length) },
+    {
+      label: 'Session Start',
+      value: new Date(session.createdAt).toLocaleString(),
+    },
+    {
+      label: 'Last Activity',
+      value: new Date(session.updatedAt).toLocaleString(),
+    },
+    { label: 'Messages', value: String(session.messages.length) },
     {
       label: 'Refusals',
       value: String(session.messages.filter((m) => m.isRefusal).length),
@@ -414,21 +483,28 @@ function InfoPanel({ session }: { session: SessionWithMessages }) {
       <div className="rounded-xl border">
         {session.userAgent && (
           <div className="border-b px-4 py-3">
-            <p className="text-muted-foreground mb-1 text-[10px] font-semibold uppercase tracking-wider">
+            <p className="text-muted-foreground mb-1 text-[10px] font-semibold tracking-wider uppercase">
               User Agent
             </p>
-            <p className="text-muted-foreground break-all text-xs">{session.userAgent}</p>
+            <p className="text-muted-foreground text-xs break-all">
+              {session.userAgent}
+            </p>
           </div>
         )}
         <dl className="divide-y">
           {rows.map(({ label, value, icon }) =>
             value ? (
-              <div key={label} className="flex items-center justify-between gap-4 px-4 py-2.5">
+              <div
+                key={label}
+                className="flex items-center justify-between gap-4 px-4 py-2.5"
+              >
                 <dt className="text-muted-foreground flex shrink-0 items-center gap-1.5 text-xs">
                   {icon}
                   {label}
                 </dt>
-                <dd className="truncate text-right text-xs font-medium">{value}</dd>
+                <dd className="truncate text-right text-xs font-medium">
+                  {value}
+                </dd>
               </div>
             ) : null,
           )}
@@ -440,10 +516,18 @@ function InfoPanel({ session }: { session: SessionWithMessages }) {
 
 // ── Device icon ────────────────────────────────────────────────────────────────
 
-function DeviceIcon({ type, active }: { type: string | null | undefined; active: boolean }) {
+function DeviceIcon({
+  type,
+  active,
+}: {
+  type: string | null | undefined;
+  active: boolean;
+}) {
   const cls = cn(
     'flex size-8 shrink-0 items-center justify-center rounded-full',
-    active ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground',
+    active
+      ? 'bg-primary text-primary-foreground'
+      : 'bg-muted text-muted-foreground',
   );
   return (
     <div className={cls}>
@@ -460,10 +544,18 @@ function DeviceIcon({ type, active }: { type: string | null | undefined; active:
 
 // ── Stat Card ──────────────────────────────────────────────────────────────────
 
-function StatCard({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
+function StatCard({
+  label,
+  value,
+  icon,
+}: {
+  label: string;
+  value: number;
+  icon: React.ReactNode;
+}) {
   return (
     <Card>
-      <CardContent className="flex items-center gap-3 pb-4 pt-5">
+      <CardContent className="flex items-center gap-3 pt-5 pb-4">
         <div className="bg-primary/10 text-primary rounded-md p-2">{icon}</div>
         <div>
           <p className="text-xl font-bold">{value}</p>
