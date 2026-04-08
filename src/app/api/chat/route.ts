@@ -2,6 +2,7 @@ import { createOpenAI } from '@ai-sdk/openai';
 import type { TextUIPart, UIMessage } from 'ai';
 // eslint-disable-next-line no-duplicate-imports
 import { convertToModelMessages, streamText } from 'ai';
+import { toast } from 'sonner';
 
 import { getAssistantConfig } from '@/lib/assistant';
 import { prisma } from '@/lib/prisma';
@@ -166,6 +167,7 @@ export async function POST(req: Request) {
       const country = req.headers.get('x-vercel-ip-country') ?? undefined;
       const region = req.headers.get('x-vercel-ip-country-region') ?? undefined;
       const city = req.headers.get('x-vercel-ip-city')
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         ? decodeURIComponent(req.headers.get('x-vercel-ip-city')!)
         : undefined;
 
@@ -248,7 +250,7 @@ export async function POST(req: Request) {
 
     return response;
   } catch (error) {
-    console.error('[Ask Moaaz] Chat error:', error);
+    toast.error(`Failed to generate response. Please try again.${error instanceof Error ? ` (${error.message})` : ''}`);
     return Response.json(
       { error: 'Failed to generate response' },
       { status: 500 },
