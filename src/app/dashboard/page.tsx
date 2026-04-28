@@ -1,9 +1,12 @@
 import {
   ArrowRight,
+  CalendarDays,
   CheckCircle2,
   Clock3,
   FileText,
   FolderOpen,
+  Images,
+  Inbox,
   Layers,
   Tag,
 } from 'lucide-react';
@@ -64,6 +67,9 @@ export default async function DashboardPage() {
     completedProjects,
     publishedPosts,
     draftPosts,
+    galleryCount,
+    unreadMessages,
+    upcomingMeetings,
     recentProjects,
     recentPosts,
   ] = await Promise.all([
@@ -77,6 +83,11 @@ export default async function DashboardPage() {
     prisma.project.count({ where: { status: 'Completed' } }),
     prisma.post.count({ where: { published: true } }),
     prisma.post.count({ where: { published: false } }),
+    prisma.galleryImage.count(),
+    prisma.contactSubmission.count({ where: { isRead: false } }),
+    prisma.meetingBooking.count({
+      where: { slot: { date: { gte: new Date() } } },
+    }),
     prisma.project.findMany({
       select: {
         id: true,
@@ -175,6 +186,39 @@ export default async function DashboardPage() {
             <p className="text-muted-foreground text-xs">
               {visibleProjects} visible projects live
             </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-3">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Gallery</CardTitle>
+            <Images className="text-muted-foreground h-4 w-4" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{galleryCount}</div>
+            <p className="text-muted-foreground text-xs">images uploaded</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Messages</CardTitle>
+            <Inbox className="text-muted-foreground h-4 w-4" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{unreadMessages}</div>
+            <p className="text-muted-foreground text-xs">unread messages</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Meetings</CardTitle>
+            <CalendarDays className="text-muted-foreground h-4 w-4" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{upcomingMeetings}</div>
+            <p className="text-muted-foreground text-xs">upcoming bookings</p>
           </CardContent>
         </Card>
       </div>

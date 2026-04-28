@@ -1,6 +1,10 @@
 "use client";
 
-import { memo, useCallback, useRef, useState } from "react";
+import {
+  useScrollLock,
+  type ToolCallMessagePartStatus,
+  type ToolCallMessagePartComponent,
+} from "@assistant-ui/react";
 import {
   AlertCircleIcon,
   CheckIcon,
@@ -8,11 +12,8 @@ import {
   LoaderIcon,
   XCircleIcon,
 } from "lucide-react";
-import {
-  useScrollLock,
-  type ToolCallMessagePartStatus,
-  type ToolCallMessagePartComponent,
-} from "@assistant-ui/react";
+import { memo, useCallback, useRef, useState } from "react";
+
 import {
   Collapsible,
   CollapsibleContent,

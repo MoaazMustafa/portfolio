@@ -1,269 +1,298 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-// User & Auth (Prepared for future NextAuth Adapter) //
 model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? @db.Text
-    access_token      String? @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? @db.Text
-    session_state     String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@unique([provider, providerAccountId])
-    @@map("accounts")
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@map("sessions")
+  @@map("sessions")
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    role          UserRole  @default(USER)
+  id            String       @id @default(cuid())
+  name          String?
+  email         String?      @unique
+  emailVerified DateTime?
+  image         String?
+  role          UserRole     @default(USER)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  bio           String?
+  githubUrl     String?
+  linkedinUrl   String?
+  title         String?
+  websiteUrl    String?
+  accounts      Account[]
+  invitations   Invitation[]
+  sessions      Session[]
+  projects      Project[]    @relation("ProjectToUser")
 
-    // User Profile
-    title       String?
-    bio         String? @db.Text
-    linkedinUrl String?
-    githubUrl   String?
-    websiteUrl  String?
-
-    accounts    Account[]
-    sessions    Session[]
-    invitations Invitation[]
-
-    // Relations
-    projects Project[] // Many-to-many as collaborators
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@index([createdAt])
-    @@map("users")
+  @@index([createdAt])
+  @@map("users")
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
-    @@map("verification_tokens")
+  @@unique([identifier, token])
+  @@map("verification_tokens")
 }
 
 model Invitation {
-    id      String   @id @default(cuid())
-    email   String
-    token   String   @unique
-    expires DateTime
-    user    User?    @relation(fields: [userId], references: [id])
-    userId  String?
-    role    UserRole @default(USER)
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expires   DateTime
+  userId    String?
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [userId], references: [id])
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@map("invitations")
+  @@map("invitations")
 }
-
-enum UserRole {
-    ADMIN
-    USER
-}
-
-// Content Models //
 
 model Project {
-    id          String  @id @default(cuid())
-    title       String
-    slug        String  @unique // URL-friendly name
-    description String  @db.Text
-    content     String? @db.Text // Extended Markdown/Rich Text content
+  id            String        @id @default(cuid())
+  title         String
+  slug          String        @unique
+  description   String
+  content       String?
+  coverImage    String?
+  images        String[]
+  liveUrl       String?
+  githubUrl     String?
+  startDate     DateTime
+  endDate       DateTime?
+  isFeatured    Boolean       @default(false)
+  isVisible     Boolean       @default(true)
+  status        ProjectStatus @default(Planned)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  categories    Category[]    @relation("CategoryToProject")
+  technologies  Technology[]  @relation("ProjectToTechnology")
+  collaborators User[]        @relation("ProjectToUser")
 
-    coverImage String?
-    images     String[] // Simple array of URLs often suffices, or use relation
-
-    liveUrl   String?
-    githubUrl String?
-
-    startDate DateTime
-    endDate   DateTime?
-
-    isFeatured Boolean @default(false)
-    isVisible  Boolean @default(true)
-
-    status ProjectStatus @default(Planned)
-
-    // Relations
-    technologies  Technology[] // Many-to-many
-    categories    Category[] // Many-to-many
-    collaborators User[] // Many-to-many
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@index([createdAt])
-    @@index([updatedAt])
-    @@map("projects")
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@map("projects")
 }
 
 model Technology {
-    id       String  @id @default(cuid())
-    name     String  @unique // React, Node.js
-    slug     String  @unique
-    category String  @default("Other") // Frontend, Backend, Database, Tools
-    icon     String? // Iconify name or URL
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  icon      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  category  String    @default("Other")
+  projects  Project[] @relation("ProjectToTechnology")
 
-    projects Project[]
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@map("technologies")
+  @@map("technologies")
 }
 
 model Category {
-    id   String @id @default(cuid())
-    name String @unique // Web App, Mobile App
-    slug String @unique
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  projects  Project[] @relation("CategoryToProject")
 
-    projects Project[]
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@map("categories")
+  @@map("categories")
 }
 
-enum ProjectStatus {
-    Planned
-    Under_Development
-    Completed
-    On_Hold
-    Cancelled
-}
-
-// If expanding to a blog later
 model Post {
-    id        String  @id @default(cuid())
-    title     String
-    slug      String  @unique
-    content   String  @db.Text
-    published Boolean @default(false)
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  content   String
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@index([createdAt])
-    @@map("posts")
+  @@index([createdAt])
+  @@map("posts")
 }
-
-// ── Ask Moaaz AI Assistant ──
 
 model AssistantConfig {
-    id               String   @id @default("default")
-    enabled          Boolean  @default(true)
-    name             String   @default("Moaaz")
-    greeting         String   @default("Hey! I'm Moaaz's AI twin. Ask me anything about him — skills, projects, experience, or what he's working on.") @db.Text
-    systemPrompt     String?  @db.Text // Override the file-based default system prompt
-    refusalMessage   String   @default("I can only answer questions about Moaaz — his work, skills, projects, and experience. Try asking something about him!") @db.Text
-    suggestedPrompts String[] // e.g. ["Who is Moaaz?", "What tech stack does he use?"]
-    providerMode     String   @default("hosted") // "hosted" | "local"
+  id               String   @id @default("default")
+  enabled          Boolean  @default(true)
+  name             String   @default("Moaaz")
+  greeting         String   @default("Hey! I'm Moaaz's AI twin. Ask me anything about him — skills, projects, experience, or what he's working on.")
+  systemPrompt     String?
+  refusalMessage   String   @default("I can only answer questions about Moaaz — his work, skills, projects, and experience. Try asking something about him!")
+  suggestedPrompts String[]
+  providerMode     String   @default("hosted")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@map("assistant_config")
+  @@map("assistant_config")
 }
 
 model AssistantKnowledge {
-    id       String  @id @default(cuid())
-    category String // "bio", "skills", "projects", "experience", "faq", "custom"
-    title    String
-    content  String  @db.Text
-    priority Int     @default(0) // Higher = included first in context
-    enabled  Boolean @default(true)
+  id        String   @id @default(cuid())
+  category  String
+  title     String
+  content   String
+  priority  Int      @default(0)
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@index([category])
-    @@index([enabled, priority])
-    @@map("assistant_knowledge")
+  @@index([category])
+  @@index([enabled, priority])
+  @@map("assistant_knowledge")
 }
 
 model ChatSession {
-    id        String  @id @default(cuid())
-    visitorId String? // Anonymous fingerprint or null
-    pagePath  String? // Page the visitor was on when they started
-    userAgent String? @db.Text
-    provider  String? // "openrouter", "groq", "ollama"
-    model     String? // Model identifier used
+  id             String        @id @default(cuid())
+  visitorId      String?
+  pagePath       String?
+  userAgent      String?
+  provider       String?
+  model          String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  browserName    String?
+  browserVersion String?
+  city           String?
+  country        String?
+  deviceType     String?
+  ipAddress      String?
+  osName         String?
+  osVersion      String?
+  referrer       String?
+  region         String?
+  messages       ChatMessage[]
 
-    // Visitor identity metadata
-    ipAddress      String?
-    country        String?
-    region         String?
-    city           String?
-    browserName    String?
-    browserVersion String?
-    osName         String?
-    osVersion      String?
-    deviceType     String? // "desktop" | "mobile" | "tablet"
-    referrer       String? @db.Text
-
-    messages ChatMessage[]
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@index([createdAt])
-    @@index([visitorId])
-    @@map("chat_sessions")
+  @@index([createdAt])
+  @@index([visitorId])
+  @@map("chat_sessions")
 }
 
 model ChatMessage {
-    id        String  @id @default(cuid())
-    sessionId String
-    role      String // "user" | "assistant"
-    content   String  @db.Text
-    isRefusal Boolean @default(false) // Was this an off-topic refusal?
-    topic     String? // Derived tag: "bio", "skills", "projects", etc.
+  id        String      @id @default(cuid())
+  sessionId String
+  role      String
+  content   String
+  isRefusal Boolean     @default(false)
+  topic     String?
+  createdAt DateTime    @default(now())
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
-    session ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  @@index([sessionId])
+  @@index([createdAt])
+  @@index([isRefusal])
+  @@map("chat_messages")
+}
 
-    createdAt DateTime @default(now())
+model GalleryImage {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  alt         String
+  url         String
+  width       Int?
+  height      Int?
+  category    String   @default("general")
+  order       Int      @default(0)
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-    @@index([sessionId])
-    @@index([createdAt])
-    @@index([isRefusal])
-    @@map("chat_messages")
+  @@index([isVisible, order])
+  @@index([category])
+  @@map("gallery_images")
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("contact_submissions")
+}
+
+model MeetingSlot {
+  id        String          @id @default(cuid())
+  date      DateTime
+  startTime String
+  endTime   String
+  timezone  String          @default("Asia/Karachi")
+  isBooked  Boolean         @default(false)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  booking   MeetingBooking?
+
+  @@unique([date, startTime])
+  @@index([date, isBooked])
+  @@map("meeting_slots")
+}
+
+model MeetingBooking {
+  id        String      @id @default(cuid())
+  slotId    String      @unique
+  name      String
+  email     String
+  company   String?
+  message   String?
+  timezone  String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  slot      MeetingSlot @relation(fields: [slotId], references: [id], onDelete: Cascade)
+
+  @@index([email])
+  @@index([createdAt])
+  @@map("meeting_bookings")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum ProjectStatus {
+  Planned
+  Under_Development
+  Completed
+  On_Hold
+  Cancelled
 }

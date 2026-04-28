@@ -335,52 +335,54 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
   return (
     <AssistantRuntimeProvider runtime={runtime}>
       {/* ── Floating launcher button ─────────────────────────────────────── */}
-      <button
-        style={{
-          position: 'fixed',
-          left: btnPos.x,
-          top: btnPos.y,
-          width: BTN_SIZE,
-          height: BTN_SIZE,
-          zIndex: 51,
-          touchAction: 'none',
-        }}
-        className={cn(
-          'relative flex items-center justify-center rounded-full',
-          'bg-primary text-primary-foreground shadow-lg',
-          'cursor-grab select-none active:cursor-grabbing',
-          'transition-shadow hover:shadow-xl',
-        )}
-        onPointerDown={handleBtnPointerDown}
-        onPointerMove={handleBtnPointerMove}
-        onPointerUp={handleBtnPointerUp}
-        aria-label={open ? 'Close chat' : 'Ask Moaaz'}
-      >
-        {/* Pulse ring when closed */}
-        {!open && (
-          <span className="bg-primary absolute inset-0 animate-ping rounded-full opacity-35" />
-        )}
-        {/* Hover ring when open */}
-        {open && (
-          <span className="border-primary/60 absolute -inset-0.75 rounded-full border-2" />
-        )}
-        <BotIcon
+      {!open && (
+        <button
+          style={{
+            position: 'fixed',
+            left: btnPos.x,
+            top: btnPos.y,
+            width: BTN_SIZE,
+            height: BTN_SIZE,
+            zIndex: 51,
+            touchAction: 'none',
+          }}
           className={cn(
-            'absolute size-5 transition-all duration-200',
-            open
-              ? 'scale-0 rotate-90 opacity-0'
-              : 'scale-100 rotate-0 opacity-100',
+            'relative flex items-center justify-center rounded-full',
+            'bg-primary text-primary-foreground shadow-lg',
+            'cursor-grab select-none active:cursor-grabbing',
+            'transition-shadow hover:shadow-xl',
           )}
-        />
-        <XIcon
-          className={cn(
-            'absolute size-5 transition-all duration-200',
-            open
-              ? 'scale-100 rotate-0 opacity-100'
-              : 'scale-0 -rotate-90 opacity-0',
+          onPointerDown={handleBtnPointerDown}
+          onPointerMove={handleBtnPointerMove}
+          onPointerUp={handleBtnPointerUp}
+          aria-label={open ? 'Close chat' : 'Ask Moaaz'}
+        >
+          {/* Pulse ring when closed */}
+          {!open && (
+            <span className="bg-primary absolute inset-0 animate-ping rounded-full opacity-35" />
           )}
-        />
-      </button>
+          {/* Hover ring when open */}
+          {open && (
+            <span className="border-primary/60 absolute -inset-0.75 rounded-full border-2" />
+          )}
+          <BotIcon
+            className={cn(
+              'absolute size-5 transition-all duration-200',
+              open
+                ? 'scale-0 rotate-90 opacity-0'
+                : 'scale-100 rotate-0 opacity-100',
+            )}
+          />
+          <XIcon
+            className={cn(
+              'absolute size-5 transition-all duration-200',
+              open
+                ? 'scale-100 rotate-0 opacity-100'
+                : 'scale-0 -rotate-90 opacity-0',
+            )}
+          />
+        </button>
+      )}
 
       {/* ── Chat window ──────────────────────────────────────────────────── */}
       <div
@@ -406,6 +408,7 @@ function AskMoaazInner({ state }: { state: AssistantPublicState }) {
             prompts: state.suggestedPrompts,
           }}
           onClear={handleClear}
+          onClose={() => setOpen(false)}
           dragHandle={dragHandle}
         />
 

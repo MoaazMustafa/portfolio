@@ -2,10 +2,13 @@
 
 import {
   Bot,
+  CalendarDays,
   Cpu,
   FileText,
   FolderOpen,
+  Images,
   Image as ImageIcon,
+  Inbox,
   LayoutDashboard,
   MessageCircle,
   Settings,
@@ -63,6 +66,21 @@ const sidebarNavItems = [
     title: 'Blog Posts',
     href: '/dashboard/posts',
     icon: FileText,
+  },
+  {
+    title: 'Gallery',
+    href: '/dashboard/gallery',
+    icon: Images,
+  },
+  {
+    title: 'Messages',
+    href: '/dashboard/contact',
+    icon: Inbox,
+  },
+  {
+    title: 'Meetings',
+    href: '/dashboard/meetings',
+    icon: CalendarDays,
   },
   {
     title: 'Ask Moaaz',

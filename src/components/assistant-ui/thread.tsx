@@ -24,6 +24,7 @@ import {
   RefreshCwIcon,
   SquareIcon,
   Trash2Icon,
+  XIcon,
 } from 'lucide-react';
 import type { FC } from 'react';
 
@@ -49,8 +50,9 @@ export interface ThreadDragHandleProps {
 export const Thread: FC<{
   welcome?: WelcomeConfig;
   onClear?: () => void;
+  onClose?: () => void;
   dragHandle?: ThreadDragHandleProps;
-}> = ({ welcome, onClear, dragHandle }) => {
+}> = ({ welcome, onClear, onClose, dragHandle }) => {
   return (
     <ThreadPrimitive.Root
       className="aui-root aui-thread-root bg-background @container flex h-full flex-col"
@@ -63,6 +65,7 @@ export const Thread: FC<{
       <ThreadHeader
         name={welcome?.name}
         onClear={onClear}
+        onClose={onClose}
         dragHandle={dragHandle}
       />
       <ThreadPrimitive.Viewport
@@ -89,8 +92,9 @@ export const Thread: FC<{
 const ThreadHeader: FC<{
   name?: string;
   onClear?: () => void;
+  onClose?: () => void;
   dragHandle?: ThreadDragHandleProps;
-}> = ({ name, onClear, dragHandle }) => {
+}> = ({ name, onClear, onClose, dragHandle }) => {
   const runtime = useThreadRuntime();
   const isEmpty = useAuiState((s) => s.thread.isEmpty);
 
@@ -124,6 +128,19 @@ const ThreadHeader: FC<{
           aria-label="Clear chat"
         >
           <Trash2Icon className="size-3.5" />
+        </TooltipIconButton>
+      )}
+      {onClose && (
+        <TooltipIconButton
+          tooltip="Close"
+          side="left"
+          variant="ghost"
+          size="icon"
+          className="text-muted-foreground hover:text-foreground size-6"
+          onClick={onClose}
+          aria-label="Close chat"
+        >
+          <XIcon className="size-3.5" />
         </TooltipIconButton>
       )}
     </div>

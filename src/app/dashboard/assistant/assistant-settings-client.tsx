@@ -427,7 +427,7 @@ function KnowledgeEntryForm({
   onDone: (entry?: AssistantKnowledgeFormValues) => void;
 }) {
   const [saving, setSaving] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const form = useForm<
     AssistantKnowledgeFormValues,
     any,
