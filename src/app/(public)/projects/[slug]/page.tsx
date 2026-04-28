@@ -6,10 +6,7 @@ import { notFound } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  getPublicProjectBySlug,
-  getPublicProjects,
-} from '@/lib/actions/project';
+import { getPublicProjectBySlug } from '@/lib/actions/project';
 
 export const dynamic = 'force-dynamic';
 
