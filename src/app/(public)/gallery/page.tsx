@@ -4,6 +4,8 @@ import { GalleryGrid } from '@/components/sections/gallery-grid';
 import { getGalleryImages } from '@/lib/actions/gallery';
 import { generatePageMetadata } from '@/lib/metadata';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = generatePageMetadata({
   title: 'Gallery',
   description:

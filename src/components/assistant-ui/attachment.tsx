@@ -8,7 +8,8 @@ import {
   useAuiState,
 } from '@assistant-ui/react';
 import { FileText, PlusIcon, XIcon } from 'lucide-react';
-import type { FC, PropsWithChildren, useEffect, useState } from 'react';
+import type { FC, PropsWithChildren } from 'react';
+import { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/shallow';
 
 import { TooltipIconButton } from '@/components/assistant-ui/tooltip-icon-button';

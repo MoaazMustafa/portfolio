@@ -11,14 +11,17 @@ import {
   getPublicProjects,
 } from '@/lib/actions/project';
 
+export const dynamic = 'force-dynamic';
+
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  const projects = await getPublicProjects();
-  return projects.map((p) => ({ slug: p.slug }));
-}
+// Disable generateStaticParams in build to avoid DB connection issue
+// export async function generateStaticParams() {
+//   const projects = await getPublicProjects();
+//   return projects.map((p) => ({ slug: p.slug }));
+// }
 
 export async function generateMetadata({
   params,

@@ -2,6 +2,8 @@ import { DevToolsProvider, Footer, Navbar } from '@/components';
 import { AskMoaazWidget } from '@/components/ask-moaaz-widget';
 import { getAssistantPublicState } from '@/lib/assistant';
 
+export const dynamic = 'force-dynamic';
+
 export default async function PublicLayout({
   children,
 }: {

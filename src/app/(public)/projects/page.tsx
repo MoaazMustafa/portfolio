@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     'Explore innovative projects and solutions built by Moaaz Mustafa. Web applications, mobile apps, and more.',
 };
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 export default async function ProjectsPage() {
   const projects = await getPublicProjects();

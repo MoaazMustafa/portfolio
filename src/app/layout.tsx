@@ -1,6 +1,5 @@
 import { Analytics } from '@vercel/analytics/next';
 import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono, Orbitron } from 'next/font/google';
 
 import { ClientLayoutProvider, ScrollBar, ThemeProvider } from '@/components';
 import { JsonLd } from '@/components/json-ld';
@@ -12,24 +11,9 @@ import { defaultMetadata } from '@/lib/metadata';
 
 import '@/styles/globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-  display: 'swap',
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-  display: 'swap',
-});
-
-const orbitron = Orbitron({
-  variable: '--font-orbitron',
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800', '900'],
-  display: 'swap',
-});
+const geistSans = { variable: '--font-geist-sans' };
+const geistMono = { variable: '--font-geist-mono' };
+const orbitron = { variable: '--font-orbitron' };
 
 export const metadata: Metadata = {
   ...defaultMetadata,
