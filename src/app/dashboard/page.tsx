@@ -129,7 +129,7 @@ export default async function DashboardPage() {
             workspace.
           </p>
         </div>
-        <div className="text-muted-foreground text-sm">
+        <div className="text-muted-foreground text-sm" suppressHydrationWarning>
           {new Date().toLocaleDateString(undefined, {
             weekday: 'long',
             month: 'long',
