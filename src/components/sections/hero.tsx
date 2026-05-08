@@ -85,8 +85,8 @@ export function Hero() {
                 <VariableProximity
                   label="MOAAZ MUSTAFA"
                   className="variable-proximity-demo font-orbitron text-foreground text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl"
-                  fromFontVariationSettings="'wght' 100"
-                  toFontVariationSettings="'wght' 1000"
+                  fromFontVariationSettings="'wght' 400"
+                  toFontVariationSettings="'wght' 900"
                   containerRef={containerRef}
                   radius={150}
                   falloff="exponential"
