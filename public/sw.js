@@ -1,6 +1,6 @@
-/* Moaaz Mustafa Portfolio — Service Worker v1 */
+/* Moaaz Mustafa Portfolio — Service Worker v2 */
 
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const STATIC_CACHE = `moaaz-static-${CACHE_VERSION}`;
 const PAGE_CACHE = `moaaz-pages-${CACHE_VERSION}`;
 const API_CACHE = `moaaz-api-${CACHE_VERSION}`;
@@ -56,6 +56,9 @@ self.addEventListener('fetch', (event) => {
   // Skip Next.js internals (_next/webpack-hmr, etc.)
   if (url.pathname.startsWith('/_next/webpack-hmr')) return;
 
+  // Never cache auth endpoints used by NextAuth/OAuth flows.
+  if (url.pathname.startsWith('/api/auth/')) return;
+
   /* ── Static assets: _next/static/** ── cache-first */
   if (
     url.pathname.startsWith('/_next/static/') ||
@@ -67,7 +70,10 @@ self.addEventListener('fetch', (event) => {
           (cached) =>
             cached ||
             fetch(request).then((response) => {
-              if (response.ok) cache.put(request, response.clone());
+              if (response.ok) {
+                const responseForCache = response.clone();
+                event.waitUntil(cache.put(request, responseForCache));
+              }
               return response;
             }),
         ),
@@ -82,9 +88,12 @@ self.addEventListener('fetch', (event) => {
       fetch(request)
         .then((response) => {
           if (response.ok) {
-            caches
-              .open(API_CACHE)
-              .then((cache) => cache.put(request, response.clone()));
+            const responseForCache = response.clone();
+            event.waitUntil(
+              caches
+                .open(API_CACHE)
+                .then((cache) => cache.put(request, responseForCache)),
+            );
           }
           return response;
         })
@@ -98,9 +107,12 @@ self.addEventListener('fetch', (event) => {
     fetch(request)
       .then((response) => {
         if (response.ok) {
-          caches
-            .open(PAGE_CACHE)
-            .then((cache) => cache.put(request, response.clone()));
+          const responseForCache = response.clone();
+          event.waitUntil(
+            caches
+              .open(PAGE_CACHE)
+              .then((cache) => cache.put(request, responseForCache)),
+          );
         }
         return response;
       })
