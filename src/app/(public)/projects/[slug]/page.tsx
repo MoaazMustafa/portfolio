@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -191,8 +192,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         {/* Extended content (markdown/rich text) */}
         {project.content && (
           <div className="border-border/50 border-t pt-10">
-            <div className="prose prose-neutral dark:prose-invert max-w-none whitespace-pre-wrap">
-              {project.content}
+            <div className="prose prose-neutral dark:prose-invert max-w-none">
+              <ReactMarkdown>
+                {project.content.replace(/\\n/g, '\n')}
+              </ReactMarkdown>
             </div>
           </div>
         )}
