@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,12 +15,6 @@ export const dynamic = 'force-dynamic';
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
 }
-
-// Disable generateStaticParams in build to avoid DB connection issue
-// export async function generateStaticParams() {
-//   const projects = await getPublicProjects();
-//   return projects.map((p) => ({ slug: p.slug }));
-// }
 
 export async function generateMetadata({
   params,
@@ -43,6 +38,107 @@ export async function generateMetadata({
 }
 
 export const revalidate = 3600;
+
+// ─── Custom Markdown Components ───────────────────────────────────────────────
+const markdownComponents: React.ComponentProps<
+  typeof ReactMarkdown
+>['components'] = {
+  h1: ({ children }) => (
+    <h1 className="text-foreground mt-8 mb-4 text-3xl font-bold tracking-tight">
+      {children}
+    </h1>
+  ),
+  h2: ({ children }) => (
+    <h2 className="text-foreground mt-6 mb-3 text-2xl font-bold tracking-tight">
+      {children}
+    </h2>
+  ),
+  h3: ({ children }) => (
+    <h3 className="text-foreground mt-5 mb-2 text-xl font-semibold">
+      {children}
+    </h3>
+  ),
+  h4: ({ children }) => (
+    <h4 className="text-foreground mt-4 mb-2 text-lg font-semibold">
+      {children}
+    </h4>
+  ),
+  p: ({ children }) => (
+    <p className="text-muted-foreground mb-4 leading-7">{children}</p>
+  ),
+  ul: ({ children }) => (
+    <ul className="text-muted-foreground mb-4 list-disc space-y-1 pl-6">
+      {children}
+    </ul>
+  ),
+  ol: ({ children }) => (
+    <ol className="text-muted-foreground mb-4 list-decimal space-y-1 pl-6">
+      {children}
+    </ol>
+  ),
+  li: ({ children }) => <li className="leading-7">{children}</li>,
+  strong: ({ children }) => (
+    <strong className="text-foreground font-semibold">{children}</strong>
+  ),
+  em: ({ children }) => (
+    <em className="text-muted-foreground italic">{children}</em>
+  ),
+  blockquote: ({ children }) => (
+    <blockquote className="border-primary/40 text-muted-foreground my-4 border-l-4 pl-4 italic">
+      {children}
+    </blockquote>
+  ),
+  hr: () => <hr className="border-border/50 my-6" />,
+  a: ({ href, children }) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-primary underline underline-offset-4 transition-opacity hover:opacity-70"
+    >
+      {children}
+    </a>
+  ),
+  code: ({ className, children, ...props }) => {
+    const isInline = !className;
+    return isInline ? (
+      <code
+        className="bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-sm"
+        {...props}
+      >
+        {children}
+      </code>
+    ) : (
+      <code className="font-mono text-sm" {...props}>
+        {children}
+      </code>
+    );
+  },
+  pre: ({ children }) => (
+    <pre className="bg-muted border-border/50 my-4 overflow-x-auto rounded-xl border p-4">
+      {children}
+    </pre>
+  ),
+  table: ({ children }) => (
+    <div className="my-4 overflow-x-auto rounded-xl">
+      <table className="border-border w-full border-collapse border text-sm">
+        {children}
+      </table>
+    </div>
+  ),
+  thead: ({ children }) => <thead className="bg-muted">{children}</thead>,
+  th: ({ children }) => (
+    <th className="border-border text-foreground border px-4 py-2 text-left font-semibold">
+      {children}
+    </th>
+  ),
+  td: ({ children }) => (
+    <td className="border-border text-muted-foreground border px-4 py-2">
+      {children}
+    </td>
+  ),
+};
+// ──────────────────────────────────────────────────────────────────────────────
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
@@ -192,11 +288,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         {/* Extended content (markdown/rich text) */}
         {project.content && (
           <div className="border-border/50 border-t pt-10">
-            <div className="prose prose-neutral dark:prose-invert max-w-none">
-              <ReactMarkdown>
-                {project.content.replace(/\\n/g, '\n')}
-              </ReactMarkdown>
-            </div>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={markdownComponents}
+            >
+              {project.content.replace(/\\n/g, '\n')}
+            </ReactMarkdown>
           </div>
         )}
 
