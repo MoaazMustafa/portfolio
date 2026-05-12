@@ -178,7 +178,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             {project.categories.map((cat) => (
               <span
                 key={cat.id}
-                className="text-primary text-[10px] font-semibold tracking-wider uppercase"
+                className="text-primary bg-primary/10 border-primary/20 rounded-2xl border px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase"
               >
                 {cat.name}
               </span>

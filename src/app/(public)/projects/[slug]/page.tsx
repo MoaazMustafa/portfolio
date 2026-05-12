@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+import { ImageGallery } from '@/components/image-gallery';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getPublicProjectBySlug } from '@/lib/actions/project';
@@ -148,7 +149,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   return (
     <section className="relative py-20 lg:py-32">
-      <div className="relative container mx-auto max-w-4xl px-4">
+      <div className="relative container mx-auto max-w-7xl px-4">
         {/* Back link */}
         <Link
           href="/projects"
@@ -159,7 +160,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         {/* Cover Image */}
         {project.coverImage && (
-          <div className="relative mb-10 aspect-video w-full overflow-hidden rounded-2xl">
+          <div className="relative mb-10 inline-flex aspect-video w-full max-w-5xl items-center justify-center overflow-hidden rounded-2xl">
             <Image
               src={project.coverImage}
               alt={project.title}
@@ -303,21 +304,22 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <h2 className="text-foreground mb-4 text-lg font-semibold">
               Gallery
             </h2>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {project.images.map((img, i) => (
-                <div
-                  key={i}
-                  className="relative aspect-video overflow-hidden rounded-xl"
-                >
-                  <Image
-                    src={img}
-                    alt={`${project.title} screenshot ${i + 1}`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 100vw, 50vw"
-                  />
-                </div>
-              ))}
+            <ImageGallery images={project.images} title={project.title} />
+          </div>
+        )}
+        {/* iframe to show the web live demo if available */}
+        {project.liveUrl && (
+          <div className="mt-10">
+            <h2 className="text-foreground mb-4 text-lg font-semibold">
+              Live Demo
+            </h2>
+            <div className="aspect-video w-full overflow-hidden rounded-lg border">
+              <iframe
+                src={project.liveUrl}
+                title={`${project.title} Live Demo`}
+                className="h-full w-full border-0"
+                allowFullScreen
+              />
             </div>
           </div>
         )}
