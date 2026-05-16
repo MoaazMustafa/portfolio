@@ -1,82 +1,66 @@
-<!-- README-AI-SIGNATURE:20260403024914 -->
-# portfolio
+<!-- README-AI-SIGNATURE:20260516000000 -->
+# Maaz Mustafa Portfolio
 
-Welcome to the portfolio repository of Moaaz Mustafa. This project showcases a personal portfolio built with TypeScript and Next.js, designed to highlight skills, projects, and experiences in a visually appealing manner. The application is structured to provide a seamless user experience while leveraging modern web technologies.
+Personal portfolio built with modern web tooling to showcase projects, skills, and experience.
 
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white) ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=next.js&logoColor=white) ![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)
+![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat&logo=next.js)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=flat&logo=prisma&logoColor=white)
 
-## ✨ Key Features
+## Highlights
 
-### 🎨 Modern Design
-- Utilizes Tailwind CSS for responsive and customizable styling.
-- Incorporates animations and transitions for an engaging user experience.
+- Next.js App Router architecture with TypeScript strict mode
+- Tailwind CSS v4 design system with reusable UI components
+- Prisma + PostgreSQL integration for structured data
+- Authentication with NextAuth.js
+- Rich UI interactions and animations
 
-### 🔒 Secure Authentication
-- Implements NextAuth.js for secure user authentication.
-- Supports Google OAuth for easy sign-in options.
+## Project Structure
 
-### 📊 Dynamic Content
-- Integrates Prisma for database management, allowing for dynamic content updates.
-- Utilizes Cloudinary for efficient media storage and management.
+```text
+src/
+├── app/
+├── components/
+├── hooks/
+├── lib/
+├── styles/
+└── types/
 
-## 🏗️ Project Structure
-
-```
-portfolio/
-├── .github/
-├── prisma/
-│   ├── migrations/
-│   └── schema.prisma
-├── public/
-│   ├── images/
-│   └── Resume.pdf
-├── src/
-│   ├── app/
-│   ├── components/
-│   ├── hooks/
-│   ├── lib/
-│   └── styles/
-├── .env.example
-├── package.json
-└── README.md
+prisma/
+├── migrations/
+└── schema.prisma
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
-To get started with the portfolio project, follow these steps:
+```bash
+git clone https://github.com/MoaazMustafa/portfolio.git
+cd portfolio
+npm install
+cp .env.example .env
+npm run dev
+```
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/MoaazMustafa/portfolio.git
-   cd portfolio
-   ```
+Open `http://localhost:3000`.
 
-2. Install dependencies:
-   ```
-   npm install
-   ```
+## Scripts
 
-3. Set up your environment variables by copying `.env.example` to `.env` and filling in the required values.
+- `npm run dev` — Start dev server (Turbopack)
+- `npm run build` — Build for production
+- `npm run start` — Start production server
+- `npm run lint` — Lint and auto-fix
+- `npm run lint:check` — Lint without auto-fix
+- `npm run format` — Format code
+- `npm run format:check` — Check formatting
+- `npm run type-check` — Run TypeScript checks
+- `npm run db:generate` — Generate Prisma client
 
-4. Run the development server:
-   ```
-   npm run dev
-   ```
+## Contributing
 
-## 📜 Scripts
+Pull requests are welcome. Please run lint, format, and type-check locally before submitting changes.
 
-The following scripts are available for managing the project:
+## License
 
-- **Development**: `npm run dev` - Starts the development server.
-- **Build**: `npm run build` - Builds the application for production.
-- **Start**: `npm run start` - Starts the production server.
-- **Lint**: `npm run lint` - Lints the codebase using ESLint.
-- **Format**: `npm run format` - Formats the code using Prettier.
-
-## 🤝 Contributing
-
-Contributions are welcome! If you have suggestions for improvements or new features, please fork the repository and submit a pull request. Ensure that your code adheres to the project's coding standards and includes appropriate tests.
-
-## 📄 License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+Licensed under the [MIT License](LICENSE).
