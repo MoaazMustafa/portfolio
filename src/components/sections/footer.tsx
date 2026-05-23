@@ -58,7 +58,7 @@ const navigationLinks = [
 const resourceLinks = [
   { name: 'Blog', href: '/blog' },
   { name: 'Uses', href: '/uses' },
-  { name: 'Resume', href: '/Resume.pdf', external: true },
+  { name: 'Resume', href: '/resume.pdf', external: true },
 ];
 
 const moreLinks = [
